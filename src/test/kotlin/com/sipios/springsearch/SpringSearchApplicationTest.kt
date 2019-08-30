@@ -1,4 +1,4 @@
-package com.sipios.srql
+package com.sipios.springsearch
 
 import org.junit.Assert
 import org.junit.Test
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional
 @RunWith(SpringRunner::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = [SpringRestQueryLanguageApplication::class])
 @Transactional
-class SpringRestQueryLanguageApplicationTest {
+class SpringSearchApplicationTest {
 
     @Autowired
     private lateinit var userRepository: UsersRepository

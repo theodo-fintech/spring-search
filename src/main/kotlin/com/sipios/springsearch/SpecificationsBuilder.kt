@@ -1,11 +1,10 @@
-package com.sipios.srql
+package com.sipios.springsearch
 
 import org.springframework.data.jpa.domain.Specification
 
 import java.util.Collections
 import java.util.Deque
 import java.util.LinkedList
-import java.util.function.Function
 
 class SpecificationsBuilder<U> {
     private var postFixedExprStack: Deque<*>? = null

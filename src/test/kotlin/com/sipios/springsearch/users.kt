@@ -1,4 +1,4 @@
-package com.sipios.srql
+package com.sipios.springsearch
 
 import javax.persistence.*
 

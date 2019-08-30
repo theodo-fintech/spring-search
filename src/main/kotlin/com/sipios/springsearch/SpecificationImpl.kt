@@ -1,4 +1,4 @@
-package com.sipios.srql
+package com.sipios.springsearch
 
 import org.springframework.data.jpa.domain.Specification
 
@@ -8,7 +8,6 @@ import javax.persistence.criteria.Path
 import javax.persistence.criteria.Predicate
 import javax.persistence.criteria.Root
 import java.util.ArrayList
-import java.util.Arrays
 
 /**
  * Implementation of the JPA Specification based on a Search Criteria
