@@ -1,5 +1,7 @@
 package com.sipios.srql
 
+import java.net.URLDecoder
+
 class SearchCriteria// Change EQUALS into ENDS_WITH, CONTAINS, STARTS_WITH based on the presence of * in the value
 (key: String, operation: String, prefix: String?, value: String, suffix: String?) {
     var key: String = key
@@ -29,6 +31,6 @@ class SearchCriteria// Change EQUALS into ENDS_WITH, CONTAINS, STARTS_WITH based
             }
         }
         this.operation = op
-        this.value = value.replace('_', ' ')
+        this.value = URLDecoder.decode(value,"UTF-8")
     }
 }
