@@ -8,8 +8,6 @@ enum class SearchOperation {
 
         val SIMPLE_OPERATION_SET = arrayOf(":", "!", ">", "<", "~")
 
-        val OR_PREDICATE_FLAG = "'"
-
         val ZERO_OR_MORE_REGEX = "*"
 
         val OR_OPERATOR = "OR"
