@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 class SpringSearchApplicationTest {
 
     @Autowired
-    private lateinit var userRepository: UsersRepository
+    lateinit var userRepository: UsersRepository
 
     @Test
     fun run() {}
@@ -29,261 +29,273 @@ class SpringSearchApplicationTest {
 
     @Test
     fun canGetUserWithId() {
-        var user = Users()
+        val userId = userRepository.save(Users()).userId
         userRepository.save(Users())
-        user = userRepository.save(user)
 
-        val specification = SpecificationsBuilder<Users>().withSearch("userId:" + user.userId).build()
-        Assert.assertEquals(1, userRepository.findAll(specification).count())
+        val specification = SpecificationsBuilder<Users>().withSearch("userId:$userId").build()
+        Assert.assertEquals(userId, userRepository.findAll(specification).get(0).userId)
     }
 
     @Test
     fun canGetUserWithName() {
-        userRepository.save(Users(userFirstName = "Alice"))
+        val aliceId = userRepository.save(Users(userFirstName = "Alice")).userId
         userRepository.save(Users(userFirstName = "Bob"))
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:Alice").build()
-        Assert.assertEquals(1, userRepository.findAll(specification).count())
+        Assert.assertEquals(aliceId, userRepository.findAll(specification).get(0).userId)
     }
 
     @Test
     fun canGetUserWithFirstNameAndLastName() {
-        userRepository.save(Users(userFirstName = "Alice", userLastName = "One"))
+        val aliceId = userRepository.save(Users(userFirstName = "Alice", userLastName = "One")).userId
         userRepository.save(Users(userFirstName = "Alice", userLastName = "Two"))
         userRepository.save(Users(userFirstName = "Bob", userLastName = "One"))
         userRepository.save(Users(userFirstName = "Bob", userLastName = "Two"))
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:Alice AND userLastName:One").build()
-        Assert.assertEquals(1, userRepository.findAll(specification).count())
+        Assert.assertEquals(aliceId, userRepository.findAll(specification).get(0).userId)
     }
 
     @Test
     fun canGetUserWithFrenchName() {
-        userRepository.save(Users(userFirstName = "Édouard", userLastName = "Pröst"))
+        val edouardProstId = userRepository.save(Users(userFirstName = "Édouard", userLastName = "Pröst")).userId
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:%C3%89douard AND userLastName:Pr%C3%B6st").build()
-        Assert.assertEquals(1, userRepository.findAll(specification).count())
+        Assert.assertEquals(edouardProstId, userRepository.findAll(specification).get(0).userId)
     }
 
     @Test
     fun canGetUserWithChineseName() {
-        userRepository.save(Users(userFirstName = "毛澤東"))
+        val sunDemingId = userRepository.save(Users(userFirstName = "孫德明")).userId
 
-        val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:%E6%AF%9B%E6%BE%A4%E6%9D%B1").build()
-        Assert.assertEquals(1, userRepository.findAll(specification).count())
+        val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:%E5%AD%AB%E5%BE%B7%E6%98%8E").build()
+        Assert.assertEquals(sunDemingId, userRepository.findAll(specification).get(0).userId)
     }
 
     @Test
     fun canGetUserWithSpecialCharactersName() {
-        userRepository.save(Users(userFirstName = "&@#*\"''^^^\$``%=+§()(__hack3rman__"))
+        val hackermanId = userRepository.save(Users(userFirstName = "&@#*\"''^^^\$``%=+§()(__hack3rman__")).userId
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:%26%40%23%2A%22%27%27%5E%5E%5E%24%60%60%25%3D%2B%C2%A7%28%29%28__hack3rman__").build()
-        Assert.assertEquals(1, userRepository.findAll(specification).count())
+        Assert.assertEquals(hackermanId, userRepository.findAll(specification).get(0).userId)
     }
 
     @Test
     fun canGetUserWithSpaceInName() {
-        userRepository.save(Users(userFirstName = "robert junior"))
+        val robertJuniorId = userRepository.save(Users(userFirstName = "robert junior")).userId
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:robert%20junior").build()
-        Assert.assertEquals(1, userRepository.findAll(specification).count())
+        Assert.assertEquals(robertJuniorId, userRepository.findAll(specification).get(0).userId)
     }
 
     @Test
     fun canGetUsersWithPartialName() {
-        userRepository.save(Users(userFirstName = "robert"))
-        userRepository.save(Users(userFirstName = "roberta"))
+        val robertId = userRepository.save(Users(userFirstName = "robert")).userId
+        val robertaId = userRepository.save(Users(userFirstName = "roberta")).userId
         userRepository.save(Users(userFirstName = "robot"))
         userRepository.save(Users(userFirstName = "röbert"))
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:robe*").build()
-        Assert.assertEquals(2, userRepository.findAll(specification).count())
+        val robeUsers = userRepository.findAll(specification)
+        Assert.assertTrue(setOf(robertId, robertaId) == robeUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
-    fun canGetUsersWithPartialName2() {
-        userRepository.save(Users(userFirstName = "rob*rt"))
-        userRepository.save(Users(userFirstName = "rob*rta"))
+    fun canGetUsersWithPartialNameAndSpecialCharacter() {
+        val robertId = userRepository.save(Users(userFirstName = "rob*rt")).userId
+        val robertaId = userRepository.save(Users(userFirstName = "rob*rta")).userId
         userRepository.save(Users(userFirstName = "robot"))
         userRepository.save(Users(userFirstName = "röb*rt"))
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:rob%2A*").build()
-        Assert.assertEquals(2, userRepository.findAll(specification).count())
+        val robeUsers = userRepository.findAll(specification)
+        Assert.assertTrue(setOf(robertId, robertaId) == robeUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
-    fun canGetUsersWithPartialName3() {
-        userRepository.save(Users(userFirstName = "Robert"))
-        userRepository.save(Users(userFirstName = "Roberta"))
-        userRepository.save(Users(userFirstName = "Loberta"))
-        userRepository.save(Users(userFirstName = "Toberta"))
-        userRepository.save(Users(userFirstName = "Toborobe"))
-        userRepository.save(Users(userFirstName = "oberta"))
+    fun canGetUsersWithPartialNameContaining() {
+        val robertId = userRepository.save(Users(userFirstName = "Robert")).userId
+        val robertaId = userRepository.save(Users(userFirstName = "Roberta")).userId
+        val toborobeId = userRepository.save(Users(userFirstName = "Toborobe")).userId
+        val obertaId = userRepository.save(Users(userFirstName = "oberta")).userId
         userRepository.save(Users(userFirstName = "Robot"))
         userRepository.save(Users(userFirstName = "Röbert"))
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:*obe*").build()
-        Assert.assertEquals(6, userRepository.findAll(specification).count())
+        val specificationUsers = userRepository.findAll(specification)
+        Assert.assertTrue(setOf(robertId, robertaId, toborobeId, obertaId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
-    fun canGetUsersWithPartialName4() {
-        userRepository.save(Users(userFirstName = "Rob*rt"))
-        userRepository.save(Users(userFirstName = "rob*rta"))
-        userRepository.save(Users(userFirstName = "Lob*rta"))
-        userRepository.save(Users(userFirstName = "Tob*rta"))
+    fun canGetUsersWithPartialNameContainingWithSpecialCharacter() {
+        val robertId = userRepository.save(Users(userFirstName = "Rob*rt")).userId
+        val robertaId = userRepository.save(Users(userFirstName = "rob*rta")).userId
+        val lobertaId = userRepository.save(Users(userFirstName = "Lob*rta")).userId
+        val tobertaId = userRepository.save(Users(userFirstName = "Tob*rta")).userId
         userRepository.save(Users(userFirstName = "robot"))
         userRepository.save(Users(userFirstName = "röb*rt"))
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:*ob%2A*").build()
-        Assert.assertEquals(4, userRepository.findAll(specification).count())
+        val specificationUsers = userRepository.findAll(specification)
+        Assert.assertTrue(setOf(robertId, robertaId, lobertaId, tobertaId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
     fun canGetUsersNotContaining() {
-        userRepository.save(Users(userFirstName = "Robèrt"))
-        userRepository.save(Users(userFirstName = "robèrta"))
-        userRepository.save(Users(userFirstName = "Lobérta"))
-        userRepository.save(Users(userFirstName = "Toberta"))
-        userRepository.save(Users(userFirstName = "robot"))
-        userRepository.save(Users(userFirstName = "röbert"))
+        val lobertaId = userRepository.save(Users(userFirstName = "Lobérta")).userId
+        val tobertaId = userRepository.save(Users(userFirstName = "Toberta")).userId
+        val robotId = userRepository.save(Users(userFirstName = "robot")).userId
+        val roobertId = userRepository.save(Users(userFirstName = "röbert")).userId
+        userRepository.save(Users(userFirstName = "Robèrt")).userId
+        userRepository.save(Users(userFirstName = "robèrta")).userId
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName!*%C3%A8*").build()
-        Assert.assertEquals(4, userRepository.findAll(specification).count())
+        val specificationUsers = userRepository.findAll(specification)
+        Assert.assertTrue(setOf(lobertaId, tobertaId, robotId, roobertId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
-    fun canGetUsersNotStratingWith() {
-        userRepository.save(Users(userFirstName = "Alice"))
+    fun canGetUsersNotStartingWith() {
+        val aliceId = userRepository.save(Users(userFirstName = "Alice")).userId
+        val aliceId2 = userRepository.save(Users(userFirstName = "alice")).userId
+        val bobId = userRepository.save(Users(userFirstName = "bob")).userId
         userRepository.save(Users(userFirstName = "Bob"))
-        userRepository.save(Users(userFirstName = "alice"))
-        userRepository.save(Users(userFirstName = "bob"))
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName!B*").build()
-        Assert.assertEquals(3, userRepository.findAll(specification).count())
+        val specificationUsers = userRepository.findAll(specification)
+        Assert.assertTrue(setOf(aliceId, aliceId2, bobId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
     fun canGetUsersNotEndingWith() {
+        val bobId = userRepository.save(Users(userFirstName = "bob")).userId
+        val alicEId = userRepository.save(Users(userFirstName = "alicE")).userId
+        val boBId = userRepository.save(Users(userFirstName = "boB")).userId
         userRepository.save(Users(userFirstName = "alice"))
-        userRepository.save(Users(userFirstName = "bob"))
-        userRepository.save(Users(userFirstName = "alicE"))
-        userRepository.save(Users(userFirstName = "boB"))
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName!*e").build()
-        Assert.assertEquals(3, userRepository.findAll(specification).count())
+        val specificationUsers = userRepository.findAll(specification)
+        Assert.assertTrue(setOf(boBId, alicEId, bobId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
     fun canGetUserWithBigFamily() {
-        userRepository.save(Users(userChildrenNumber = 5))
+        val userWith5ChildrenId = userRepository.save(Users(userChildrenNumber = 5)).userId
+        val userWith6ChildrenId = userRepository.save(Users(userChildrenNumber = 6)).userId
+        val user2With5ChildrenId = userRepository.save(Users(userChildrenNumber = 5)).userId
         userRepository.save(Users(userChildrenNumber = 1))
         userRepository.save(Users(userChildrenNumber = 2))
         userRepository.save(Users(userChildrenNumber = 4))
-        userRepository.save(Users(userChildrenNumber = 6))
         userRepository.save(Users(userChildrenNumber = 2))
-        userRepository.save(Users(userChildrenNumber = 5))
 
         val specification = SpecificationsBuilder<Users>().withSearch("userChildrenNumber>4").build()
-        Assert.assertEquals(3, userRepository.findAll(specification).count())
+        val specificationUsers = userRepository.findAll(specification)
+        Assert.assertTrue(setOf(user2With5ChildrenId, userWith5ChildrenId, userWith6ChildrenId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
     fun canGetUserWithChildrenEquals() {
+        val user1With4ChildrenId = userRepository.save(Users(userChildrenNumber = 4)).userId
+        val user2With4ChildrenId = userRepository.save(Users(userChildrenNumber = 4)).userId
+        val user3With4ChildrenId = userRepository.save(Users(userChildrenNumber = 4)).userId
         userRepository.save(Users(userChildrenNumber = 5))
         userRepository.save(Users(userChildrenNumber = 1))
         userRepository.save(Users(userChildrenNumber = 2))
-        userRepository.save(Users(userChildrenNumber = 4))
-        userRepository.save(Users(userChildrenNumber = 4))
-        userRepository.save(Users(userChildrenNumber = 4))
-        userRepository.save(Users(userChildrenNumber = 4))
         userRepository.save(Users(userChildrenNumber = 6))
         userRepository.save(Users(userChildrenNumber = 2))
         userRepository.save(Users(userChildrenNumber = 5))
 
         val specification = SpecificationsBuilder<Users>().withSearch("userChildrenNumber:4").build()
-        Assert.assertEquals(4, userRepository.findAll(specification).count())
+        val specificationUsers = userRepository.findAll(specification)
+        Assert.assertTrue(setOf(user1With4ChildrenId, user2With4ChildrenId, user3With4ChildrenId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
     fun canGetUserWithChildrenNotEquals() {
-        userRepository.save(Users(userChildrenNumber = 5))
-        userRepository.save(Users(userChildrenNumber = 1))
-        userRepository.save(Users(userChildrenNumber = 6))
+        val userWith5ChildrenId = userRepository.save(Users(userChildrenNumber = 5)).userId
+        val userWith1ChildId = userRepository.save(Users(userChildrenNumber = 1)).userId
+        val userWith6ChildrenId = userRepository.save(Users(userChildrenNumber = 6)).userId
         userRepository.save(Users(userChildrenNumber = 2))
-        userRepository.save(Users(userChildrenNumber = 5))
+        userRepository.save(Users(userChildrenNumber = 2))
 
         val specification = SpecificationsBuilder<Users>().withSearch("userChildrenNumber!2").build()
-        Assert.assertEquals(4, userRepository.findAll(specification).count())
+        val specificationUsers = userRepository.findAll(specification)
+        Assert.assertTrue(setOf(userWith1ChildId, userWith5ChildrenId, userWith6ChildrenId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
     fun canGetUserWithSmallerSalary() {
-        userRepository.save(Users(userSalary = 2223.3F))
-        userRepository.save(Users(userSalary = 1500.2F))
+        val smallerSalaryUserId = userRepository.save(Users(userSalary = 2223.3F)).userId
+        val smallerSalaryUser2Id = userRepository.save(Users(userSalary = 1500.2F)).userId
         userRepository.save(Users(userSalary = 4000.0F))
         userRepository.save(Users(userSalary = 2550.7F))
         userRepository.save(Users(userSalary = 2300.0F))
 
         val specification = SpecificationsBuilder<Users>().withSearch("userSalary<2300").build()
-        Assert.assertEquals(2, userRepository.findAll(specification).count())
+        val specificationUsers = userRepository.findAll(specification)
+        Assert.assertTrue(setOf(smallerSalaryUserId, smallerSalaryUser2Id) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
     fun canGetUserWithHigherSalary() {
+        val higherSalaryUserId = userRepository.save(Users(userSalary = 4000.1F)).userId
+        val higherSalaryUser2Id = userRepository.save(Users(userSalary = 5350.7F)).userId
         userRepository.save(Users(userSalary = 2323.3F))
         userRepository.save(Users(userSalary = 1500.2F))
-        userRepository.save(Users(userSalary = 4000.1F))
-        userRepository.save(Users(userSalary = 5350.7F))
 
         val specification = SpecificationsBuilder<Users>().withSearch("userSalary>4000.001").build()
-        Assert.assertEquals(2, userRepository.findAll(specification).count())
+        val specificationUsers = userRepository.findAll(specification)
+        Assert.assertTrue(setOf(higherSalaryUserId, higherSalaryUser2Id) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
     fun canGetUserWithMedianSalary() {
-        userRepository.save(Users(userSalary = 2323.3F))
+        val medianUserId = userRepository.save(Users(userSalary = 2323.3F)).userId
         userRepository.save(Users(userSalary = 1500.2F))
         userRepository.save(Users(userSalary = 4000.1F))
         userRepository.save(Users(userSalary = 5350.7F))
 
         val specification = SpecificationsBuilder<Users>().withSearch("userSalary<4000.1 AND userSalary>1500.2").build()
-        Assert.assertEquals(1, userRepository.findAll(specification).count())
+        val specificationUsers = userRepository.findAll(specification)
+        Assert.assertTrue(setOf(medianUserId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
     fun canGetUsersWithAge() {
-        userRepository.save(Users(userAgeInSeconds = 23222223.3))
+        val olderUserId = userRepository.save(Users(userAgeInSeconds = 23222223.3)).userId
         userRepository.save(Users(userAgeInSeconds = 23222223.2))
         userRepository.save(Users(userAgeInSeconds = 23222223.0))
 
         val specification = SpecificationsBuilder<Users>().withSearch("userAgeInSeconds>23222223.2").build()
-        Assert.assertEquals(1, userRepository.findAll(specification).count())
+        val specificationUsers = userRepository.findAll(specification)
+        Assert.assertTrue(setOf(olderUserId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
     fun canGetUserWithParentheses() {
+        val userOneWithHigherSalaryId = userRepository.save(Users(userSalary = 1500.2F, userLastName = "One")).userId
+        val userTwoWithHigherSalaryId = userRepository.save(Users(userSalary = 1500.2F, userLastName = "Two")).userId
         userRepository.save(Users(userSalary = 1500.1F, userLastName = "One"))
-        userRepository.save(Users(userSalary = 1500.2F, userLastName = "One"))
         userRepository.save(Users(userSalary = 1500.1F, userLastName = "Two"))
-        userRepository.save(Users(userSalary = 1500.2F, userLastName = "Two"))
         userRepository.save(Users(userSalary = 1500.1F, userLastName = "Three"))
         userRepository.save(Users(userSalary = 1500.2F, userLastName = "Three"))
 
         val specification = SpecificationsBuilder<Users>().withSearch("userSalary>1500.1 AND ( userLastName:One OR userLastName:Two )").build()
-        Assert.assertEquals(2, userRepository.findAll(specification).count())
+        val specificationUsers = userRepository.findAll(specification)
+        Assert.assertTrue(setOf(userOneWithHigherSalaryId, userTwoWithHigherSalaryId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
-    fun interlinkedTest1() {
-        userRepository.save(Users(userSalary = 1501F, userLastName = "One"))
+    fun canGetUsersWithInterlinkedConditions() {
+        val userOneWithSmallerSalaryId = userRepository.save(Users(userSalary = 1501F, userLastName = "One")).userId
+        val userOeId = userRepository.save(Users(userSalary = 1501F, userLastName = "Oe")).userId
         userRepository.save(Users(userSalary = 1501F, userLastName = "One one"))
         userRepository.save(Users(userSalary = 1501F, userLastName = "Oneone"))
-        userRepository.save(Users(userSalary = 1501F, userLastName = "Oe"))
         userRepository.save(Users(userSalary = 1501F, userLastName = "O n e"))
         userRepository.save(Users(userSalary = 1502F, userLastName = "One"))
 
         val specification = SpecificationsBuilder<Users>().withSearch("userSalary<1502 AND ( ( userLastName:One OR userLastName:one ) OR userLastName!*n* )").build()
-        Assert.assertEquals(2, userRepository.findAll(specification).count())
+        val specificationUsers = userRepository.findAll(specification)
+        Assert.assertTrue(setOf(userOneWithSmallerSalaryId, userOeId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 }
