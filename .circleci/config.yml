@@ -1,0 +1,25 @@
+version: 2
+jobs:
+  test:
+    environment:
+      MAVEN_OPTS: -Xmx3200m
+    docker:
+      - image: circleci/openjdk:11-jdk
+    working_directory: ~/project
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - spring-search-{{ checksum "pom.xml" }}
+            - spring-search-
+      - run: mvn dependency:go-offline
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: spring-search-{{ checksum "pom.xml" }}
+      - run: mvn test
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test
