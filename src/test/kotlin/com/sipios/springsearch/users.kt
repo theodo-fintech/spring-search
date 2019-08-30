@@ -1,4 +1,4 @@
-package com.sipios.srql
+package com.sipios.springsearch
 
 import javax.persistence.*
 
@@ -6,8 +6,8 @@ import javax.persistence.*
 @Table(name="USERS")
 data class Users(
         @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-        var userId: Long = 1,
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        var userId: Long? = null,
 
         @Column(name = "FirstName")
         var userFirstName: String = "John",

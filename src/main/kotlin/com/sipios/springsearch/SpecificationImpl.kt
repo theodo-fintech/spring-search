@@ -1,4 +1,4 @@
-package com.sipios.srql
+package com.sipios.springsearch
 
 import org.springframework.data.jpa.domain.Specification
 
@@ -8,7 +8,6 @@ import javax.persistence.criteria.Path
 import javax.persistence.criteria.Predicate
 import javax.persistence.criteria.Root
 import java.util.ArrayList
-import java.util.Arrays
 
 /**
  * Implementation of the JPA Specification based on a Search Criteria
@@ -31,6 +30,9 @@ class SpecificationImpl<T>(private val criteria: SearchCriteria) : Specification
             SearchOperation.STARTS_WITH -> return builder.like(nestedRoot.get(criteriaKey), criteria.value + "%")
             SearchOperation.ENDS_WITH -> return builder.like(nestedRoot.get(criteriaKey), "%" + criteria.value)
             SearchOperation.CONTAINS -> return builder.like(builder.lower(nestedRoot.get<String>(criteriaKey).`as`(String::class.java)), "%" + criteria.value + "%")
+            SearchOperation.DOESNT_START_WITH -> return builder.notLike(nestedRoot.get(criteriaKey), criteria.value + "%")
+            SearchOperation.DOESNT_END_WITH -> return builder.notLike(nestedRoot.get(criteriaKey), "%" + criteria.value)
+            SearchOperation.DOESNT_CONTAIN -> return builder.notLike(builder.lower(nestedRoot.get<String>(criteriaKey).`as`(String::class.java)), "%" + criteria.value + "%")
             else -> return null
         }
     }

@@ -1,15 +1,13 @@
-package com.sipios.srql
+package com.sipios.springsearch
 
 import com.google.common.base.Joiner
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
-import java.util.Arrays // may not be useful, arrays already exist in Kotlin
 import java.util.Collections
 import java.util.Deque
 import java.util.HashMap
 import java.util.LinkedList
-import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 /**

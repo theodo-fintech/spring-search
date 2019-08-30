@@ -1,4 +1,4 @@
-package com.sipios.srql.anotation
+package com.sipios.springsearch.anotation
 
 
 /**

@@ -1,14 +1,12 @@
-package com.sipios.srql
+package com.sipios.springsearch
 
 enum class SearchOperation {
-    EQUALS, NOT_EQUALS, GREATER_THAN, LESS_THAN, STARTS_WITH, ENDS_WITH, CONTAINS;
+    EQUALS, NOT_EQUALS, GREATER_THAN, LESS_THAN, STARTS_WITH, ENDS_WITH, CONTAINS, DOESNT_START_WITH, DOESNT_END_WITH, DOESNT_CONTAIN;
 
 
     companion object {
 
         val SIMPLE_OPERATION_SET = arrayOf(":", "!", ">", "<", "~")
-
-        val OR_PREDICATE_FLAG = "'"
 
         val ZERO_OR_MORE_REGEX = "*"
 

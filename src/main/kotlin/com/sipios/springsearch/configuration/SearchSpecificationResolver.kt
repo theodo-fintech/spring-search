@@ -1,8 +1,7 @@
-package com.sipios.srql.configuration
+package com.sipios.springsearch.configuration
 
-import com.sipios.srql.SpecificationsBuilder
-import com.sipios.srql.anotation.SearchSpec
-import org.slf4j.Logger
+import com.sipios.springsearch.SpecificationsBuilder
+import com.sipios.springsearch.anotation.SearchSpec
 import org.slf4j.LoggerFactory
 import org.springframework.core.MethodParameter
 import org.springframework.data.jpa.domain.Specification

@@ -1,4 +1,4 @@
-package com.sipios.srql
+package com.sipios.springsearch
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.repository.CrudRepository
