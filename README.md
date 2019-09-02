@@ -139,6 +139,9 @@ Use this space to show useful examples of how a project can be used. Additional 
 1. Using the equal operator `:`
 ![equal operator example](./docs/images/equal-example.gif)
 
+2. Using the not equal operator `!`
+![not equal operator example](./docs/images/not-equal-example.gif)
+
 _For more examples, please refer to the [Documentation](https://example.com)_
 
 
