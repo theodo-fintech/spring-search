@@ -95,13 +95,20 @@ npm install npm@latest -g
  
 1. Clone the repo
 ```sh
-git clone https:://github.com/github_username/repo.git
+git clone https:://github.com/sipios/spring-search.git
 ```
+
 2. Install NPM packages
 ```sh
 npm install
 ```
-3. Add the repo to your project inside your `pom.xml` file
+
+3. Make the library available
+```sh
+mvn install #inside the spring-search folder
+```
+
+4. Add the repo to your project inside your `pom.xml` file
 ```xml
 <dependency>
     <groupId>com.sipios</groupId>
@@ -110,12 +117,12 @@ npm install
 </dependency>
 
 ```
-4. Import the library in your controller
+5. Import the library in your controller
 ```kotlin
 import com.sipios.springsearch.anotation.SearchSpec;
 ```
 
-5. Use it (see [Usage](#usage) for various examples)
+6. Use it (see [Usage](#usage) for various examples)
 ```kotlin
 @GetMapping("someMapping")
 fun yourFunctionNameHere(@SearchSpec specs: Specification<yourModelHere>): ResponseEntity<yourResponse> {
