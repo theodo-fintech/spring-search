@@ -115,8 +115,8 @@ mvn install #inside the spring-search folder
     <artifactId>spring-search</artifactId>
     <version>0.0.4-SNAPSHOT</version>
 </dependency>
-
 ```
+
 5. Import the library in your controller
 ```kotlin
 import com.sipios.springsearch.anotation.SearchSpec;
@@ -141,6 +141,32 @@ Use this space to show useful examples of how a project can be used. Additional 
 
 2. Using the not equal operator `!`
 ![not equal operator example](./docs/images/not-equal-example.gif)
+
+3. Using the greater than operator `>`
+![greater than operator example](./docs/images/greater-than-example.gif)
+
+4. Using the less than operator `<`
+![less than operator example](./docs/images/less-than-example.gif)
+
+5. Using the starts with operator `*`  
+*For the ends with operator, simply place `*` at the beginning of the word*.  
+*For the contains operator, simply place `*` at the beginning and the end of the word*.
+![starts with operator example](./docs/images/starts-with-example.gif)
+
+6. Using the `OR` operator
+![or operator example](./docs/images/or-example.gif)
+
+7. Using the `AND` operator
+![and operator example](./docs/images/and-example.gif)
+
+8. Using parenthesis
+![parenthesis example](./docs/images/parenthesis-example.gif)
+
+9. Using space in nouns
+
+
+10. Using special characters
+
 
 _For more examples, please refer to the [Documentation](https://example.com)_
 

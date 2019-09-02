@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.sipios</groupId>
 	<artifactId>spring-search</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<name>spring-search</name>
 	<description>API for generating spring boot database queries</description>
 
