@@ -61,12 +61,40 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr4-runtime</artifactId>
+			<version>4.7.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>
 		<sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
 		<testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
 		<plugins>
+			<plugin>
+				<groupId>org.antlr</groupId>
+				<artifactId>antlr4-maven-plugin</artifactId>
+				<version>4.7.2</version>
+				<executions>
+					<execution>
+						<id>antlr</id>
+						<goals>
+							<goal>antlr4</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<listener>true</listener>
+					<visitor>true</visitor>
+					<arguments>
+						<argument>-package</argument>
+						<argument>com.sipios.springsearch</argument>
+					</arguments>
+					<outputDirectory>${project.build.directory}/generated-sources/antlr4/com/sipios/springsearch</outputDirectory>
+				</configuration>
+			</plugin>
 			<plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.5.1</version>
@@ -98,5 +126,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

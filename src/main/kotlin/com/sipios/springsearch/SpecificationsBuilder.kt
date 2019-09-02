@@ -1,16 +1,18 @@
 package com.sipios.springsearch
 
 import org.springframework.data.jpa.domain.Specification
-
-import java.util.Collections
-import java.util.Deque
-import java.util.LinkedList
+import javax.persistence.criteria.CriteriaBuilder
+import javax.persistence.criteria.CriteriaQuery
+import javax.persistence.criteria.Predicate
+import javax.persistence.criteria.Root
 
 class SpecificationsBuilder<U> {
-    private var postFixedExprStack: Deque<*>? = null
+
+    private var specs: Specification<U> = NullSPecification()
+    private val parser: CriteriaParser<U> = CriteriaParser()
 
     fun withSearch(search: String): SpecificationsBuilder<U> {
-        postFixedExprStack = parser.parse(search)
+        specs = parser.parse(search)
 
         return this
     }
@@ -22,42 +24,12 @@ class SpecificationsBuilder<U> {
      * @return A list of specification used to filter the underlying object using JPA specifications
      */
     fun build(): Specification<U> {
-        val specStack = LinkedList<Specification<U>>()
-
-        // Reverse the preFixedExpressionStack to make it into a postFixedExprStack
-        // Info on those stacks: https://www.geeksforgeeks.org/stack-set-4-evaluation-postfix-expression/
-        Collections.reverse(postFixedExprStack as List<*>?)
-
-        while (!postFixedExprStack!!.isEmpty()) {
-            val mayBeOperand = postFixedExprStack!!.pop()
-
-            if (mayBeOperand !is String) {
-                // The element in the stack is a comparaison value and not a AND or OR operand
-                specStack.push(SpecificationImpl(mayBeOperand as SearchCriteria))
-            } else {
-                // The element in the stack is either a AND or an OR
-                // Get the two specification that are impacted
-                val operand1 = specStack.pop()
-                val operand2 = specStack.pop()
-
-                // Push the resulting specification
-                if (mayBeOperand.equals(SearchOperation.AND_OPERATOR))
-                    specStack.push(Specification.where(operand1)
-                            .and(operand2))
-                else if (mayBeOperand.equals(SearchOperation.OR_OPERATOR))
-                    specStack.push(Specification.where(operand1)
-                            .or(operand2))
-            }
-
-        }
-
-        // Return the constructed specfication
-        return specStack.pop()
-
+        return specs
     }
+}
 
-    companion object {
-
-        private val parser = CriteriaParser()
+class NullSPecification<T>: Specification<T> {
+    override fun toPredicate(root: Root<T>, query: CriteriaQuery<*>, criteriaBuilder: CriteriaBuilder): Predicate? {
+        return null
     }
 }
