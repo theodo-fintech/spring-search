@@ -6,7 +6,7 @@ package com.sipios.springsearch.anotation
  *
  * This annotation can be used on a parameter in a Spring MVC RestRepository Class
  */
-@Target(AnnotationTarget.TYPE_PARAMETER)
+@Target(AnnotationTarget.VALUE_PARAMETER)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class SearchSpec(
         /**
