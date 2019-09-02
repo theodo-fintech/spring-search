@@ -58,7 +58,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+[![Spring-search screenshot][product-screenshot]](https://example.com)
 
 Spring Search provides a simple query language to perform advanced searches for your JPA entities.
 
@@ -101,7 +101,27 @@ git clone https:://github.com/github_username/repo.git
 ```sh
 npm install
 ```
+3. Add the repo to your project inside your `pom.xml` file
+```xml
+<dependency>
+    <groupId>com.sipios</groupId>
+    <artifactId>spring-search</artifactId>
+    <version>0.0.4-SNAPSHOT</version>
+</dependency>
 
+```
+4. Import the library in your controller
+```kotlin
+import com.sipios.springsearch.anotation.SearchSpec;
+```
+
+5. Use it (see [Usage](#usage) for various examples)
+```kotlin
+@GetMapping("someMapping")
+fun yourFunctionNameHere(@SearchSpec specs: Specification<yourModelHere>): ResponseEntity<yourResponse> {
+    return ResponseEntity(yourRepository.findAll(Specification.where(specs)), HttpStatus.OK)
+}
+```
 
 
 <!-- USAGE EXAMPLES -->
