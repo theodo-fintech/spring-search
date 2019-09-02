@@ -136,6 +136,9 @@ fun yourFunctionNameHere(@SearchSpec specs: Specification<yourModelHere>): Respo
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
+1. Using the equal operator `:`
+[equal operator](./docs/images/equal-example.gif)
+
 _For more examples, please refer to the [Documentation](https://example.com)_
 
 
