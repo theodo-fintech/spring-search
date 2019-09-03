@@ -172,7 +172,7 @@ fun yourFunctionNameHere(@SearchSpec specs: Specification<yourModelHere>): Respo
 ![parenthesis example](./docs/images/parenthesis-example.gif)
 
 9. Using space in nouns
-
+![space example](./docs/images/space-example.gif)
 
 10. Using special characters
 
