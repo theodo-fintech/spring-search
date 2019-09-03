@@ -178,7 +178,7 @@ fun yourFunctionNameHere(@SearchSpec specs: Specification<yourModelHere>): Respo
 ![special characters example](./docs/images/special-characters-example.gif)
 
 11. Using deep fields
-
+![deep field example](./docs/images/deep-field-example.gif)
 
 
 _For more examples, please refer to the [Documentation](https://example.com)_
