@@ -117,24 +117,33 @@ mvn install #inside the spring-search folder
 </dependency>
 ```
 
-5. Import the library in your controller
-```kotlin
-import com.sipios.springsearch.anotation.SearchSpec;
-```
-
-6. Use it (see [Usage](#usage) for various examples)
-```kotlin
-@GetMapping("someMapping")
-fun yourFunctionNameHere(@SearchSpec specs: Specification<yourModelHere>): ResponseEntity<yourResponse> {
-    return ResponseEntity(yourRepository.findAll(Specification.where(specs)), HttpStatus.OK)
-}
-```
-
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+Create a Rest repository extending JpaSpecificationExecutor
+```
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+
+@RepositoryRestResource
+public interface yourRepository extends JpaRepository<yourModel, Integer>, JpaSpecificationExecutor<yourModel> {
+
+}
+```
+
+Import the library in your controller
+```kotlin
+import com.sipios.springsearch.anotation.SearchSpec;
+```
+
+Use it in your controller
+```kotlin
+@GetMapping("searchUrl")
+fun yourFunctionNameHere(@SearchSpec specs: Specification<yourModelHere>): ResponseEntity<yourResponse> {
+    return ResponseEntity(yourRepository.findAll(Specification.where(specs)), HttpStatus.OK)
+}
+```
 
 1. Using the equal operator `:`
 ![equal operator example](./docs/images/equal-example.gif)
