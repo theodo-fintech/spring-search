@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class SpringRestQueryLanguageApplication
+class SpringSearchApplication
 
 fun main() {
-	runApplication<SpringRestQueryLanguageApplication>()
+	runApplication<SpringSearchApplication>()
 }
