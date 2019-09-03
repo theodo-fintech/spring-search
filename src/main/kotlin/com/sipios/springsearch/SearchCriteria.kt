@@ -31,6 +31,6 @@ class SearchCriteria// Change EQUALS into ENDS_WITH, CONTAINS, STARTS_WITH based
             }
         }
         this.operation = op
-        this.value = URLDecoder.decode(value, "UTF-8")
+        this.value = value
     }
 }

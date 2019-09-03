@@ -60,7 +60,7 @@ class SpringSearchApplicationTest {
     fun canGetUserWithFrenchName() {
         val edouardProstId = userRepository.save(Users(userFirstName = "Édouard", userLastName = "Pröst")).userId
 
-        val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:%C3%89douard AND userLastName:Pr%C3%B6st").build()
+        val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:Édouard AND userLastName:Pröst").build()
         Assert.assertEquals(edouardProstId, userRepository.findAll(specification).get(0).userId)
     }
 
@@ -68,7 +68,7 @@ class SpringSearchApplicationTest {
     fun canGetUserWithChineseName() {
         val sunDemingId = userRepository.save(Users(userFirstName = "孫德明")).userId
 
-        val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:%E5%AD%AB%E5%BE%B7%E6%98%8E").build()
+        val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:孫德明").build()
         Assert.assertEquals(sunDemingId, userRepository.findAll(specification).get(0).userId)
     }
 
@@ -82,17 +82,17 @@ class SpringSearchApplicationTest {
 
     @Test
     fun canGetUserWithSpecialCharactersName() {
-        val hackermanId = userRepository.save(Users(userFirstName = "&@#*\"''^^^\$``%=+§()(__hack3rman__")).userId
+        val hackermanId = userRepository.save(Users(userFirstName = "&@#*\"''^^^\$``%=+§__hack3rman__")).userId
 
-        val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:%26%40%23%2A%22%27%27%5E%5E%5E%24%60%60%25%3D%2B%C2%A7%28%29%28__hack3rman__").build()
+        val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:&@#*\"''^^^\$``%=+§__hack3rman__").build()
         Assert.assertEquals(hackermanId, userRepository.findAll(specification).get(0).userId)
     }
 
     @Test
-    fun canGetUserWithSpaceInName() {
+    fun canGetUserWithSpaceInNameWithString() {
         val robertJuniorId = userRepository.save(Users(userFirstName = "robert junior")).userId
 
-        val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:robert%20junior").build()
+        val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:'robert junior'").build()
         Assert.assertEquals(robertJuniorId, userRepository.findAll(specification).get(0).userId)
     }
 
@@ -123,7 +123,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "robot"))
         userRepository.save(Users(userFirstName = "röb*rt"))
 
-        val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:rob%2A*").build()
+        val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:rob**").build()
         val robeUsers = userRepository.findAll(specification)
         Assert.assertTrue(setOf(robertId, robertaId) == robeUsers.map { user -> user.userId }.toSet())
     }
@@ -151,7 +151,35 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "robot"))
         userRepository.save(Users(userFirstName = "röb*rt"))
 
-        val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:*ob%2A*").build()
+        val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:*ob**").build()
+        val specificationUsers = userRepository.findAll(specification)
+        Assert.assertTrue(setOf(robertId, robertaId, lobertaId, tobertaId) == specificationUsers.map { user -> user.userId }.toSet())
+    }
+
+    @Test
+    fun canGetUsersWithPartialNameContainingSpecialCharacterUsingSimpleString() {
+        val robertId = userRepository.save(Users(userFirstName = "Rob*rt")).userId
+        val robertaId = userRepository.save(Users(userFirstName = "rob*rta")).userId
+        val lobertaId = userRepository.save(Users(userFirstName = "Lob*rta")).userId
+        val tobertaId = userRepository.save(Users(userFirstName = "Tob*rta")).userId
+        userRepository.save(Users(userFirstName = "robot"))
+        userRepository.save(Users(userFirstName = "röb*rt"))
+
+        val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:'*ob**'").build()
+        val specificationUsers = userRepository.findAll(specification)
+        Assert.assertTrue(setOf(robertId, robertaId, lobertaId, tobertaId) == specificationUsers.map { user -> user.userId }.toSet())
+    }
+
+    @Test
+    fun canGetUsersWithPartialNameContainingWithSpecialCharacterUsingDoubleString() {
+        val robertId = userRepository.save(Users(userFirstName = "Rob*rt")).userId
+        val robertaId = userRepository.save(Users(userFirstName = "rob*rta")).userId
+        val lobertaId = userRepository.save(Users(userFirstName = "Lob*rta")).userId
+        val tobertaId = userRepository.save(Users(userFirstName = "Tob*rta")).userId
+        userRepository.save(Users(userFirstName = "robot"))
+        userRepository.save(Users(userFirstName = "röb*rt"))
+
+        val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:\"*ob**\"").build()
         val specificationUsers = userRepository.findAll(specification)
         Assert.assertTrue(setOf(robertId, robertaId, lobertaId, tobertaId) == specificationUsers.map { user -> user.userId }.toSet())
     }
@@ -193,7 +221,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "Robèrt")).userId
         userRepository.save(Users(userFirstName = "robèrta")).userId
 
-        val specification = SpecificationsBuilder<Users>().withSearch("userFirstName!*%C3%A8*").build()
+        val specification = SpecificationsBuilder<Users>().withSearch("userFirstName!*è*").build()
         val specificationUsers = userRepository.findAll(specification)
         Assert.assertTrue(setOf(lobertaId, tobertaId, robotId, roobertId) == specificationUsers.map { user -> user.userId }.toSet())
     }
