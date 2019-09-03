@@ -25,10 +25,10 @@
   <p align="center">
     Spring Search provides advanced search capabilities to a JPA entity
     <br />
-    <a href="https://github.com/github_username/repo"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/sipios/spring-search#installation"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/github_username/repo">View Demo</a>
+    <a href="https://github.com/sipios/spring-search#usage">View Demo</a>
     ·
     <a href="https://github.com/sipios/spring-search/issues">Report Bug</a>
     ·
@@ -58,7 +58,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Spring-search screenshot][product-screenshot]](https://example.com)
+[![Spring-search screenshot][product-screenshot]](./docs/images/complete-example)
 
 Spring Search provides a simple query language to perform advanced searches for your JPA entities.
 
@@ -74,8 +74,6 @@ Please note that providing such a feature on your API does not come without risk
 
 * [Kotlin](https://kotlinlang.org/)
 * [Spring Boot](https://spring.io/projects/spring-boot)
-* []()
-
 
 
 <!-- GETTING STARTED -->
@@ -145,39 +143,51 @@ fun yourFunctionNameHere(@SearchSpec specs: Specification<yourModelHere>): Respo
 }
 ```
 
-1. Using the equal operator `:`
+1. Using the equal operator `:`  
+Request : `/cars?search=color:Red`  
 ![equal operator example](./docs/images/equal-example.gif)
 
-2. Using the not equal operator `!`
+2. Using the not equal operator `!`  
+Request : `/cars?search=color!Red`
 ![not equal operator example](./docs/images/not-equal-example.gif)
 
-3. Using the greater than operator `>`
+3. Using the greater than operator `>`  
+Request : `/cars?search=creationyear>2017`  
 ![greater than operator example](./docs/images/greater-than-example.gif)
 
-4. Using the less than operator `<`
+4. Using the less than operator `<`  
+Request : `/cars?search=price<100000`  
 ![less than operator example](./docs/images/less-than-example.gif)
 
 5. Using the starts with operator `*`  
 *For the ends with operator, simply place `*` at the beginning of the word*.  
-*For the contains operator, simply place `*` at the beginning and the end of the word*.
+*For the contains operator, simply place `*` at the beginning and the end of the word*.  
+Request : `/cars?search=brand:Aston*`  
 ![starts with operator example](./docs/images/starts-with-example.gif)
 
-6. Using the `OR` operator
+6. Using the `OR` operator  
+Request : `/cars?search=color:Red OR color:Blue`  
 ![or operator example](./docs/images/or-example.gif)
 
-7. Using the `AND` operator
+7. Using the `AND` operator  
+Request : `/cars?search=brand:Aston* AND price<300000`  
 ![and operator example](./docs/images/and-example.gif)
 
-8. Using parenthesis
+8. Using parenthesis  
+Request : `/cars?search=( brand:Nissan OR brand:Chevrolet ) AND color:Blue`  
+*Note: Space inside parenthesis is not necessary*
 ![parenthesis example](./docs/images/parenthesis-example.gif)
 
-9. Using space in nouns
+9. Using space in nouns  
+Request : `/cars?search=model:'Spacetourer Business Lounge'`  
 ![space example](./docs/images/space-example.gif)
 
-10. Using special characters
+10. Using special characters  
+Request: `/cars?search=model:中华V7`
 ![special characters example](./docs/images/special-characters-example.gif)
 
-11. Using deep fields
+11. Using deep fields  
+Request : `/cars?search=options.transmission:Auto`
 ![deep field example](./docs/images/deep-field-example.gif)
 
 
@@ -190,6 +200,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 See the [open issues](https://github.com/sipios/spring-search/issues) for a list of proposed features (and known issues).
 
+Please note that boolean parameter types isn't yet supported.
 
 
 <!-- CONTRIBUTING -->
@@ -215,7 +226,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@sipios_fintech](https://twitter.com/sipios_fintech) - contact@sipios.com
+[@sipios_fintech](https://twitter.com/sipios_fintech) - contact@sipios.com
 
 Project Link: [https://github.com/sipios/spring-search](https://github.com/sipios/spring-search)
 
@@ -232,4 +243,4 @@ Project Link: [https://github.com/sipios/spring-search](https://github.com/sipio
 [issues-url]: https://github.com/sipios/spring-search/issues
 [license-shield]: https://img.shields.io/github/license/sipios/spring-search.svg?style=flat-square
 [license-url]: https://github.com/sipios/spring-search/blob/master/LICENSE.txt
-[product-screenshot]: images/screenshot.png
+[product-screenshot]: docs/images/complete-example.gif
