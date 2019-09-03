@@ -74,7 +74,7 @@ Please note that providing such a feature on your API does not come without risk
 
 * [Kotlin](https://kotlinlang.org/)
 * [Spring Boot](https://spring.io/projects/spring-boot)
-
+* [ANTLR](https://www.antlr.org/)
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -115,17 +115,16 @@ mvn install #inside the spring-search folder
 </dependency>
 ```
 
-
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Create a Rest repository extending JpaSpecificationExecutor
+Your repository should be annotated as a `RepositoryRestResource` and should extend `JpaSpecificationExecutor`
 ```
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource
-public interface yourRepository extends JpaRepository<yourModel, Integer>, JpaSpecificationExecutor<yourModel> {
+public interface YourRepository extends JpaRepository<YourModel, Integer>, JpaSpecificationExecutor<YourModel> {
 
 }
 ```
@@ -175,7 +174,7 @@ Request : `/cars?search=brand:Aston* AND price<300000`
 
 8. Using parenthesis  
 Request : `/cars?search=( brand:Nissan OR brand:Chevrolet ) AND color:Blue`  
-*Note: Space inside parenthesis is not necessary*
+*Note: Spaces inside the parenthesis are not necessary*
 ![parenthesis example](./docs/images/parenthesis-example.gif)
 
 9. Using space in nouns  
@@ -190,7 +189,7 @@ Request: `/cars?search=model:中华V7`
 Request : `/cars?search=options.transmission:Auto`
 ![deep field example](./docs/images/deep-field-example.gif)
 
-12. Full example  
+12. Complex example  
 Request : `/cars?search=creationyear:2018 AND price<300000 AND (color:Yellow OR color:Blue) AND options.transmission:Auto`
 ![full example](./docs/images/complete-example.gif)
 
@@ -199,7 +198,7 @@ Request : `/cars?search=creationyear:2018 AND price<300000 AND (color:Yellow OR 
 
 See the [open issues](https://github.com/sipios/spring-search/issues) for a list of proposed features (and known issues).
 
-Please note that boolean parameter types isn't yet supported.
+Please note that boolean parameter types are yet to be supported.
 
 
 <!-- CONTRIBUTING -->
