@@ -190,10 +190,9 @@ Request: `/cars?search=model:中华V7`
 Request : `/cars?search=options.transmission:Auto`
 ![deep field example](./docs/images/deep-field-example.gif)
 
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-
+12. Full example  
+Request : `/cars?search=creationyear:2018 AND price<300000 AND (color:Yellow OR color:Blue) AND options.transmission:Auto`
+![full example](./docs/images/complete-example.gif)
 
 <!-- ROADMAP -->
 ## Roadmap
