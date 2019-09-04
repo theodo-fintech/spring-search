@@ -58,7 +58,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Spring-search screenshot][product-screenshot]](./docs/images/complete-example)
+[![Spring-search screenshot][product-screenshot]](./docs/images/complex-example)
 
 Spring Search provides a simple query language to perform advanced searches for your JPA entities.
 
@@ -181,7 +181,7 @@ Request : `/cars?search=options.transmission:Auto`
 
 12. Complex example  
 Request : `/cars?search=creationyear:2018 AND price<300000 AND (color:Yellow OR color:Blue) AND options.transmission:Auto`
-![full example](./docs/images/complete-example.gif)
+![complex example](./docs/images/complex-example.gif)
 
 <!-- ROADMAP -->
 ## Roadmap
@@ -231,4 +231,4 @@ Project Link: [https://github.com/sipios/spring-search](https://github.com/sipio
 [issues-url]: https://github.com/sipios/spring-search/issues
 [license-shield]: https://img.shields.io/github/license/sipios/spring-search.svg?style=flat-square
 [license-url]: https://github.com/sipios/spring-search/blob/master/LICENSE.txt
-[product-screenshot]: docs/images/complete-example.gif
+[product-screenshot]: docs/images/complex-example.gif
