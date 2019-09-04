@@ -102,7 +102,7 @@ cd spring-search && mvn install
 <dependency>
     <groupId>com.sipios</groupId>
     <artifactId>spring-search</artifactId>
-    <version>0.0.4-SNAPSHOT</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
