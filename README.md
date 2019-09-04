@@ -79,25 +79,12 @@ Please note that providing such a feature on your API does not come without risk
 <!-- GETTING STARTED -->
 ## Getting Started
 
+**Requirements** : JDK 8 or more.  
 To get a local copy up and running follow these simple steps.
 
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-```sh
-npm install npm@latest -g
-```
-
 ### Installation
- 
-1. Clone the repo and make it available
-```sh
-git clone https:://github.com/sipios/spring-search.git;
-cd spring-search && mvn install
-```
 
-2. Add the repo to your project inside your `pom.xml` file
+Add the repo to your project inside your `pom.xml` file
 ```xml
 <dependency>
     <groupId>com.sipios</groupId>
@@ -127,7 +114,7 @@ import com.sipios.springsearch.anotation.SearchSpec
 Use it in your controller
 ```kotlin
 @GetMapping("searchUrl")
-fun yourFunctionNameHere(@SearchSpec specs: Specification<YourModel>): ResponseEntity<YourResponse> {
+fun yourFunctionNameHere(@SearchSpec specs: Specification<YourModel>): ResponseEntity<List<YourResponse>> {
     return ResponseEntity(yourRepository.findAll(Specification.where(specs)), HttpStatus.OK)
 }
 ```
