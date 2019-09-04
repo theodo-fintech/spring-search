@@ -91,22 +91,13 @@ npm install npm@latest -g
 
 ### Installation
  
-1. Clone the repo
+1. Clone the repo and make it available
 ```sh
-git clone https:://github.com/sipios/spring-search.git
+git clone https:://github.com/sipios/spring-search.git;
+cd spring-search && mvn install
 ```
 
-2. Install NPM packages
-```sh
-npm install
-```
-
-3. Make the library available
-```sh
-mvn install #inside the spring-search folder
-```
-
-4. Add the repo to your project inside your `pom.xml` file
+2. Add the repo to your project inside your `pom.xml` file
 ```xml
 <dependency>
     <groupId>com.sipios</groupId>
@@ -119,25 +110,24 @@ mvn install #inside the spring-search folder
 ## Usage
 
 Your repository should be annotated as a `RepositoryRestResource` and should extend `JpaSpecificationExecutor`
-```
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+```kotlin
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor
+import org.springframework.data.rest.core.annotation.RepositoryRestResource
 
 @RepositoryRestResource
-public interface YourRepository extends JpaRepository<YourModel, Integer>, JpaSpecificationExecutor<YourModel> {
-
-}
+interface YourRepository : JpaRepository<YourModel, Int>, JpaSpecificationExecutor<YourModel>
 ```
 
 Import the library in your controller
 ```kotlin
-import com.sipios.springsearch.anotation.SearchSpec;
+import com.sipios.springsearch.anotation.SearchSpec
 ```
 
 Use it in your controller
 ```kotlin
 @GetMapping("searchUrl")
-fun yourFunctionNameHere(@SearchSpec specs: Specification<yourModelHere>): ResponseEntity<yourResponse> {
+fun yourFunctionNameHere(@SearchSpec specs: Specification<YourModel>): ResponseEntity<YourResponse> {
     return ResponseEntity(yourRepository.findAll(Specification.where(specs)), HttpStatus.OK)
 }
 ```
