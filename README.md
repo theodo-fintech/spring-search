@@ -83,6 +83,7 @@ Please note that providing such a feature on your API does not come without risk
 To get a local copy up and running follow these simple steps.
 
 ### Installation
+##### Maven
 
 Add the repo to your project inside your `pom.xml` file
 ```xml
@@ -92,6 +93,9 @@ Add the repo to your project inside your `pom.xml` file
     <version>0.2.0</version>
 </dependency>
 ```
+
+##### Gradle
+Add the repo to your project by adding `mavenLocal()` to `repositories` and `implementation 'com.sipios:spring-search:0.2.0'` to  `dependencies` in your `build.gradle` file.
 
 <!-- USAGE EXAMPLES -->
 ## Usage
