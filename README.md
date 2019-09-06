@@ -95,7 +95,7 @@ Add the repo to your project inside your `pom.xml` file
 ```
 
 ##### Gradle
-Add the repo to your project by adding `mavenLocal()` to `repositories` and `implementation 'com.sipios:spring-search:0.2.0'` to  `dependencies` in your `build.gradle` file.
+Add the repo to your project by adding `implementation 'com.sipios:spring-search:0.2.0'` in your `build.gradle` file.
 
 <!-- USAGE EXAMPLES -->
 ## Usage
