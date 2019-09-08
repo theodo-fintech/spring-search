@@ -1,22 +1,23 @@
 package com.sipios.springsearch
 
-import com.fasterxml.jackson.databind.util.StdDateFormat
-import com.sipios.springsearch.strategies.*
-import org.springframework.data.jpa.domain.Specification
-import org.springframework.format.datetime.DateFormatter
-import org.springframework.http.HttpStatus
-import org.springframework.web.client.HttpStatusCodeException
-import org.springframework.web.server.ResponseStatusException
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.*
-
+import com.sipios.springsearch.strategies.BooleanStrategy
+import com.sipios.springsearch.strategies.DateStrategy
+import com.sipios.springsearch.strategies.DoubleStrategy
+import com.sipios.springsearch.strategies.FloatStrategy
+import com.sipios.springsearch.strategies.IntStrategy
+import com.sipios.springsearch.strategies.ParsingStrategy
+import com.sipios.springsearch.strategies.StringStrategy
+import java.util.ArrayList
+import java.util.Date
 import javax.persistence.criteria.CriteriaBuilder
 import javax.persistence.criteria.CriteriaQuery
 import javax.persistence.criteria.Path
 import javax.persistence.criteria.Predicate
 import javax.persistence.criteria.Root
 import kotlin.reflect.KClass
+import org.springframework.data.jpa.domain.Specification
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 
 /**
  * Implementation of the JPA Specification based on a Search Criteria
@@ -33,11 +34,14 @@ class SpecificationImpl<T>(private val criteria: SearchCriteria) : Specification
         val criteriaKey = nestedKey[nestedKey.size - 1]
         val fieldClass = nestedRoot.get<Any>(criteriaKey).javaType.kotlin
         val strategy = getStrategy(fieldClass)
-        var value: Any?
+        val value: Any?
         try {
-             value = strategy.parse(criteria.value, fieldClass)
+            value = strategy.parse(criteria.value, fieldClass)
         } catch (e: Exception) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not parse input for the field $criteriaKey as a ${fieldClass.simpleName}")
+            throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Could not parse input for the field $criteriaKey as a ${fieldClass.simpleName}"
+            )
         }
 
         return strategy.buildPredicate(builder, nestedRoot, criteriaKey, criteria.operation, value)
@@ -45,10 +49,10 @@ class SpecificationImpl<T>(private val criteria: SearchCriteria) : Specification
 
     private fun getStrategy(fieldClass: KClass<out Any>): ParsingStrategy {
         return when (fieldClass) {
-            Boolean::class-> BooleanStrategy()
+            Boolean::class -> BooleanStrategy()
             Double::class -> DoubleStrategy()
             Float::class -> FloatStrategy()
-            Int::class-> IntStrategy()
+            Int::class -> IntStrategy()
             Date::class -> DateStrategy()
             else -> StringStrategy()
         }

@@ -6,8 +6,14 @@ import javax.persistence.criteria.Path
 import javax.persistence.criteria.Predicate
 import kotlin.reflect.KClass
 
-class IntStrategy: ParsingStrategy {
-    override fun buildPredicate(builder: CriteriaBuilder, path: Path<*>, fieldName: String, ops: SearchOperation?, value: Any?): Predicate? {
+class IntStrategy : ParsingStrategy {
+    override fun buildPredicate(
+        builder: CriteriaBuilder,
+        path: Path<*>,
+        fieldName: String,
+        ops: SearchOperation?,
+        value: Any?
+    ): Predicate? {
         return when (ops) {
             SearchOperation.GREATER_THAN -> builder.greaterThan(path.get<Int>(fieldName), value as Int)
             SearchOperation.LESS_THAN -> builder.lessThan(path.get<Int>(fieldName), value as Int)

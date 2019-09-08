@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class SpringSearchApplication
 
 fun main() {
-	runApplication<SpringSearchApplication>()
+    runApplication<SpringSearchApplication>()
 }

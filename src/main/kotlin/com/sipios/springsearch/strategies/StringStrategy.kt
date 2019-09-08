@@ -1,3 +1,3 @@
 package com.sipios.springsearch.strategies
 
-class StringStrategy: ParsingStrategy
+class StringStrategy : ParsingStrategy
