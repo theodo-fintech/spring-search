@@ -12,7 +12,6 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
 
 class SearchSpecificationResolver : HandlerMethodArgumentResolver {
-
     /**
      * Check if the method parameter is a Specification with the @SearchSpec annotation
      *
@@ -31,8 +30,14 @@ class SearchSpecificationResolver : HandlerMethodArgumentResolver {
      * @return True if it is the case
      */
     @Throws(Exception::class)
-    override fun resolveArgument(@NonNull parameter: MethodParameter, mavContainer: ModelAndViewContainer?, webRequest: NativeWebRequest, binderFactory: WebDataBinderFactory?): Specification<*>? {
+    override fun resolveArgument(
+        @NonNull parameter: MethodParameter,
+        mavContainer: ModelAndViewContainer?,
+        webRequest: NativeWebRequest,
+        binderFactory: WebDataBinderFactory?
+    ): Specification<*>? {
         val def = parameter.getParameterAnnotation(SearchSpec::class.java)
+
         return buildSpecification(parameter.genericParameterType.javaClass, webRequest.getParameter(def!!.searchParam))
     }
 
@@ -43,11 +48,11 @@ class SearchSpecificationResolver : HandlerMethodArgumentResolver {
             return null
         }
         val specBuilder = SpecificationsBuilder<T>()
+
         return specBuilder.withSearch(search).build()
     }
 
     companion object {
-
         private val logger = LoggerFactory.getLogger(SearchSpecificationResolver::class.java)
     }
 }
