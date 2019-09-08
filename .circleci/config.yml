@@ -1,4 +1,7 @@
-version: 2
+version: 2.1
+orbs:
+  codecov: codecov/codecov@1.0.2
+
 jobs:
   test:
     environment:
@@ -18,8 +21,28 @@ jobs:
             - ~/.m2
           key: spring-search-{{ checksum "pom.xml" }}
       - run: mvn test
+      - store_artifacts:
+          path:  ~/project/target/test-results
+      - persist_to_workspace:
+          root: ~/project/target
+          paths:
+            - test-results
+  upload_cov:
+    docker:
+      - image: circleci/node:9.6.1
+    steps:
+      - attach_workspace:
+          at: ~/project/target
+      - codecov/upload:
+          file: ~/project/target/test-results/coverage/jacoco/jacoco.xml
+          flags: coverage
+          upload_name: Coverage
+
 workflows:
   version: 2
   test:
     jobs:
       - test
+      - upload_cov:
+          requires:
+            - test
