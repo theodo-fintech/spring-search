@@ -1,13 +1,22 @@
 package com.sipios.springsearch
 
+import com.fasterxml.jackson.databind.util.StdDateFormat
+import com.sipios.springsearch.strategies.*
 import org.springframework.data.jpa.domain.Specification
+import org.springframework.format.datetime.DateFormatter
+import org.springframework.http.HttpStatus
+import org.springframework.web.client.HttpStatusCodeException
+import org.springframework.web.server.ResponseStatusException
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 import javax.persistence.criteria.CriteriaBuilder
 import javax.persistence.criteria.CriteriaQuery
 import javax.persistence.criteria.Path
 import javax.persistence.criteria.Predicate
 import javax.persistence.criteria.Root
-import java.util.ArrayList
+import kotlin.reflect.KClass
 
 /**
  * Implementation of the JPA Specification based on a Search Criteria
@@ -17,23 +26,31 @@ import java.util.ArrayList
  * @param <T> THe class on which the specification will be applied
 </T> */
 class SpecificationImpl<T>(private val criteria: SearchCriteria) : Specification<T> {
+    @Throws(ResponseStatusException::class)
     override fun toPredicate(root: Root<T>, query: CriteriaQuery<*>, builder: CriteriaBuilder): Predicate? {
         val nestedKey = criteria.key.split(".")
         val nestedRoot = getNestedRoot(root, nestedKey)
         val criteriaKey = nestedKey[nestedKey.size - 1]
+        val fieldClass = nestedRoot.get<Any>(criteriaKey).javaType.kotlin
+        val strategy = getStrategy(fieldClass)
+        var value: Any?
+        try {
+             value = strategy.parse(criteria.value, fieldClass)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not parse input for the field $criteriaKey as a ${fieldClass.simpleName}")
+        }
 
-        when (criteria.operation) {
-            SearchOperation.EQUALS -> return builder.equal(nestedRoot.get<String>(criteriaKey), criteria.value)
-            SearchOperation.NOT_EQUALS -> return builder.notEqual(nestedRoot.get<String>(criteriaKey), criteria.value)
-            SearchOperation.GREATER_THAN -> return builder.greaterThan(nestedRoot.get<Double>(criteriaKey), criteria.value!!.toDouble())
-            SearchOperation.LESS_THAN -> return builder.lessThan(nestedRoot.get<Double>(criteriaKey), criteria.value!!.toDouble())
-            SearchOperation.STARTS_WITH -> return builder.like(nestedRoot.get(criteriaKey), criteria.value + "%")
-            SearchOperation.ENDS_WITH -> return builder.like(nestedRoot.get(criteriaKey), "%" + criteria.value)
-            SearchOperation.CONTAINS -> return builder.like(builder.lower(nestedRoot.get<String>(criteriaKey).`as`(String::class.java)), "%" + criteria.value + "%")
-            SearchOperation.DOESNT_START_WITH -> return builder.notLike(nestedRoot.get(criteriaKey), criteria.value + "%")
-            SearchOperation.DOESNT_END_WITH -> return builder.notLike(nestedRoot.get(criteriaKey), "%" + criteria.value)
-            SearchOperation.DOESNT_CONTAIN -> return builder.notLike(builder.lower(nestedRoot.get<String>(criteriaKey).`as`(String::class.java)), "%" + criteria.value + "%")
-            else -> return null
+        return strategy.buildPredicate(builder, nestedRoot, criteriaKey, criteria.operation, value)
+    }
+
+    private fun getStrategy(fieldClass: KClass<out Any>): ParsingStrategy {
+        return when (fieldClass) {
+            Boolean::class-> BooleanStrategy()
+            Double::class -> DoubleStrategy()
+            Float::class -> FloatStrategy()
+            Int::class-> IntStrategy()
+            Date::class -> DateStrategy()
+            else -> StringStrategy()
         }
     }
 

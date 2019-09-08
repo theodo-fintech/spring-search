@@ -1,5 +1,6 @@
 package com.sipios.springsearch
 
+import java.util.*
 import javax.persistence.*
 
 @Entity
@@ -11,6 +12,9 @@ data class Users(
 
         @Column(name = "FirstName")
         var userFirstName: String = "John",
+
+        @Column(name = "isAdmin")
+        var isAdmin: Boolean = true,
 
         @Column(name = "LastName")
         var userLastName: String = "Doe",
@@ -28,6 +32,8 @@ data class Users(
         var userSalary: Float = 3000.0F,
 
         @Column(name = "AgeInSeconds")
-        var userAgeInSeconds: Double = 1261440000.0
+        var userAgeInSeconds: Double = 1261440000.0,
 
-) { }
+        @Column
+        var createdAt: Date = Date()
+)
