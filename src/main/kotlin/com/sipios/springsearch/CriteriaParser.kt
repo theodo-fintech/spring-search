@@ -1,5 +1,7 @@
 package com.sipios.springsearch
 
+import com.sipios.springsearch.grammar.QueryLexer
+import com.sipios.springsearch.grammar.QueryParser
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.springframework.data.jpa.domain.Specification
