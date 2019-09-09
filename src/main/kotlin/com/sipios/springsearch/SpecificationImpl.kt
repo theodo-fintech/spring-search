@@ -1,20 +1,12 @@
 package com.sipios.springsearch
 
-import com.sipios.springsearch.strategies.BooleanStrategy
-import com.sipios.springsearch.strategies.DateStrategy
-import com.sipios.springsearch.strategies.DoubleStrategy
-import com.sipios.springsearch.strategies.FloatStrategy
-import com.sipios.springsearch.strategies.IntStrategy
 import com.sipios.springsearch.strategies.ParsingStrategy
-import com.sipios.springsearch.strategies.StringStrategy
 import java.util.ArrayList
-import java.util.Date
 import javax.persistence.criteria.CriteriaBuilder
 import javax.persistence.criteria.CriteriaQuery
 import javax.persistence.criteria.Path
 import javax.persistence.criteria.Predicate
 import javax.persistence.criteria.Root
-import kotlin.reflect.KClass
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -33,7 +25,7 @@ class SpecificationImpl<T>(private val criteria: SearchCriteria) : Specification
         val nestedRoot = getNestedRoot(root, nestedKey)
         val criteriaKey = nestedKey[nestedKey.size - 1]
         val fieldClass = nestedRoot.get<Any>(criteriaKey).javaType.kotlin
-        val strategy = getStrategy(fieldClass)
+        val strategy = ParsingStrategy.getStrategy(fieldClass)
         val value: Any?
         try {
             value = strategy.parse(criteria.value, fieldClass)
@@ -45,17 +37,6 @@ class SpecificationImpl<T>(private val criteria: SearchCriteria) : Specification
         }
 
         return strategy.buildPredicate(builder, nestedRoot, criteriaKey, criteria.operation, value)
-    }
-
-    private fun getStrategy(fieldClass: KClass<out Any>): ParsingStrategy {
-        return when (fieldClass) {
-            Boolean::class -> BooleanStrategy()
-            Double::class -> DoubleStrategy()
-            Float::class -> FloatStrategy()
-            Int::class -> IntStrategy()
-            Date::class -> DateStrategy()
-            else -> StringStrategy()
-        }
     }
 
     private fun getNestedRoot(root: Root<T>, nestedKey: List<String>): Path<*> {
