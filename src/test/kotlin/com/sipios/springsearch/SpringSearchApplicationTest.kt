@@ -1,19 +1,18 @@
 package com.sipios.springsearch
 
+import com.fasterxml.jackson.databind.util.StdDateFormat
 import org.junit.Assert
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
-import org.junit.runner.RunWith
 import org.springframework.transaction.annotation.Transactional
-
 
 @RunWith(SpringRunner::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = [SpringSearchApplication::class])
 @Transactional
 class SpringSearchApplicationTest {
-
     @Autowired
     lateinit var userRepository: UsersRepository
 
@@ -347,5 +346,52 @@ class SpringSearchApplicationTest {
         val specification = SpecificationsBuilder<Users>().withSearch("userSalary<1502 AND ((userLastName:One OR userLastName:one) OR userLastName!*n*)").build()
         val specificationUsers = userRepository.findAll(specification)
         Assert.assertTrue(setOf(userOneWithSmallerSalaryId, userOeId) == specificationUsers.map { user -> user.userId }.toSet())
+    }
+
+    @Test
+    fun canGetUsersByBoolean() {
+        userRepository.save(Users(isAdmin = true))
+        userRepository.save(Users(isAdmin = false))
+
+        val specification = SpecificationsBuilder<Users>().withSearch("isAdmin:true").build()
+        val specificationUsers = userRepository.findAll(specification)
+        Assert.assertEquals(1, specificationUsers.size)
+    }
+
+    @Test
+    fun canGetUsersEarlierThanDate() {
+        val sdf = StdDateFormat()
+        userRepository.save(Users(createdAt = sdf.parse("2019-01-01")))
+        userRepository.save(Users(createdAt = sdf.parse("2019-01-03")))
+
+        val specification = SpecificationsBuilder<Users>().withSearch("createdAt<'2019-01-02'").build()
+        val specificationUsers = userRepository.findAll(specification)
+        Assert.assertEquals(1, specificationUsers.size)
+    }
+
+    @Test
+    fun canGetUsersAfterDate() {
+        val sdf = StdDateFormat()
+        userRepository.save(Users(createdAt = sdf.parse("2019-01-01")))
+        userRepository.save(Users(createdAt = sdf.parse("2019-01-03")))
+
+        var specification = SpecificationsBuilder<Users>().withSearch("createdAt>'2019-01-02'").build()
+        var specificationUsers = userRepository.findAll(specification)
+        Assert.assertEquals(1, specificationUsers.size)
+
+        specification = SpecificationsBuilder<Users>().withSearch("createdAt>'2019-01-04'").build()
+        specificationUsers = userRepository.findAll(specification)
+        Assert.assertEquals(0, specificationUsers.size)
+    }
+
+    @Test
+    fun canGetUsersAtPreciseDate() {
+        val sdf = StdDateFormat()
+        val date = sdf.parse("2019-01-01")
+        userRepository.save(Users(createdAt = date))
+
+        val specification = SpecificationsBuilder<Users>().withSearch("createdAt:'${sdf.format(date)}'").build()
+        val specificationUsers = userRepository.findAll(specification)
+        Assert.assertEquals(1, specificationUsers.size)
     }
 }

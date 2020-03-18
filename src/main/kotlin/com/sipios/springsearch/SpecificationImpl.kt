@@ -1,13 +1,15 @@
 package com.sipios.springsearch
 
-import org.springframework.data.jpa.domain.Specification
-
+import com.sipios.springsearch.strategies.ParsingStrategy
+import java.util.ArrayList
 import javax.persistence.criteria.CriteriaBuilder
 import javax.persistence.criteria.CriteriaQuery
 import javax.persistence.criteria.Path
 import javax.persistence.criteria.Predicate
 import javax.persistence.criteria.Root
-import java.util.ArrayList
+import org.springframework.data.jpa.domain.Specification
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 
 /**
  * Implementation of the JPA Specification based on a Search Criteria
@@ -17,24 +19,24 @@ import java.util.ArrayList
  * @param <T> THe class on which the specification will be applied
 </T> */
 class SpecificationImpl<T>(private val criteria: SearchCriteria) : Specification<T> {
+    @Throws(ResponseStatusException::class)
     override fun toPredicate(root: Root<T>, query: CriteriaQuery<*>, builder: CriteriaBuilder): Predicate? {
         val nestedKey = criteria.key.split(".")
         val nestedRoot = getNestedRoot(root, nestedKey)
         val criteriaKey = nestedKey[nestedKey.size - 1]
-
-        when (criteria.operation) {
-            SearchOperation.EQUALS -> return builder.equal(nestedRoot.get<String>(criteriaKey), criteria.value)
-            SearchOperation.NOT_EQUALS -> return builder.notEqual(nestedRoot.get<String>(criteriaKey), criteria.value)
-            SearchOperation.GREATER_THAN -> return builder.greaterThan(nestedRoot.get<Double>(criteriaKey), criteria.value!!.toDouble())
-            SearchOperation.LESS_THAN -> return builder.lessThan(nestedRoot.get<Double>(criteriaKey), criteria.value!!.toDouble())
-            SearchOperation.STARTS_WITH -> return builder.like(nestedRoot.get(criteriaKey), criteria.value + "%")
-            SearchOperation.ENDS_WITH -> return builder.like(nestedRoot.get(criteriaKey), "%" + criteria.value)
-            SearchOperation.CONTAINS -> return builder.like(builder.lower(nestedRoot.get<String>(criteriaKey).`as`(String::class.java)), "%" + criteria.value + "%")
-            SearchOperation.DOESNT_START_WITH -> return builder.notLike(nestedRoot.get(criteriaKey), criteria.value + "%")
-            SearchOperation.DOESNT_END_WITH -> return builder.notLike(nestedRoot.get(criteriaKey), "%" + criteria.value)
-            SearchOperation.DOESNT_CONTAIN -> return builder.notLike(builder.lower(nestedRoot.get<String>(criteriaKey).`as`(String::class.java)), "%" + criteria.value + "%")
-            else -> return null
+        val fieldClass = nestedRoot.get<Any>(criteriaKey).javaType.kotlin
+        val strategy = ParsingStrategy.getStrategy(fieldClass)
+        val value: Any?
+        try {
+            value = strategy.parse(criteria.value, fieldClass)
+        } catch (e: Exception) {
+            throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Could not parse input for the field $criteriaKey as a ${fieldClass.simpleName}"
+            )
         }
+
+        return strategy.buildPredicate(builder, nestedRoot, criteriaKey, criteria.operation, value)
     }
 
     private fun getNestedRoot(root: Root<T>, nestedKey: List<String>): Path<*> {

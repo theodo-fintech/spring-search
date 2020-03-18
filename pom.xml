@@ -16,6 +16,10 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<kotlin.version>1.2.71</kotlin.version>
+		<grammar.package>com.sipios.springsearch.grammar</grammar.package>
+		<grammar.directory>com/sipios/springsearch/grammar</grammar.directory>
+		<jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
+		<project.testresult.directory>${project.build.directory}/test-results</project.testresult.directory>
 	</properties>
 
 	<dependencies>
@@ -89,9 +93,9 @@
 					<visitor>true</visitor>
 					<arguments>
 						<argument>-package</argument>
-						<argument>com.sipios.springsearch</argument>
+						<argument>${grammar.package}</argument>
 					</arguments>
-					<outputDirectory>${project.build.directory}/generated-sources/antlr4/com/sipios/springsearch</outputDirectory>
+					<outputDirectory>${project.build.directory}/generated-sources/antlr4/${grammar.directory}</outputDirectory>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -131,6 +135,109 @@
 					<releaseProfiles>release</releaseProfiles>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>ktlint</id>
+						<phase>compile</phase>
+						<configuration>
+							<target name="ktlint">
+								<java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true"
+									  classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
+									<arg value="src/**/*.kt"/>
+								</java>
+							</target>
+						</configuration>
+						<goals><goal>run</goal></goals>
+					</execution>
+					<execution>
+						<id>ktlint-format</id>
+						<configuration>
+							<target name="ktlint">
+								<java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true"
+									  classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
+									<arg value="-F"/>
+									<arg value="src/**/*.kt"/>
+								</java>
+							</target>
+						</configuration>
+						<goals><goal>run</goal></goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>com.pinterest</groupId>
+						<artifactId>ktlint</artifactId>
+						<version>0.34.2</version>
+					</dependency>
+					<!-- additional 3rd party ruleset(s) can be specified here -->
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco-maven-plugin.version}</version>
+				<configuration>
+					<excludes>
+						<exclude>${grammar.directory}/**/*</exclude>
+						<exclude>com/sipios/springsearch/configuration/**/*</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>pre-unit-tests</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+						<configuration>
+							<!-- Sets the path to the file which contains the execution data. -->
+							<destFile>${project.testresult.directory}/coverage/jacoco/jacoco.exec</destFile>
+						</configuration>
+					</execution>
+					<!-- Ensures that the code coverage report for unit tests is created after unit tests have been run -->
+					<execution>
+						<id>post-unit-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<dataFile>${project.testresult.directory}/coverage/jacoco/jacoco.exec</dataFile>
+							<outputDirectory>${project.testresult.directory}/coverage/jacoco</outputDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>jacoco-check</id>
+						<phase>test</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<dataFile>${project.testresult.directory}/coverage/jacoco/jacoco.exec</dataFile>
+							<rules>
+								<rule implementation="org.jacoco.maven.RuleConfiguration">
+									<element>BUNDLE</element>
+									<limits>
+										<limit implementation="org.jacoco.report.check.Limit">
+											<counter>INSTRUCTION</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.80</minimum>
+										</limit>
+										<limit implementation="org.jacoco.report.check.Limit">
+											<counter>BRANCH</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.75</minimum>
+										</limit>
+									</limits>
+								</rule>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
