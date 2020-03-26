@@ -24,13 +24,16 @@ interface ParsingStrategy {
             SearchOperation.NOT_EQUALS -> builder.notEqual(path.get<Any>(fieldName), value)
             SearchOperation.STARTS_WITH -> builder.like(path.get(fieldName), "$value%")
             SearchOperation.ENDS_WITH -> builder.like(path.get(fieldName), "%$value")
-            SearchOperation.CONTAINS -> builder.like((path.get<String>(fieldName).`as`(String::class.java)), "%$value%")
+            SearchOperation.CONTAINS -> {
+                val lower = (value as String).decapitalize()
+                builder.like(builder.lower(path.get<String>(fieldName).`as`(String::class.java)), "%$lower%")
+            }
             SearchOperation.DOESNT_START_WITH -> builder.notLike(path.get(fieldName), "$value%")
             SearchOperation.DOESNT_END_WITH -> builder.notLike(path.get(fieldName), "%$value")
-            SearchOperation.DOESNT_CONTAIN -> builder.notLike(
-                (path.get<String>(fieldName).`as`(String::class.java)),
-                "%$value%"
-            )
+            SearchOperation.DOESNT_CONTAIN -> {
+                val lower = (value as String).decapitalize()
+                builder.notLike(builder.lower(path.get<String>(fieldName).`as`(String::class.java)), "%$lower%")
+            }
             else -> null
         }
     }
