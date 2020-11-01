@@ -71,7 +71,7 @@ class SpecificationImpl<T>(private val criteria: SearchCriteria) : Specification
         if (javaType == java.sql.Date::class.java || javaType == java.util.Date::class.java) {
             return when (criteria.operation) {
                 SearchOperation.EQUALS -> builder.equal(nestedRoot.get<Date>(criteriaKey), Date(criteria.value!!.toLong()))
-                SearchOperation.NOT_EQUALS -> builder.equal(nestedRoot.get<Date>(criteriaKey), Date(criteria.value!!.toLong()))
+                SearchOperation.NOT_EQUALS -> builder.notEqual(nestedRoot.get<Date>(criteriaKey), Date(criteria.value!!.toLong()))
                 SearchOperation.GREATER_THAN -> builder.greaterThan(nestedRoot.get<Date>(criteriaKey), Date(criteria.value!!.toLong()))
                 SearchOperation.LESS_THAN -> builder.lessThan(nestedRoot.get<Date>(criteriaKey), Date(criteria.value!!.toLong()))
                 else -> null
@@ -81,7 +81,7 @@ class SpecificationImpl<T>(private val criteria: SearchCriteria) : Specification
         if (javaType == java.lang.Boolean::class.java) {
             return when (criteria.operation) {
                 SearchOperation.EQUALS -> builder.equal(nestedRoot.get<Boolean>(criteriaKey), criteria.value!!.toBoolean())
-                SearchOperation.NOT_EQUALS -> builder.equal(nestedRoot.get<Boolean>(criteriaKey), criteria.value!!.toBoolean())
+                SearchOperation.NOT_EQUALS -> builder.notEqual(nestedRoot.get<Boolean>(criteriaKey), criteria.value!!.toBoolean())
                 else -> null
             }
         }
