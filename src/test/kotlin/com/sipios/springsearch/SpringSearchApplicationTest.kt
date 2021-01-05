@@ -1,15 +1,12 @@
 package com.sipios.springsearch
 
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.junit4.SpringRunner
-import org.junit.runner.RunWith
 import org.springframework.transaction.annotation.Transactional
 
 
-@RunWith(SpringRunner::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = [SpringSearchApplication::class])
 @Transactional
 class SpringSearchApplicationTest {
@@ -24,7 +21,7 @@ class SpringSearchApplicationTest {
     fun canAddUsers() {
         userRepository.save(Users())
 
-        Assert.assertEquals(1, userRepository.findAll().count())
+        Assertions.assertEquals(1, userRepository.findAll().count())
     }
 
     @Test
@@ -33,7 +30,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users())
 
         val specification = SpecificationsBuilder<Users>().withSearch("userId:$userId").build()
-        Assert.assertEquals(userId, userRepository.findAll(specification).get(0).userId)
+        Assertions.assertEquals(userId, userRepository.findAll(specification).get(0).userId)
     }
 
     @Test
@@ -42,7 +39,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "Bob"))
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:Alice").build()
-        Assert.assertEquals(aliceId, userRepository.findAll(specification).get(0).userId)
+        Assertions.assertEquals(aliceId, userRepository.findAll(specification).get(0).userId)
     }
 
     @Test
@@ -53,7 +50,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "Bob", userLastName = "Two"))
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:Alice AND userLastName:One").build()
-        Assert.assertEquals(aliceId, userRepository.findAll(specification).get(0).userId)
+        Assertions.assertEquals(aliceId, userRepository.findAll(specification).get(0).userId)
     }
 
     @Test
@@ -61,7 +58,7 @@ class SpringSearchApplicationTest {
         val edouardProstId = userRepository.save(Users(userFirstName = "Édouard", userLastName = "Pröst")).userId
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:Édouard AND userLastName:Pröst").build()
-        Assert.assertEquals(edouardProstId, userRepository.findAll(specification).get(0).userId)
+        Assertions.assertEquals(edouardProstId, userRepository.findAll(specification).get(0).userId)
     }
 
     @Test
@@ -69,7 +66,7 @@ class SpringSearchApplicationTest {
         val sunDemingId = userRepository.save(Users(userFirstName = "孫德明")).userId
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:孫德明").build()
-        Assert.assertEquals(sunDemingId, userRepository.findAll(specification).get(0).userId)
+        Assertions.assertEquals(sunDemingId, userRepository.findAll(specification).get(0).userId)
     }
 
     @Test
@@ -77,7 +74,7 @@ class SpringSearchApplicationTest {
         val sunDemingId = userRepository.save(Users(userFirstName = "孫德明")).userId
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:孫德明").build()
-        Assert.assertEquals(sunDemingId, userRepository.findAll(specification).get(0).userId)
+        Assertions.assertEquals(sunDemingId, userRepository.findAll(specification).get(0).userId)
     }
 
     @Test
@@ -85,7 +82,7 @@ class SpringSearchApplicationTest {
         val hackermanId = userRepository.save(Users(userFirstName = "&@#*\"''^^^\$``%=+§__hack3rman__")).userId
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:&@#*\"''^^^\$``%=+§__hack3rman__").build()
-        Assert.assertEquals(hackermanId, userRepository.findAll(specification).get(0).userId)
+        Assertions.assertEquals(hackermanId, userRepository.findAll(specification).get(0).userId)
     }
 
     @Test
@@ -93,7 +90,7 @@ class SpringSearchApplicationTest {
         val robertJuniorId = userRepository.save(Users(userFirstName = "robert junior")).userId
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:'robert junior'").build()
-        Assert.assertEquals(robertJuniorId, userRepository.findAll(specification).get(0).userId)
+        Assertions.assertEquals(robertJuniorId, userRepository.findAll(specification).get(0).userId)
     }
 
     @Test
@@ -105,7 +102,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:robe*").build()
         val robeUsers = userRepository.findAll(specification)
-        Assert.assertTrue(setOf(robertId, robertaId) == robeUsers.map { user -> user.userId }.toSet())
+        Assertions.assertTrue(setOf(robertId, robertaId) == robeUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
@@ -117,7 +114,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:rob**").build()
         val robeUsers = userRepository.findAll(specification)
-        Assert.assertTrue(setOf(robertId, robertaId) == robeUsers.map { user -> user.userId }.toSet())
+        Assertions.assertTrue(setOf(robertId, robertaId) == robeUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
@@ -131,7 +128,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:*obe*").build()
         val specificationUsers = userRepository.findAll(specification)
-        Assert.assertTrue(setOf(robertId, robertaId, toborobeId, obertaId) == specificationUsers.map { user -> user.userId }.toSet())
+        Assertions.assertTrue(setOf(robertId, robertaId, toborobeId, obertaId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
@@ -145,7 +142,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:*ob**").build()
         val specificationUsers = userRepository.findAll(specification)
-        Assert.assertTrue(setOf(robertId, robertaId, lobertaId, tobertaId) == specificationUsers.map { user -> user.userId }.toSet())
+        Assertions.assertTrue(setOf(robertId, robertaId, lobertaId, tobertaId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
@@ -159,7 +156,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:'*ob**'").build()
         val specificationUsers = userRepository.findAll(specification)
-        Assert.assertTrue(setOf(robertId, robertaId, lobertaId, tobertaId) == specificationUsers.map { user -> user.userId }.toSet())
+        Assertions.assertTrue(setOf(robertId, robertaId, lobertaId, tobertaId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
@@ -173,7 +170,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:\"*ob**\"").build()
         val specificationUsers = userRepository.findAll(specification)
-        Assert.assertTrue(setOf(robertId, robertaId, lobertaId, tobertaId) == specificationUsers.map { user -> user.userId }.toSet())
+        Assertions.assertTrue(setOf(robertId, robertaId, lobertaId, tobertaId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
@@ -187,7 +184,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName!*è*").build()
         val specificationUsers = userRepository.findAll(specification)
-        Assert.assertTrue(setOf(lobertaId, tobertaId, robotId, roobertId) == specificationUsers.map { user -> user.userId }.toSet())
+        Assertions.assertTrue(setOf(lobertaId, tobertaId, robotId, roobertId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
@@ -199,7 +196,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName!B*").build()
         val specificationUsers = userRepository.findAll(specification)
-        Assert.assertTrue(setOf(aliceId, aliceId2, bobId) == specificationUsers.map { user -> user.userId }.toSet())
+        Assertions.assertTrue(setOf(aliceId, aliceId2, bobId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
@@ -211,7 +208,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName!*e").build()
         val specificationUsers = userRepository.findAll(specification)
-        Assert.assertTrue(setOf(boBId, alicEId, bobId) == specificationUsers.map { user -> user.userId }.toSet())
+        Assertions.assertTrue(setOf(boBId, alicEId, bobId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
@@ -226,7 +223,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>().withSearch("userChildrenNumber>4").build()
         val specificationUsers = userRepository.findAll(specification)
-        Assert.assertTrue(setOf(user2With5ChildrenId, userWith5ChildrenId, userWith6ChildrenId) == specificationUsers.map { user -> user.userId }.toSet())
+        Assertions.assertTrue(setOf(user2With5ChildrenId, userWith5ChildrenId, userWith6ChildrenId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
@@ -243,7 +240,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>().withSearch("userChildrenNumber:4").build()
         val specificationUsers = userRepository.findAll(specification)
-        Assert.assertTrue(setOf(user1With4ChildrenId, user2With4ChildrenId, user3With4ChildrenId) == specificationUsers.map { user -> user.userId }.toSet())
+        Assertions.assertTrue(setOf(user1With4ChildrenId, user2With4ChildrenId, user3With4ChildrenId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
@@ -256,7 +253,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>().withSearch("userChildrenNumber!2").build()
         val specificationUsers = userRepository.findAll(specification)
-        Assert.assertTrue(setOf(userWith1ChildId, userWith5ChildrenId, userWith6ChildrenId) == specificationUsers.map { user -> user.userId }.toSet())
+        Assertions.assertTrue(setOf(userWith1ChildId, userWith5ChildrenId, userWith6ChildrenId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
@@ -269,7 +266,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>().withSearch("userSalary<2300").build()
         val specificationUsers = userRepository.findAll(specification)
-        Assert.assertTrue(setOf(smallerSalaryUserId, smallerSalaryUser2Id) == specificationUsers.map { user -> user.userId }.toSet())
+        Assertions.assertTrue(setOf(smallerSalaryUserId, smallerSalaryUser2Id) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
@@ -281,7 +278,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>().withSearch("userSalary>4000.001").build()
         val specificationUsers = userRepository.findAll(specification)
-        Assert.assertTrue(setOf(higherSalaryUserId, higherSalaryUser2Id) == specificationUsers.map { user -> user.userId }.toSet())
+        Assertions.assertTrue(setOf(higherSalaryUserId, higherSalaryUser2Id) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
@@ -293,7 +290,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>().withSearch("userSalary<4000.1 AND userSalary>1500.2").build()
         val specificationUsers = userRepository.findAll(specification)
-        Assert.assertTrue(setOf(medianUserId) == specificationUsers.map { user -> user.userId }.toSet())
+        Assertions.assertTrue(setOf(medianUserId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
@@ -304,7 +301,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>().withSearch("userAgeInSeconds>23222223.2").build()
         val specificationUsers = userRepository.findAll(specification)
-        Assert.assertTrue(setOf(olderUserId) == specificationUsers.map { user -> user.userId }.toSet())
+        Assertions.assertTrue(setOf(olderUserId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
@@ -318,7 +315,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>().withSearch("userSalary>1500.1 AND ( userLastName:One OR userLastName:Two )").build()
         val specificationUsers = userRepository.findAll(specification)
-        Assert.assertTrue(setOf(userOneWithHigherSalaryId, userTwoWithHigherSalaryId) == specificationUsers.map { user -> user.userId }.toSet())
+        Assertions.assertTrue(setOf(userOneWithHigherSalaryId, userTwoWithHigherSalaryId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
@@ -332,7 +329,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>().withSearch("userSalary<1502 AND ( ( userLastName:One OR userLastName:one ) OR userLastName!*n* )").build()
         val specificationUsers = userRepository.findAll(specification)
-        Assert.assertTrue(setOf(userOneWithSmallerSalaryId, userOeId) == specificationUsers.map { user -> user.userId }.toSet())
+        Assertions.assertTrue(setOf(userOneWithSmallerSalaryId, userOeId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
@@ -346,6 +343,6 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>().withSearch("userSalary<1502 AND ((userLastName:One OR userLastName:one) OR userLastName!*n*)").build()
         val specificationUsers = userRepository.findAll(specification)
-        Assert.assertTrue(setOf(userOneWithSmallerSalaryId, userOeId) == specificationUsers.map { user -> user.userId }.toSet())
+        Assertions.assertTrue(setOf(userOneWithSmallerSalaryId, userOeId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 }
