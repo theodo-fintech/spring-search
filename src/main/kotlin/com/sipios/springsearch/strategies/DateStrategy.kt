@@ -10,7 +10,7 @@ import javax.persistence.criteria.Predicate
 import kotlin.reflect.KClass
 
 class DateStrategy : ParsingStrategy {
-    private val sdf: DateFormat = StdDateFormat()
+    private val standardDateFormat: DateFormat = StdDateFormat()
 
     override fun buildPredicate(
         builder: CriteriaBuilder,
@@ -27,6 +27,6 @@ class DateStrategy : ParsingStrategy {
     }
 
     override fun parse(value: String?, fieldClass: KClass<out Any>): Any? {
-        return sdf.parse(value)
+        return standardDateFormat.parse(value)
     }
 }
