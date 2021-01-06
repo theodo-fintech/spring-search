@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.7.RELEASE</version>
+		<version>2.4.1</version>
 		<relativePath /> <!-- lookup parent from repository --> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.sipios</groupId>
@@ -15,32 +15,30 @@
 
 	<properties>
 		<java.version>1.8</java.version>
-		<kotlin.version>1.2.71</kotlin.version>
+		<kotlin.version>1.4.10</kotlin.version>
+		<antl4.version>4.9</antl4.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<scope>provided</scope>
 		</dependency>
-			<dependency>
-				<groupId>com.google.guava</groupId>
-				<artifactId>guava</artifactId>
-				<version>23.0</version>
-			</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-rest</artifactId>
-			<version>2.1.7.RELEASE</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
-		<groupId>org.springframework.boot</groupId>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.module</groupId>
@@ -64,7 +62,7 @@
 		<dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr4-runtime</artifactId>
-			<version>4.7.2</version>
+			<version>${antl4.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -75,7 +73,7 @@
 			<plugin>
 				<groupId>org.antlr</groupId>
 				<artifactId>antlr4-maven-plugin</artifactId>
-				<version>4.7.2</version>
+				<version>${antl4.version}</version>
 				<executions>
 					<execution>
 						<id>antlr</id>
@@ -96,7 +94,7 @@
 			</plugin>
 			<plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>3.8.1</version>
             </plugin>
 			<plugin>
 				<groupId>org.jetbrains.kotlin</groupId>
@@ -109,6 +107,10 @@
 						<plugin>spring</plugin>
 						<plugin>jpa</plugin>
 					</compilerPlugins>
+					<sourceDirs>
+						<sourceDir>src/main/kotlin</sourceDir>
+						<sourceDir>target/generated-sources/antlr4</sourceDir>
+					</sourceDirs>
 				</configuration>
 				<dependencies>
 					<dependency>
@@ -125,7 +127,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>2.4.1</version>
+				<version>2.5.3</version>
 				<configuration>
 					<useReleaseProfile>false</useReleaseProfile>
 					<releaseProfiles>release</releaseProfiles>
