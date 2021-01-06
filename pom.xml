@@ -107,6 +107,10 @@
 						<plugin>spring</plugin>
 						<plugin>jpa</plugin>
 					</compilerPlugins>
+					<sourceDirs>
+						<sourceDir>src/main/kotlin</sourceDir>
+						<sourceDir>target/generated-sources/antlr4</sourceDir>
+					</sourceDirs>
 				</configuration>
 				<dependencies>
 					<dependency>
