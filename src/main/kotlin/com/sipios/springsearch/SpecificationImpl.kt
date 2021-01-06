@@ -16,8 +16,8 @@ import org.springframework.web.server.ResponseStatusException
  *
  * @see Specification
  *
- * @param <T> THe class on which the specification will be applied
-</T> */
+ * @param <T>The class on which the specification will be applied</T>
+ * */
 class SpecificationImpl<T>(private val criteria: SearchCriteria) : Specification<T> {
     @Throws(ResponseStatusException::class)
     override fun toPredicate(root: Root<T>, query: CriteriaQuery<*>, builder: CriteriaBuilder): Predicate? {
