@@ -8,10 +8,27 @@ import javax.persistence.criteria.Predicate
 import kotlin.reflect.KClass
 
 interface ParsingStrategy {
+    /**
+     * Method to parse the value specified to the corresponding strategy
+     *
+     * @param value Value used for the search
+     * @param fieldClass Kotlin class of the referred field
+     * @return Returns by default the value without any parsing
+     */
     fun parse(value: String?, fieldClass: KClass<out Any>): Any? {
         return value
     }
 
+    /**
+     * Method to build the predicate
+     *
+     * @param builder Criteria object to build on
+     * @param path Current path for predicate
+     * @param fieldName Name of the field to be searched
+     * @param ops Search operation to use
+     * @param value Value used for the search
+     * @return Returns a Predicate instance or null if the operation was not found
+     */
     fun buildPredicate(
         builder: CriteriaBuilder,
         path: Path<*>,
