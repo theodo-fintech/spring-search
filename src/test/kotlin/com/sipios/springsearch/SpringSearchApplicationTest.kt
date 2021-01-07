@@ -93,13 +93,25 @@ class SpringSearchApplicationTest {
     }
 
     @Test
-    fun canGetUsersWithPartialName() {
+    fun canGetUsersWithPartialStartingName() {
         val robertId = userRepository.save(Users(userFirstName = "robert")).userId
         val robertaId = userRepository.save(Users(userFirstName = "roberta")).userId
         userRepository.save(Users(userFirstName = "robot"))
         userRepository.save(Users(userFirstName = "röbert"))
 
         val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:robe*").build()
+        val robeUsers = userRepository.findAll(specification)
+        Assertions.assertTrue(setOf(robertId, robertaId) == robeUsers.map { user -> user.userId }.toSet())
+    }
+
+    @Test
+    fun canGetUsersWithPartialEndingName() {
+        val robertId = userRepository.save(Users(userFirstName = "robert")).userId
+        val robertaId = userRepository.save(Users(userFirstName = "roubert")).userId
+        userRepository.save(Users(userFirstName = "robot"))
+        userRepository.save(Users(userFirstName = "röbęrt"))
+
+        val specification = SpecificationsBuilder<Users>().withSearch("userFirstName:*ert").build()
         val robeUsers = userRepository.findAll(specification)
         Assertions.assertTrue(setOf(robertId, robertaId) == robeUsers.map { user -> user.userId }.toSet())
     }
@@ -226,6 +238,21 @@ class SpringSearchApplicationTest {
     }
 
     @Test
+    fun canGetUserWithSmallFamily() {
+        userRepository.save(Users(userChildrenNumber = 5))
+        userRepository.save(Users(userChildrenNumber = 6))
+        userRepository.save(Users(userChildrenNumber = 5))
+        val userWith1ChildrenId = userRepository.save(Users(userChildrenNumber = 1)).userId
+        val userWith2ChildrenId = userRepository.save(Users(userChildrenNumber = 2)).userId
+        userRepository.save(Users(userChildrenNumber = 4))
+        val user2With2ChildrenId = userRepository.save(Users(userChildrenNumber = 2)).userId
+
+        val specification = SpecificationsBuilder<Users>().withSearch("userChildrenNumber<4").build()
+        val specificationUsers = userRepository.findAll(specification)
+        Assertions.assertTrue(setOf(user2With2ChildrenId, userWith1ChildrenId, userWith2ChildrenId) == specificationUsers.map { user -> user.userId }.toSet())
+    }
+
+    @Test
     fun canGetUserWithChildrenEquals() {
         val user1With4ChildrenId = userRepository.save(Users(userChildrenNumber = 4)).userId
         val user2With4ChildrenId = userRepository.save(Users(userChildrenNumber = 4)).userId
@@ -269,7 +296,7 @@ class SpringSearchApplicationTest {
     }
 
     @Test
-    fun canGetUserWithHigherSalary() {
+    fun canGetUserWithHigherFloatSalary() {
         val higherSalaryUserId = userRepository.save(Users(userSalary = 4000.1F)).userId
         val higherSalaryUser2Id = userRepository.save(Users(userSalary = 5350.7F)).userId
         userRepository.save(Users(userSalary = 2323.3F))
@@ -293,7 +320,7 @@ class SpringSearchApplicationTest {
     }
 
     @Test
-    fun canGetUsersWithAge() {
+    fun canGetUsersWithAgeHigher() {
         val olderUserId = userRepository.save(Users(userAgeInSeconds = 23222223.3)).userId
         userRepository.save(Users(userAgeInSeconds = 23222223.2))
         userRepository.save(Users(userAgeInSeconds = 23222223.0))
@@ -301,6 +328,28 @@ class SpringSearchApplicationTest {
         val specification = SpecificationsBuilder<Users>().withSearch("userAgeInSeconds>23222223.2").build()
         val specificationUsers = userRepository.findAll(specification)
         Assertions.assertTrue(setOf(olderUserId) == specificationUsers.map { user -> user.userId }.toSet())
+    }
+
+    @Test
+    fun canGetUsersWithAgeLower() {
+        val youngerUserId = userRepository.save(Users(userAgeInSeconds = 23222223.0)).userId
+        userRepository.save(Users(userAgeInSeconds = 23222223.2))
+        userRepository.save(Users(userAgeInSeconds = 23222223.3))
+
+        val specification = SpecificationsBuilder<Users>().withSearch("userAgeInSeconds<23222223.2").build()
+        val specificationUsers = userRepository.findAll(specification)
+        Assertions.assertTrue(setOf(youngerUserId) == specificationUsers.map { user -> user.userId }.toSet())
+    }
+
+    @Test
+    fun canGetUsersWithAgeEqual() {
+        val middleUserId = userRepository.save(Users(userAgeInSeconds = 23222223.2)).userId
+        userRepository.save(Users(userAgeInSeconds = 23222223.3))
+        userRepository.save(Users(userAgeInSeconds = 23222223.0))
+
+        val specification = SpecificationsBuilder<Users>().withSearch("userAgeInSeconds:23222223.2").build()
+        val specificationUsers = userRepository.findAll(specification)
+        Assertions.assertTrue(setOf(middleUserId) == specificationUsers.map { user -> user.userId }.toSet())
     }
 
     @Test
