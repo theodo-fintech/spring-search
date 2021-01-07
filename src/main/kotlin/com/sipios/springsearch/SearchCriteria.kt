@@ -1,12 +1,8 @@
 package com.sipios.springsearch
 
-import java.net.URLDecoder
-
-class SearchCriteria// Change EQUALS into ENDS_WITH, CONTAINS, STARTS_WITH based on the presence of * in the value
-(key: String, operation: String, prefix: String?, value: String, suffix: String?) {
-    var key: String = key
-    var operation: SearchOperation? = null
-    var value: String? = null
+class SearchCriteria // Change EQUALS into ENDS_WITH, CONTAINS, STARTS_WITH based on the presence of * in the value
+    (var key: String, operation: String, prefix: String?, var value: String, suffix: String?) {
+    var operation: SearchOperation?
 
     init {
         var op = SearchOperation.getSimpleOperation(operation[0])
@@ -31,6 +27,5 @@ class SearchCriteria// Change EQUALS into ENDS_WITH, CONTAINS, STARTS_WITH based
             }
         }
         this.operation = op
-        this.value = value
     }
 }

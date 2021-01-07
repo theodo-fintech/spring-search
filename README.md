@@ -12,6 +12,7 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
+[![codecov][coverage-shield]][coverage-url]
 
 <!-- PROJECT LOGO -->
 <br />
@@ -223,3 +224,5 @@ Project Link: [https://github.com/sipios/spring-search](https://github.com/sipio
 [license-shield]: https://img.shields.io/github/license/sipios/spring-search.svg?style=flat-square
 [license-url]: https://github.com/sipios/spring-search/blob/master/LICENSE.txt
 [product-screenshot]: docs/images/complex-example.gif
+[coverage-shield]: https://codecov.io/gh/sipios/spring-search/branch/master/graph/badge.svg
+[coverage-url]: https://codecov.io/gh/sipios/spring-search

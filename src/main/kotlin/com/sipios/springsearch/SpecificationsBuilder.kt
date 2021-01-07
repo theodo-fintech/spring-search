@@ -1,14 +1,14 @@
 package com.sipios.springsearch
 
-import org.springframework.data.jpa.domain.Specification
 import javax.persistence.criteria.CriteriaBuilder
 import javax.persistence.criteria.CriteriaQuery
 import javax.persistence.criteria.Predicate
 import javax.persistence.criteria.Root
+import org.springframework.data.jpa.domain.Specification
 
 class SpecificationsBuilder<U> {
 
-    private var specs: Specification<U> = NullSPecification()
+    private var specs: Specification<U> = NullSpecification()
     private val parser: CriteriaParser<U> = CriteriaParser()
 
     fun withSearch(search: String): SpecificationsBuilder<U> {
@@ -28,7 +28,7 @@ class SpecificationsBuilder<U> {
     }
 }
 
-class NullSPecification<T>: Specification<T> {
+class NullSpecification<T> : Specification<T> {
     override fun toPredicate(root: Root<T>, query: CriteriaQuery<*>, criteriaBuilder: CriteriaBuilder): Predicate? {
         return null
     }
