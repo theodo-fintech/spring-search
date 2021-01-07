@@ -20,8 +20,8 @@ class DateStrategy : ParsingStrategy {
         value: Any?
     ): Predicate? {
         return when (ops) {
-            SearchOperation.GREATER_THAN -> builder.greaterThan(path.get<Date>(fieldName), value as Date)
-            SearchOperation.LESS_THAN -> builder.lessThan(path.get<Date>(fieldName), value as Date)
+            SearchOperation.GREATER_THAN -> builder.greaterThan(path.get(fieldName), value as Date)
+            SearchOperation.LESS_THAN -> builder.lessThan(path.get(fieldName), value as Date)
             else -> super.buildPredicate(builder, path, fieldName, ops, value)
         }
     }

@@ -15,8 +15,8 @@ class FloatStrategy : ParsingStrategy {
         value: Any?
     ): Predicate? {
         return when (ops) {
-            SearchOperation.GREATER_THAN -> builder.greaterThan(path.get<Float>(fieldName), value as Float)
-            SearchOperation.LESS_THAN -> builder.lessThan(path.get<Float>(fieldName), value as Float)
+            SearchOperation.GREATER_THAN -> builder.greaterThan(path.get(fieldName), value as Float)
+            SearchOperation.LESS_THAN -> builder.lessThan(path.get(fieldName), value as Float)
             else -> super.buildPredicate(builder, path, fieldName, ops, value)
         }
     }

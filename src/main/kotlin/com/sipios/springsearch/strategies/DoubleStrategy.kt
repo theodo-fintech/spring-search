@@ -15,8 +15,8 @@ class DoubleStrategy : ParsingStrategy {
         value: Any?
     ): Predicate? {
         return when (ops) {
-            SearchOperation.GREATER_THAN -> builder.greaterThan(path.get<Double>(fieldName), value as Double)
-            SearchOperation.LESS_THAN -> builder.lessThan(path.get<Double>(fieldName), value as Double)
+            SearchOperation.GREATER_THAN -> builder.greaterThan(path.get(fieldName), value as Double)
+            SearchOperation.LESS_THAN -> builder.lessThan(path.get(fieldName), value as Double)
             else -> super.buildPredicate(builder, path, fieldName, ops, value)
         }
     }
