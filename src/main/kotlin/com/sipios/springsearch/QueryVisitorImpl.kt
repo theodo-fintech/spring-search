@@ -1,10 +1,11 @@
 package com.sipios.springsearch
 
+import com.sipios.springsearch.anotation.SearchSpec
 import com.sipios.springsearch.grammar.QueryBaseVisitor
 import com.sipios.springsearch.grammar.QueryParser
 import org.springframework.data.jpa.domain.Specification
 
-class QueryVisitorImpl<T> : QueryBaseVisitor<Specification<T>>() {
+class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryBaseVisitor<Specification<T>>() {
     private val ValueRegExp = Regex(pattern = "^(\\*?)(.+?)(\\*?)$")
     override fun visitOpQuery(ctx: QueryParser.OpQueryContext): Specification<T> {
         val left = visit(ctx.left)
@@ -51,6 +52,6 @@ class QueryVisitorImpl<T> : QueryBaseVisitor<Specification<T>>() {
             matchResult.groups[3]!!.value
         )
 
-        return SpecificationImpl(criteria)
+        return SpecificationImpl(criteria, searchSpecAnnotation)
     }
 }

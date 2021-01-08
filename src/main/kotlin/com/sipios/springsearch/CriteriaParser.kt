@@ -1,5 +1,6 @@
 package com.sipios.springsearch
 
+import com.sipios.springsearch.anotation.SearchSpec
 import com.sipios.springsearch.grammar.QueryLexer
 import com.sipios.springsearch.grammar.QueryParser
 import org.antlr.v4.runtime.CharStreams
@@ -9,9 +10,9 @@ import org.springframework.data.jpa.domain.Specification
 /**
  * Class used to parse a search query string and create a specification
  */
-class CriteriaParser<T> {
+class CriteriaParser<T>(searchSpecAnnotation: SearchSpec) {
 
-    private val visitor = QueryVisitorImpl<T>()
+    private val visitor = QueryVisitorImpl<T>(searchSpecAnnotation)
 
     /**
      * Lexer -> Parser -> Visitor are used to build the specification

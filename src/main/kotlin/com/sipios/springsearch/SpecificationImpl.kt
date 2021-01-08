@@ -1,5 +1,6 @@
 package com.sipios.springsearch
 
+import com.sipios.springsearch.anotation.SearchSpec
 import com.sipios.springsearch.strategies.ParsingStrategy
 import java.util.ArrayList
 import javax.persistence.criteria.CriteriaBuilder
@@ -18,14 +19,14 @@ import org.springframework.web.server.ResponseStatusException
  *
  * @param <T>The class on which the specification will be applied</T>
  * */
-class SpecificationImpl<T>(private val criteria: SearchCriteria) : Specification<T> {
+class SpecificationImpl<T>(private val criteria: SearchCriteria, private val searchSpecAnnotation: SearchSpec) : Specification<T> {
     @Throws(ResponseStatusException::class)
     override fun toPredicate(root: Root<T>, query: CriteriaQuery<*>, builder: CriteriaBuilder): Predicate? {
         val nestedKey = criteria.key.split(".")
         val nestedRoot = getNestedRoot(root, nestedKey)
         val criteriaKey = nestedKey[nestedKey.size - 1]
         val fieldClass = nestedRoot.get<Any>(criteriaKey).javaType.kotlin
-        val strategy = ParsingStrategy.getStrategy(fieldClass)
+        val strategy = ParsingStrategy.getStrategy(fieldClass, searchSpecAnnotation)
         val value: Any?
         try {
             value = strategy.parse(criteria.value, fieldClass)
