@@ -441,4 +441,51 @@ class SpringSearchApplicationTest {
         val specificationUsers = userRepository.findAll(specification)
         Assertions.assertEquals(1, specificationUsers.size)
     }
+
+    @Test
+    fun canGetUsersWithCaseInsensitiveLowerCaseSearch() {
+        val robertId = userRepository.save(Users(userFirstName = "ROBERT")).userId
+        val robertaId = userRepository.save(Users(userFirstName = "roberta")).userId
+        userRepository.save(Users(userFirstName = "robot"))
+        userRepository.save(Users(userFirstName = "röbęrt"))
+
+        val specification = SpecificationsBuilder<Users>(SearchSpec::class.constructors.first().call("", false)).withSearch("userFirstName:robe*").build()
+        val robeUsers = userRepository.findAll(specification)
+        Assertions.assertTrue(setOf(robertId, robertaId) == robeUsers.map { user -> user.userId }.toSet())
+    }
+
+    @Test
+    fun canGetUsersWithCaseInsensitiveUpperCaseSearch() {
+        val robertId = userRepository.save(Users(userFirstName = "ROBERT")).userId
+        val roubertId = userRepository.save(Users(userFirstName = "roubert")).userId
+        userRepository.save(Users(userFirstName = "robot"))
+        userRepository.save(Users(userFirstName = "röbęrt"))
+
+        val specification = SpecificationsBuilder<Users>(SearchSpec::class.constructors.first().call("", false)).withSearch("userFirstName:*ert").build()
+        val robeUsers = userRepository.findAll(specification)
+        Assertions.assertTrue(setOf(robertId, roubertId) == robeUsers.map { user -> user.userId }.toSet())
+    }
+
+    @Test
+    fun canGetUsersWithCaseInsensitiveContainsSearch() {
+        val robertId = userRepository.save(Users(userFirstName = "ROBERT")).userId
+        val roubertId = userRepository.save(Users(userFirstName = "roubert")).userId
+        userRepository.save(Users(userFirstName = "robot"))
+        userRepository.save(Users(userFirstName = "röbęrt"))
+
+        val specification = SpecificationsBuilder<Users>(SearchSpec::class.constructors.first().call("", false)).withSearch("userFirstName:*er*").build()
+        val robeUsers = userRepository.findAll(specification)
+        Assertions.assertTrue(setOf(robertId, roubertId) == robeUsers.map { user -> user.userId }.toSet())
+    }
+
+    @Test
+    fun canGetUsersWithCaseInsensitiveDoesntContainSearch() {
+        userRepository.save(Users(userFirstName = "ROBERT"))
+        val roubertId = userRepository.save(Users(userFirstName = "roubert")).userId
+        userRepository.save(Users(userFirstName = "robot"))
+
+        val specification = SpecificationsBuilder<Users>(SearchSpec::class.constructors.first().call("", false)).withSearch("userFirstName!*rob*").build()
+        val robeUsers = userRepository.findAll(specification)
+        Assertions.assertTrue(setOf(roubertId) == robeUsers.map { user -> user.userId }.toSet())
+    }
 }
