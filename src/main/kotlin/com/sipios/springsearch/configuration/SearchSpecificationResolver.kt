@@ -38,16 +38,16 @@ class SearchSpecificationResolver : HandlerMethodArgumentResolver {
     ): Specification<*>? {
         val def = parameter.getParameterAnnotation(SearchSpec::class.java)
 
-        return buildSpecification(parameter.genericParameterType.javaClass, webRequest.getParameter(def!!.searchParam))
+        return buildSpecification(parameter.genericParameterType.javaClass, webRequest.getParameter(def!!.searchParam), def)
     }
 
-    private fun <T> buildSpecification(specClass: Class<T>, search: String?): Specification<T>? {
+    private fun <T> buildSpecification(specClass: Class<T>, search: String?, searchSpecAnnotation: SearchSpec): Specification<T>? {
         logger.debug("Building specification for class {}", specClass)
         logger.debug("Search value found is {}", search)
         if (search == null || search.isEmpty()) {
             return null
         }
-        val specBuilder = SpecificationsBuilder<T>()
+        val specBuilder = SpecificationsBuilder<T>(searchSpecAnnotation)
 
         return specBuilder.withSearch(search).build()
     }

@@ -11,5 +11,10 @@ annotation class SearchSpec(
     /**
      * The name of the query param that will be transformed into a specification
      */
-    val searchParam: String = "search"
+    val searchParam: String = "search",
+
+    /**
+     * A flag to indicate if the search needs to be case sensitive or not
+     */
+    val caseSensitiveFlag: Boolean = true
 )

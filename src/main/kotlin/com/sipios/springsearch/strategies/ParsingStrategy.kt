@@ -1,6 +1,7 @@
 package com.sipios.springsearch.strategies
 
 import com.sipios.springsearch.SearchOperation
+import com.sipios.springsearch.anotation.SearchSpec
 import java.util.Date
 import javax.persistence.criteria.CriteriaBuilder
 import javax.persistence.criteria.Path
@@ -53,14 +54,14 @@ interface ParsingStrategy {
     }
 
     companion object {
-        fun getStrategy(fieldClass: KClass<out Any>): ParsingStrategy {
+        fun getStrategy(fieldClass: KClass<out Any>, searchSpecAnnotation: SearchSpec): ParsingStrategy {
             return when (fieldClass) {
                 Boolean::class -> BooleanStrategy()
                 Double::class -> DoubleStrategy()
                 Float::class -> FloatStrategy()
                 Int::class -> IntStrategy()
                 Date::class -> DateStrategy()
-                else -> StringStrategy()
+                else -> StringStrategy(searchSpecAnnotation)
             }
         }
     }

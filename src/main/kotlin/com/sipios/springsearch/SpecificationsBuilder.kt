@@ -1,15 +1,16 @@
 package com.sipios.springsearch
 
+import com.sipios.springsearch.anotation.SearchSpec
 import javax.persistence.criteria.CriteriaBuilder
 import javax.persistence.criteria.CriteriaQuery
 import javax.persistence.criteria.Predicate
 import javax.persistence.criteria.Root
 import org.springframework.data.jpa.domain.Specification
 
-class SpecificationsBuilder<U> {
+class SpecificationsBuilder<U>(searchSpecAnnotation: SearchSpec) {
 
     private var specs: Specification<U> = NullSpecification()
-    private val parser: CriteriaParser<U> = CriteriaParser()
+    private val parser: CriteriaParser<U> = CriteriaParser(searchSpecAnnotation)
 
     fun withSearch(search: String): SpecificationsBuilder<U> {
         specs = parser.parse(search)
