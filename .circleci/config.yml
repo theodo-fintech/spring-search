@@ -23,16 +23,6 @@ jobs:
       - run: mvn test
       - store_artifacts:
           path:  ~/project/target/test-results
-      - persist_to_workspace:
-          root: ~/project/target
-          paths:
-            - test-results
-  upload_cov:
-    docker:
-      - image: circleci/node:9.6.1
-    steps:
-      - attach_workspace:
-          at: ~/project/target
       - codecov/upload:
           file: ~/project/target/test-results/coverage/jacoco/jacoco.xml
           flags: coverage
@@ -43,6 +33,3 @@ workflows:
   test:
     jobs:
       - test
-      - upload_cov:
-          requires:
-            - test
