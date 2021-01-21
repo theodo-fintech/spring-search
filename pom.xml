@@ -124,6 +124,17 @@
 				</dependencies>
 			</plugin>
 			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.4.1</version>
 				<configuration>
@@ -140,17 +151,6 @@
 			<build>
 				<plugins>
 					<plugin>
-						<artifactId>maven-source-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>attach-sources</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<executions>
 							<execution>
@@ -161,21 +161,68 @@
 							</execution>
 						</executions>
 					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.7</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>ossrh</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
 	</profiles>
+
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Michaël Mollard</name>
+			<email>michaelm@sipios.com</email>
+			<organization>Sipios</organization>
+			<organizationUrl>https://www.sipios.com</organizationUrl>
+		</developer>
+		<developer>
+			<name>Thibault Flesselles</name>
+			<email>thibaultf@sipios.com</email>
+			<organization>Sipios</organization>
+			<organizationUrl>https://www.sipios.com</organizationUrl>
+		</developer>
+		<developer>
+			<name>Woody Rousseau</name>
+			<email>woodyr+ossrh@sipios.com</email>
+			<organization>Sipios</organization>
+			<organizationUrl>https://www.sipios.com</organizationUrl>
+		</developer>
+	</developers>
+
 	<scm>
 		<connection>scm:git:https://github.com/sipios/spring-search.git</connection>
 		<developerConnection>scm:git:git@github.com:sipios/spring-search.git</developerConnection>
 		<url>https://github.com/sipios/spring-search</url>
 		<tag>HEAD</tag>
 	</scm>
-
-	<distributionManagement>
-		<repository>
-			<id>spring-search</id>
-			<url>https://api.bintray.com/maven/sipios/spring-search/spring-search</url>
-		</repository>
-	</distributionManagement>
 </project>
