@@ -7,6 +7,7 @@ import javax.persistence.criteria.CriteriaBuilder
 import javax.persistence.criteria.Path
 import javax.persistence.criteria.Predicate
 import kotlin.reflect.KClass
+import kotlin.reflect.full.superclasses
 
 interface ParsingStrategy {
     /**
@@ -61,7 +62,15 @@ interface ParsingStrategy {
                 Float::class -> FloatStrategy()
                 Int::class -> IntStrategy()
                 Date::class -> DateStrategy()
-                else -> StringStrategy(searchSpecAnnotation)
+                else -> getStrategyWithSuperClass(fieldClass, searchSpecAnnotation)
+            }
+        }
+
+        private fun getStrategyWithSuperClass(fieldClass: KClass<out Any>, searchSpecAnnotation: SearchSpec): ParsingStrategy {
+            return if (fieldClass.superclasses[0] == Enum::class) {
+                EnumStrategy()
+            } else {
+                StringStrategy(searchSpecAnnotation)
             }
         }
     }
