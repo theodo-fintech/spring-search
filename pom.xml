@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>com.sipios</groupId>
 	<artifactId>spring-search</artifactId>
-	<version>0.2.0</version>
+	<version>0.2.1</version>
 	<name>spring-search</name>
 	<description>API for generating spring boot database queries</description>
 
@@ -208,6 +208,12 @@
 		<developer>
 			<name>Thibault Flesselles</name>
 			<email>thibaultf@sipios.com</email>
+			<organization>Sipios</organization>
+			<organizationUrl>https://www.sipios.com</organizationUrl>
+		</developer>
+		<developer>
+			<name>Luc Boussant-Roux</name>
+			<email>lucb@sipios.com</email>
 			<organization>Sipios</organization>
 			<organizationUrl>https://www.sipios.com</organizationUrl>
 		</developer>

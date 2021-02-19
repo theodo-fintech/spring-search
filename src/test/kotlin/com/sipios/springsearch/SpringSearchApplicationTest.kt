@@ -65,6 +65,14 @@ class SpringSearchApplicationTest {
     }
 
     @Test
+    fun canGetUserWithNull() {
+        val edouardProstId = userRepository.save(Users(userFirstName = null, userLastName = "Pröst")).userId
+
+        val specification = SpecificationsBuilder<Users>().withSearch("userLastName:Pröst").build()
+        Assert.assertEquals(edouardProstId, userRepository.findAll(specification).get(0).userId)
+    }
+
+    @Test
     fun canGetUserWithChineseName() {
         val sunDemingId = userRepository.save(Users(userFirstName = "孫德明")).userId
 
