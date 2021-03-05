@@ -7,7 +7,7 @@ import javax.persistence.criteria.CriteriaBuilder
 import javax.persistence.criteria.Path
 import javax.persistence.criteria.Predicate
 import kotlin.reflect.KClass
-import kotlin.reflect.full.superclasses
+import kotlin.reflect.full.isSubclassOf
 
 interface ParsingStrategy {
     /**
@@ -56,21 +56,14 @@ interface ParsingStrategy {
 
     companion object {
         fun getStrategy(fieldClass: KClass<out Any>, searchSpecAnnotation: SearchSpec): ParsingStrategy {
-            return when (fieldClass) {
-                Boolean::class -> BooleanStrategy()
-                Double::class -> DoubleStrategy()
-                Float::class -> FloatStrategy()
-                Int::class -> IntStrategy()
-                Date::class -> DateStrategy()
-                else -> getStrategyWithSuperClass(fieldClass, searchSpecAnnotation)
-            }
-        }
-
-        private fun getStrategyWithSuperClass(fieldClass: KClass<out Any>, searchSpecAnnotation: SearchSpec): ParsingStrategy {
-            return if (fieldClass.superclasses[0] == Enum::class) {
-                EnumStrategy()
-            } else {
-                StringStrategy(searchSpecAnnotation)
+            return when {
+                fieldClass == Boolean::class -> BooleanStrategy()
+                fieldClass == Date::class -> DateStrategy()
+                fieldClass == Double::class -> DoubleStrategy()
+                fieldClass == Float::class -> FloatStrategy()
+                fieldClass == Int::class -> IntStrategy()
+                fieldClass.isSubclassOf(Enum::class) -> EnumStrategy()
+                else -> StringStrategy(searchSpecAnnotation)
             }
         }
     }
