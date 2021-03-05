@@ -490,14 +490,15 @@ class SpringSearchApplicationTest {
     }
 
     @Test
-    fun canGetUsersWithUserTypeContainsSearch() {
-        userRepository.save(Users(userFirstName = "ROBERT", type = UserType.MANAGER))
+    fun canGetUsersWithUserTypeContainsSearch() {      
         userRepository.save(Users(userFirstName = "Hamid", type = UserType.TEAM_MEMBER))
         userRepository.save(Users(userFirstName = "Reza", type = UserType.TEAM_MEMBER))
-        userRepository.save(Users(userFirstName = "Ireh", type = UserType.ADMINISTRATOR))
+        userRepository.save(Users(userFirstName = "Ireh", type = UserType.TEAM_MEMBER))
+        userRepository.save(Users(userFirstName = "robot", type = UserType.ADMINISTRATOR))
 
         val specification = SpecificationsBuilder<Users>(SearchSpec::class.constructors.first().call("", false)).withSearch("type:ADMINISTRATOR").build()
         val robeUsers = userRepository.findAll(specification)
         Assertions.assertEquals(1, robeUsers.size)
+        Assertions.assertEquals("robot", robeUsers[0].userFirstName)
     }
 }
