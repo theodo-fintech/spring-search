@@ -43,5 +43,5 @@ data class Users(
     var createdAt: Date = Date(),
 
     @Column(name = "UserType")
-    var type: UserType? = UserType.TEAM_MEMBER,
+    var type: UserType? = UserType.TEAM_MEMBER
 )

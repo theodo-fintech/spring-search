@@ -22,7 +22,6 @@ class EnumStrategy : ParsingStrategy {
     }
 
     override fun parse(value: String?, fieldClass: KClass<out Any>): Any? {
-        val enumClz = Class.forName(fieldClass.qualifiedName).enumConstants as Array<Enum<*>>
-        return enumClz.first { it.name == value }
+        return Class.forName(fieldClass.qualifiedName).methods.first { it.name == "valueOf" }.invoke(null, value)
     }
 }
