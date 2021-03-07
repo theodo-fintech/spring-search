@@ -22,6 +22,6 @@ class EnumStrategy : ParsingStrategy {
     }
 
     override fun parse(value: String?, fieldClass: KClass<out Any>): Any? {
-        return Class.forName(fieldClass.qualifiedName).methods.first { it.name == "valueOf" }.invoke(null, value)
+        return Class.forName(fieldClass.qualifiedName).getMethod("valueOf", String::class.java).invoke(null, value)
     }
 }
