@@ -40,5 +40,8 @@ data class Users(
     var userAgeInSeconds: Double = 1261440000.0,
 
     @Column
-    var createdAt: Date = Date()
+    var createdAt: Date = Date(),
+
+    @Column(name = "UserType")
+    var type: UserType? = UserType.TEAM_MEMBER
 )

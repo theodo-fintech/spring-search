@@ -488,4 +488,29 @@ class SpringSearchApplicationTest {
         val robeUsers = userRepository.findAll(specification)
         Assertions.assertTrue(setOf(roubertId) == robeUsers.map { user -> user.userId }.toSet())
     }
+
+    @Test
+    fun canGetUsersWithUserTypeEqualSearch() {
+        userRepository.save(Users(userFirstName = "Hamid", type = UserType.TEAM_MEMBER))
+        userRepository.save(Users(userFirstName = "Reza", type = UserType.TEAM_MEMBER))
+        userRepository.save(Users(userFirstName = "Ireh", type = UserType.TEAM_MEMBER))
+        userRepository.save(Users(userFirstName = "robot", type = UserType.ADMINISTRATOR))
+
+        val specification = SpecificationsBuilder<Users>(SearchSpec::class.constructors.first().call("", false)).withSearch("type:ADMINISTRATOR").build()
+        val robeUsers = userRepository.findAll(specification)
+        Assertions.assertEquals(1, robeUsers.size)
+        Assertions.assertEquals("robot", robeUsers[0].userFirstName)
+    }
+
+    @Test
+    fun canGetUsersWithUserTypeNotEqualSearch() {
+        userRepository.save(Users(userFirstName = "HamidReza", type = UserType.TEAM_MEMBER))
+        userRepository.save(Users(userFirstName = "Ireh", type = UserType.ADMINISTRATOR))
+        userRepository.save(Users(userFirstName = "robot", type = UserType.TEAM_MEMBER))
+
+        val specification = SpecificationsBuilder<Users>(SearchSpec::class.constructors.first().call("", false)).withSearch("type!TEAM_MEMBER").build()
+        val irehUsers = userRepository.findAll(specification)
+        Assertions.assertEquals(1, irehUsers.size)
+        Assertions.assertEquals("Ireh", irehUsers[0].userFirstName)
+    }
 }
