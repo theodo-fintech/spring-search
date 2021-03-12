@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>com.sipios</groupId>
 	<artifactId>spring-search</artifactId>
-	<version>0.2.2</version>
+	<version>0.2.3</version>
 	<name>spring-search</name>
 	<description>API for generating spring boot database queries</description>
 
