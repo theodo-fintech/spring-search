@@ -2,6 +2,10 @@ package com.sipios.springsearch.strategies
 
 import com.sipios.springsearch.SearchOperation
 import com.sipios.springsearch.anotation.SearchSpec
+import java.time.Duration
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.util.Date
 import javax.persistence.criteria.CriteriaBuilder
 import javax.persistence.criteria.Path
@@ -63,6 +67,10 @@ interface ParsingStrategy {
                 fieldClass == Float::class -> FloatStrategy()
                 fieldClass == Int::class -> IntStrategy()
                 fieldClass.isSubclassOf(Enum::class) -> EnumStrategy()
+                fieldClass == Duration::class -> DurationStrategy()
+                fieldClass == LocalDate::class -> LocalDateStrategy()
+                fieldClass == LocalTime::class -> LocalTimeStrategy()
+                fieldClass == LocalDateTime::class -> LocalDateTimeStrategy()
                 else -> StringStrategy(searchSpecAnnotation)
             }
         }
