@@ -506,6 +506,28 @@ class SpringSearchApplicationTest {
     }
 
     @Test
+    fun canGetUsersWithCaseInsensitiveDoesntStartSearch() {
+        userRepository.save(Users(userFirstName = "ROBERT"))
+        val roubertId = userRepository.save(Users(userFirstName = "roubert")).userId
+        userRepository.save(Users(userFirstName = "robot"))
+
+        val specification = SpecificationsBuilder<Users>(SearchSpec::class.constructors.first().call("", false)).withSearch("userFirstName!rob*").build()
+        val robeUsers = userRepository.findAll(specification)
+        Assertions.assertTrue(setOf(roubertId) == robeUsers.map { user -> user.userId }.toSet())
+    }
+
+    @Test
+    fun canGetUsersWithCaseInsensitiveDoesntEndSearch() {
+        userRepository.save(Users(userFirstName = "ROBERT"))
+        userRepository.save(Users(userFirstName = "roubert"))
+        val robotId = userRepository.save(Users(userFirstName = "robot")).userId
+
+        val specification = SpecificationsBuilder<Users>(SearchSpec::class.constructors.first().call("", false)).withSearch("userFirstName!*rt").build()
+        val robotUsers = userRepository.findAll(specification)
+        Assertions.assertTrue(setOf(robotId) == robotUsers.map { user -> user.userId }.toSet())
+    }
+
+    @Test
     fun canGetUsersWithUserTypeEqualSearch() {
         userRepository.save(Users(userFirstName = "Hamid", type = UserType.TEAM_MEMBER))
         userRepository.save(Users(userFirstName = "Reza", type = UserType.TEAM_MEMBER))
