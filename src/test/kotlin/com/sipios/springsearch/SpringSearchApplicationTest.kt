@@ -19,8 +19,7 @@ class SpringSearchApplicationTest {
     lateinit var userRepository: UsersRepository
 
     @Test
-    fun run() {
-    }
+    fun run() {}
 
     @Test
     fun canAddUsers() {
