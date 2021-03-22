@@ -1,5 +1,9 @@
 package com.sipios.springsearch
 
+import java.time.Duration
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.util.Date
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -41,6 +45,18 @@ data class Users(
 
     @Column
     var createdAt: Date = Date(),
+
+    @Column
+    var updatedAt: LocalDateTime = LocalDateTime.now(),
+
+    @Column
+    var updatedTimeAt: LocalTime = LocalTime.now(),
+
+    @Column
+    var updatedDateAt: LocalDate = LocalDate.now(),
+
+    @Column
+    var validityDuration: Duration = Duration.ofDays(30),
 
     @Column(name = "UserType")
     var type: UserType? = UserType.TEAM_MEMBER
