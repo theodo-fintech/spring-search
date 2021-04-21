@@ -16,5 +16,10 @@ annotation class SearchSpec(
     /**
      * A flag to indicate if the search needs to be case sensitive or not
      */
-    val caseSensitiveFlag: Boolean = true
+    val caseSensitiveFlag: Boolean = true,
+
+    /**
+     * The name of the data base function to execute on the searched field if StringStrategy is been used
+     */
+     val stringFieldFunction: String = ""
 )
