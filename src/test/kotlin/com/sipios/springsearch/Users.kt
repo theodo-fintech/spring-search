@@ -5,6 +5,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.Date
+import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -59,5 +60,8 @@ data class Users(
     var validityDuration: Duration = Duration.ofDays(30),
 
     @Column(name = "UserType")
-    var type: UserType? = UserType.TEAM_MEMBER
+    var type: UserType? = UserType.TEAM_MEMBER,
+
+    @Column
+    var uuid: UUID = UUID.randomUUID()
 )

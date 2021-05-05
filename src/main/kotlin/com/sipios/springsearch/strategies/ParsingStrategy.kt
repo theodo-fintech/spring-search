@@ -7,6 +7,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.Date
+import java.util.UUID
 import javax.persistence.criteria.CriteriaBuilder
 import javax.persistence.criteria.Path
 import javax.persistence.criteria.Predicate
@@ -71,6 +72,7 @@ interface ParsingStrategy {
                 fieldClass == LocalDate::class -> LocalDateStrategy()
                 fieldClass == LocalTime::class -> LocalTimeStrategy()
                 fieldClass == LocalDateTime::class -> LocalDateTimeStrategy()
+                fieldClass == UUID::class -> UUIDStrategy()
                 else -> StringStrategy(searchSpecAnnotation)
             }
         }

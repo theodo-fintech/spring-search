@@ -6,6 +6,7 @@ import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.util.UUID
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -725,5 +726,27 @@ class SpringSearchApplicationTest {
         val robotUsers = userRepository.findAll(specification)
         Assertions.assertEquals(1, robotUsers.size)
         Assertions.assertEquals("robot", robotUsers[0].userFirstName)
+    }
+
+    @Test
+    fun canGetUsersWithUUIDEqualSearch() {
+        val userUUID = UUID.randomUUID()
+        userRepository.save(Users(userFirstName = "Diego", uuid = userUUID))
+        val specification = SpecificationsBuilder<Users>(SearchSpec::class.constructors.first().call("", false)).withSearch("uuid:'$userUUID'").build()
+        val robotUsers = userRepository.findAll(specification)
+        Assertions.assertEquals(1, robotUsers.size)
+        Assertions.assertEquals(userUUID, robotUsers[0].uuid)
+    }
+
+    @Test
+    fun canGetUsersWithUUIDNotEqualSearch() {
+        val userUUID = UUID.randomUUID()
+        val user2UUID = UUID.randomUUID()
+        userRepository.save(Users(userFirstName = "Diego", uuid = userUUID))
+        userRepository.save(Users(userFirstName = "Diego two", uuid = user2UUID))
+        val specification = SpecificationsBuilder<Users>(SearchSpec::class.constructors.first().call("", false)).withSearch("uuid!'$userUUID'").build()
+        val robotUsers = userRepository.findAll(specification)
+        Assertions.assertEquals(1, robotUsers.size)
+        Assertions.assertEquals(user2UUID, robotUsers[0].uuid)
     }
 }
