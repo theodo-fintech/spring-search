@@ -289,6 +289,60 @@ class SpringSearchApplicationTest {
     }
 
     @Test
+    fun canGetUserWithHugeDebt() {
+        val userWith1BDebtId = userRepository.save(Users(userDebt = 4000000000)).userId
+        val userWith2BDebtId = userRepository.save(Users(userDebt = 5000000000)).userId
+        val userWith3BDebtId = userRepository.save(Users(userDebt = 6000000000)).userId
+        userRepository.save(Users(userDebt = 0))
+        userRepository.save(Users(userDebt = 1000))
+        userRepository.save(Users(userDebt = 20000))
+        userRepository.save(Users(userDebt = 300000))
+
+        val specification = SpecificationsBuilder<Users>(SearchSpec::class.constructors.first().call("", true)).withSearch("userDebt>1000000000").build()
+        val specificationUsers = userRepository.findAll(specification)
+        Assertions.assertTrue(setOf(userWith1BDebtId, userWith2BDebtId, userWith3BDebtId) == specificationUsers.map { user -> user.userId }.toSet())
+    }
+
+    @Test
+    fun canGetUserWithSmallDebt() {
+        userRepository.save(Users(userDebt = 4000000000))
+        userRepository.save(Users(userDebt = 5000000000))
+        userRepository.save(Users(userDebt = 6000000000))
+        val userWith1KDebtId = userRepository.save(Users(userDebt = 1000)).userId
+        val userWith2KDebtId = userRepository.save(Users(userDebt = 2000)).userId
+
+        val specification = SpecificationsBuilder<Users>(SearchSpec::class.constructors.first().call("", true)).withSearch("userDebt>0 AND userDebt<1000000000").build()
+        val specificationUsers = userRepository.findAll(specification)
+        Assertions.assertTrue(setOf(userWith1KDebtId, userWith2KDebtId) == specificationUsers.map { user -> user.userId }.toSet())
+    }
+
+    @Test
+    fun canGetUserWithNoDebt() {
+        val user1WithNoDebtId = userRepository.save(Users(userDebt = 0)).userId
+        val user2WithNoDebtId = userRepository.save(Users(userDebt = 0)).userId
+        val user3WithNoDebtId = userRepository.save(Users(userDebt = 0)).userId
+        userRepository.save(Users(userDebt = 1000))
+        userRepository.save(Users(userDebt = 2000))
+        userRepository.save(Users(userDebt = 3000))
+
+        val specification = SpecificationsBuilder<Users>(SearchSpec::class.constructors.first().call("", true)).withSearch("userDebt:0").build()
+        val specificationUsers = userRepository.findAll(specification)
+        Assertions.assertTrue(setOf(user1WithNoDebtId, user2WithNoDebtId, user3WithNoDebtId) == specificationUsers.map { user -> user.userId }.toSet())
+    }
+
+    @Test
+    fun canGetUserWithDebt() {
+        val user1WithNoDebtId = userRepository.save(Users(userDebt = 1000)).userId
+        val user2WithNoDebtId = userRepository.save(Users(userDebt = 2000)).userId
+        userRepository.save(Users(userDebt = 0))
+        userRepository.save(Users(userDebt = 0))
+
+        val specification = SpecificationsBuilder<Users>(SearchSpec::class.constructors.first().call("", true)).withSearch("userDebt!0").build()
+        val specificationUsers = userRepository.findAll(specification)
+        Assertions.assertTrue(setOf(user1WithNoDebtId, user2WithNoDebtId) == specificationUsers.map { user -> user.userId }.toSet())
+    }
+
+    @Test
     fun canGetUserWithSmallerSalary() {
         val smallerSalaryUserId = userRepository.save(Users(userSalary = 2223.3F)).userId
         val smallerSalaryUser2Id = userRepository.save(Users(userSalary = 1500.2F)).userId

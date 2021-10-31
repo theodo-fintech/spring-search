@@ -67,6 +67,7 @@ interface ParsingStrategy {
                 fieldClass == Double::class -> DoubleStrategy()
                 fieldClass == Float::class -> FloatStrategy()
                 fieldClass == Int::class -> IntStrategy()
+                fieldClass == Long::class -> LongStrategy()
                 fieldClass.isSubclassOf(Enum::class) -> EnumStrategy()
                 fieldClass == Duration::class -> DurationStrategy()
                 fieldClass == LocalDate::class -> LocalDateStrategy()
