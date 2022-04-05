@@ -9,13 +9,13 @@
 	</parent>
 	<groupId>com.sipios</groupId>
 	<artifactId>spring-search</artifactId>
-	<version>0.2.4</version>
+	<version>0.2.5</version>
 	<name>spring-search</name>
 	<description>API for generating spring boot database queries</description>
 
 	<properties>
 		<java.version>1.8</java.version>
-		<kotlin.version>1.4.10</kotlin.version>
+		<kotlin.version>1.6.20</kotlin.version>
 		<antl4.version>4.9</antl4.version>
 		<grammar.package>com.sipios.springsearch.grammar</grammar.package>
 		<grammar.directory>com/sipios/springsearch/grammar</grammar.directory>

@@ -1,6 +1,7 @@
 package com.sipios.springsearch
 
 import java.time.Duration
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -55,6 +56,9 @@ data class Users(
 
     @Column
     var updatedDateAt: LocalDate = LocalDate.now(),
+
+    @Column
+    var updatedInstantAt: Instant = Instant.now(),
 
     @Column
     var validityDuration: Duration = Duration.ofDays(30),
