@@ -3,6 +3,7 @@ package com.sipios.springsearch.strategies
 import com.sipios.springsearch.SearchOperation
 import com.sipios.springsearch.anotation.SearchSpec
 import java.time.Duration
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -72,6 +73,7 @@ interface ParsingStrategy {
                 fieldClass == LocalDate::class -> LocalDateStrategy()
                 fieldClass == LocalTime::class -> LocalTimeStrategy()
                 fieldClass == LocalDateTime::class -> LocalDateTimeStrategy()
+                fieldClass == Instant::class -> InstantStrategy()
                 fieldClass == UUID::class -> UUIDStrategy()
                 else -> StringStrategy(searchSpecAnnotation)
             }
