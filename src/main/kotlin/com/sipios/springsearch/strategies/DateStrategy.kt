@@ -2,11 +2,11 @@ package com.sipios.springsearch.strategies
 
 import com.fasterxml.jackson.databind.util.StdDateFormat
 import com.sipios.springsearch.SearchOperation
+import jakarta.persistence.criteria.CriteriaBuilder
+import jakarta.persistence.criteria.Path
+import jakarta.persistence.criteria.Predicate
 import java.text.DateFormat
 import java.util.Date
-import javax.persistence.criteria.CriteriaBuilder
-import javax.persistence.criteria.Path
-import javax.persistence.criteria.Predicate
 import kotlin.reflect.KClass
 
 class DateStrategy : ParsingStrategy {
