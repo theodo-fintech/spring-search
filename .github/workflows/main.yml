@@ -31,9 +31,9 @@ jobs:
         uses: actions/checkout@v3
       - name: Get project version
         id: get-project-version
-        uses: ./mega/general/actions/properties-version-maven
+        uses: ./.github/actions/properties-version-maven
         with:
-          workingDirectory: spring-search/
+          workingDirectory: .
 
   publish:
     name: publish ${{ needs.prerequisites.outputs.projectVersion }}
