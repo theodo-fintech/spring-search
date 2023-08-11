@@ -11,11 +11,11 @@ on:
     branches:
       - 'master'
     paths:
-      - 'spring-search/**'
+      - '*'
   pull_request:
     branches: [ 'master' ]
     paths:
-      - 'spring-search/**'
+      - '*'
   release:
     types: [created]
 
@@ -43,7 +43,7 @@ jobs:
       packages: write
     defaults:
       run:
-        working-directory: spring-search
+        working-directory: .
     environment: 'dev'
     needs: prerequisites
     steps:
