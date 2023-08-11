@@ -7,7 +7,7 @@
 		<version>2.4.1</version>
 		<relativePath /> <!-- lookup parent from repository --> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.sipios</groupId>
+	<groupId>cz.ecodef</groupId>
 	<artifactId>spring-search</artifactId>
 	<version>0.2.5</version>
 	<name>spring-search</name>
