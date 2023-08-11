@@ -1,10 +1,10 @@
 package com.sipios.springsearch.strategies
 
 import com.sipios.springsearch.SearchOperation
+import jakarta.persistence.criteria.CriteriaBuilder
+import jakarta.persistence.criteria.Path
+import jakarta.persistence.criteria.Predicate
 import java.time.LocalDate
-import javax.persistence.criteria.CriteriaBuilder
-import javax.persistence.criteria.Path
-import javax.persistence.criteria.Predicate
 import kotlin.reflect.KClass
 
 class LocalDateStrategy : ParsingStrategy {
