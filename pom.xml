@@ -4,19 +4,19 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.1</version>
+		<version>3.0.9</version>
 		<relativePath /> <!-- lookup parent from repository --> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.sipios</groupId>
 	<artifactId>spring-search</artifactId>
-	<version>0.2.5</version>
+	<version>0.3.0</version>
 	<name>spring-search</name>
 	<description>API for generating spring boot database queries</description>
 
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>17</java.version>
 		<kotlin.version>1.6.20</kotlin.version>
-		<antl4.version>4.9</antl4.version>
+		<antl4.version>4.10.1</antl4.version>
 		<grammar.package>com.sipios.springsearch.grammar</grammar.package>
 		<grammar.directory>com/sipios/springsearch/grammar</grammar.directory>
 		<jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
@@ -52,10 +52,6 @@
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-reflect</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-stdlib-jdk8</artifactId>
-		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -78,11 +74,6 @@
 			<artifactId>kotlin-test</artifactId>
 			<version>${kotlin.version}</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-stdlib-jdk8</artifactId>
-			<version>${kotlin.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -161,7 +152,7 @@
 						<sourceDir>src/main/kotlin</sourceDir>
 						<sourceDir>target/generated-sources/antlr4</sourceDir>
 					</sourceDirs>
-					<jvmTarget>1.8</jvmTarget>
+					<jvmTarget>17</jvmTarget>
 				</configuration>
 				<dependencies>
 					<dependency>
@@ -348,7 +339,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
+			<!--<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
 				<version>1.5</version>
@@ -361,13 +352,13 @@
 						</goals>
 						<configuration>
 							<gpgArguments>
-								<arg>--pinentry-mode</arg>
+								<arg>&#45;&#45;pinentry-mode</arg>
 								<arg>loopback</arg>
 							</gpgArguments>
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin>-->
 		</plugins>
 	</build>
 	<scm>
