@@ -1,0 +1,71 @@
+name: Build Spring-Search Library
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publish (true|false)'
+        required: false
+        default: 'true'
+  push:
+    branches:
+      - 'master'
+    paths:
+      - 'spring-search/**'
+  pull_request:
+    branches: [ 'master' ]
+    paths:
+      - 'spring-search/**'
+  release:
+    types: [created]
+
+jobs:
+  prerequisites:
+    name: prerequisites
+    runs-on: ubuntu-latest
+    environment: 'dev'
+    outputs:
+      projectVersion: ${{ steps.get-project-version.outputs.projectVersion }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Get project version
+        id: get-project-version
+        uses: ./mega/general/actions/properties-version-maven
+        with:
+          workingDirectory: spring-search/
+
+  publish:
+    name: publish ${{ needs.prerequisites.outputs.projectVersion }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    defaults:
+      run:
+        working-directory: spring-search
+    environment: 'dev'
+    needs: prerequisites
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+      - name: Build maven wrapper
+        run: mvn -N wrapper:wrapper
+      - name: Import GPG key
+        id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+      - name: List secret keys
+        run:  gpg --list-secret-keys
+      - name: Publish to GitHub Packages
+        run: ./mvnw --batch-mode deploy -Dmaven.antrun.skip=true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ contains(github.event.inputs.publish, 'true') }}
