@@ -1,0 +1,23 @@
+name: "get properties version from maven"
+description: "Reads version of MAVEN module out of properties in POM file"
+inputs:
+  workingDirectory:
+    description: "working directory to use"
+    required: false
+    default: "."
+outputs:
+  projectVersion:
+    description: "the project version"
+    value: ${{ steps.get-properties-project-version.outputs.projectVersion }}
+runs:
+  using: "composite"
+  steps:
+    - name: Get properties project version
+      id: get-properties-project-version
+      working-directory: ${{ inputs.workingDirectory }}
+      run: |
+        projectVersion=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout`
+        echo "Identified projectVersion: $projectVersion"
+        echo "::set-output name=projectVersion::$projectVersion"
+        echo "projectVersion2=$projectVersion" >> $GITHUB_ENV
+      shell: bash
