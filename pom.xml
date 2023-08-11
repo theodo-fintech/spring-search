@@ -362,16 +362,17 @@
 		</plugins>
 	</build>
 	<scm>
-		<connection>scm:git:https://github.com/sipios/spring-search.git</connection>
-		<developerConnection>scm:git:git@github.com:sipios/spring-search.git</developerConnection>
-		<url>https://github.com/sipios/spring-search</url>
+		<connection>scm:git:https://github.com/ecodef/spring-search.git</connection>
+		<developerConnection>scm:git:git@github.com:ecodef/spring-search.git</developerConnection>
+		<url>https://github.com/ecodef/spring-search</url>
 		<tag>HEAD</tag>
 	</scm>
 
 	<distributionManagement>
 		<repository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+			<id>github</id>
+			<name>GitHub Packages</name>
+			<url>https://maven.pkg.github.com/vwdfive/we-deliver</url>
 		</repository>
 	</distributionManagement>
 </project>
