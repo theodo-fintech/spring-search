@@ -372,7 +372,7 @@
 		<repository>
 			<id>github</id>
 			<name>GitHub Packages</name>
-			<url>https://maven.pkg.github.com/vwdfive/we-deliver</url>
+			<url>https://maven.pkg.github.com/ecodef/spring-search</url>
 		</repository>
 	</distributionManagement>
 </project>
