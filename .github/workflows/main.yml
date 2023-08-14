@@ -53,7 +53,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'adopt'
+          distribution: 'semeru'
       - name: Build maven wrapper
         run: mvn -N wrapper:wrapper
       - name: Import GPG key

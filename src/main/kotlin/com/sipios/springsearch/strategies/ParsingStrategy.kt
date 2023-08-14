@@ -2,6 +2,9 @@ package com.sipios.springsearch.strategies
 
 import com.sipios.springsearch.SearchOperation
 import com.sipios.springsearch.anotation.SearchSpec
+import jakarta.persistence.criteria.CriteriaBuilder
+import jakarta.persistence.criteria.Path
+import jakarta.persistence.criteria.Predicate
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -9,9 +12,6 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.Date
 import java.util.UUID
-import javax.persistence.criteria.CriteriaBuilder
-import javax.persistence.criteria.Path
-import javax.persistence.criteria.Predicate
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 
