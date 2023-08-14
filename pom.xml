@@ -19,7 +19,7 @@
 		<antl4.version>4.10.1</antl4.version>
 		<grammar.package>com.sipios.springsearch.grammar</grammar.package>
 		<grammar.directory>com/sipios/springsearch/grammar</grammar.directory>
-		<jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
+		<jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
 		<project.testresult.directory>${project.build.directory}/test-results</project.testresult.directory>
 	</properties>
 
