@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>cz.ecodef</groupId>
 	<artifactId>spring-search</artifactId>
-	<version>0.3.0-SNAPSHOT</version>
+	<version>0.3.0</version>
 	<name>spring-search</name>
 	<description>API for generating spring boot database queries</description>
 
