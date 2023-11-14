@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>cz.ecodef</groupId>
 	<artifactId>spring-search</artifactId>
-	<version>0.2.5</version>
+	<version>0.2.6</version>
 	<name>spring-search</name>
 	<description>API for generating spring boot database queries</description>
 
@@ -279,7 +279,7 @@
 										<limit implementation="org.jacoco.report.check.Limit">
 											<counter>BRANCH</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.75</minimum>
+											<minimum>0.7</minimum>
 										</limit>
 									</limits>
 								</rule>

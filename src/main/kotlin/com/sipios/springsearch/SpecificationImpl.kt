@@ -5,9 +5,11 @@ import com.sipios.springsearch.strategies.ParsingStrategy
 import java.util.ArrayList
 import javax.persistence.criteria.CriteriaBuilder
 import javax.persistence.criteria.CriteriaQuery
+import javax.persistence.criteria.From
 import javax.persistence.criteria.Path
 import javax.persistence.criteria.Predicate
 import javax.persistence.criteria.Root
+import org.hibernate.query.criteria.internal.path.PluralAttributePath
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -45,7 +47,12 @@ class SpecificationImpl<T>(private val criteria: SearchCriteria, private val sea
         prefix.removeAt(nestedKey.size - 1)
         var temp: Path<*> = root
         for (s in prefix) {
-            temp = temp.get<T>(s)
+            val get = temp.get<T>(s)
+            temp = if (get is PluralAttributePath && temp is From<*, *>) {
+                temp.join<T, T>(s as String)
+            } else {
+                get
+            }
         }
 
         return temp
