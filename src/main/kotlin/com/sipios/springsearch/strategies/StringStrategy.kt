@@ -2,9 +2,9 @@ package com.sipios.springsearch.strategies
 
 import com.sipios.springsearch.SearchOperation
 import com.sipios.springsearch.anotation.SearchSpec
-import javax.persistence.criteria.CriteriaBuilder
-import javax.persistence.criteria.Path
-import javax.persistence.criteria.Predicate
+import jakarta.persistence.criteria.CriteriaBuilder
+import jakarta.persistence.criteria.Path
+import jakarta.persistence.criteria.Predicate
 
 class StringStrategy(var searchSpecAnnotation: SearchSpec) : ParsingStrategy {
     override fun buildPredicate(
