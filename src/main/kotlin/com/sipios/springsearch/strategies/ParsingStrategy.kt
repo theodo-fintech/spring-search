@@ -47,11 +47,11 @@ interface ParsingStrategy {
         return when (ops) {
             SearchOperation.EQUALS -> builder.equal(path.get<Any>(fieldName), value)
             SearchOperation.NOT_EQUALS -> builder.notEqual(path.get<Any>(fieldName), value)
-            SearchOperation.STARTS_WITH -> builder.like(path.get(fieldName), "$value%")
-            SearchOperation.ENDS_WITH -> builder.like(path.get(fieldName), "%$value")
+            SearchOperation.STARTS_WITH -> builder.like(path[fieldName], "$value%")
+            SearchOperation.ENDS_WITH -> builder.like(path[fieldName], "%$value")
             SearchOperation.CONTAINS -> builder.like((path.get<String>(fieldName).`as`(String::class.java)), "%$value%")
-            SearchOperation.DOESNT_START_WITH -> builder.notLike(path.get(fieldName), "$value%")
-            SearchOperation.DOESNT_END_WITH -> builder.notLike(path.get(fieldName), "%$value")
+            SearchOperation.DOESNT_START_WITH -> builder.notLike(path[fieldName], "$value%")
+            SearchOperation.DOESNT_END_WITH -> builder.notLike(path[fieldName], "%$value")
             SearchOperation.DOESNT_CONTAIN -> builder.notLike(
                 (path.get<String>(fieldName).`as`(String::class.java)),
                 "%$value%"
