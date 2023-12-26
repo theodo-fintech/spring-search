@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.1</version>
+		<version>3.1.2</version>
 		<relativePath /> <!-- lookup parent from repository --> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.sipios</groupId>
@@ -14,8 +14,8 @@
 	<description>API for generating spring boot database queries</description>
 
 	<properties>
-		<java.version>1.8</java.version>
-		<kotlin.version>1.6.20</kotlin.version>
+		<java.version>17</java.version>
+		<kotlin.version>1.9.22</kotlin.version>
 		<antl4.version>4.9</antl4.version>
 		<grammar.package>com.sipios.springsearch.grammar</grammar.package>
 		<grammar.directory>com/sipios/springsearch/grammar</grammar.directory>
@@ -161,7 +161,7 @@
 						<sourceDir>src/main/kotlin</sourceDir>
 						<sourceDir>target/generated-sources/antlr4</sourceDir>
 					</sourceDirs>
-					<jvmTarget>1.8</jvmTarget>
+					<jvmTarget>21</jvmTarget>
 				</configuration>
 				<dependencies>
 					<dependency>
