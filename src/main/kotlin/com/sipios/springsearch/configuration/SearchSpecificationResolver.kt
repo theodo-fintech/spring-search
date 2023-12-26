@@ -44,7 +44,7 @@ class SearchSpecificationResolver : HandlerMethodArgumentResolver {
     private fun <T> buildSpecification(specClass: Class<T>, search: String?, searchSpecAnnotation: SearchSpec): Specification<T>? {
         logger.debug("Building specification for class {}", specClass)
         logger.debug("Search value found is {}", search)
-        if (search == null || search.isEmpty()) {
+        if (search.isNullOrEmpty()) {
             return null
         }
         val specBuilder = SpecificationsBuilder<T>(searchSpecAnnotation)
