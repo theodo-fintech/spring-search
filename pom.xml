@@ -16,7 +16,7 @@
 	<properties>
 		<java.version>21</java.version>
 		<kotlin.version>1.9.22</kotlin.version>
-		<antl4.version>4.9</antl4.version>
+		<antl4.version>4.13.1</antl4.version>
 		<grammar.package>com.sipios.springsearch.grammar</grammar.package>
 		<grammar.directory>com/sipios/springsearch/grammar</grammar.directory>
 		<jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
