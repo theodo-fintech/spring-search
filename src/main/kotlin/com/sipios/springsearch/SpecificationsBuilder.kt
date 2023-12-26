@@ -20,7 +20,7 @@ class SpecificationsBuilder<U>(searchSpecAnnotation: SearchSpec) {
 
     /**
      * This function expect a search string to have been provided.
-     * The search string has been transformed into a Expression Queue with the format: [OR, value>100, AND, value<1000, label:*MONO*]
+     * The search string has been transformed into an Expression Queue with the format: [OR, value>100, AND, value<1000, label:*MONO*]
      *
      * @return A list of specification used to filter the underlying object using JPA specifications
      */
