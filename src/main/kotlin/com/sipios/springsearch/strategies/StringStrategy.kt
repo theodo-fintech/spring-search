@@ -17,7 +17,7 @@ class StringStrategy(var searchSpecAnnotation: SearchSpec) : ParsingStrategy {
     ): Predicate? {
         if (!searchSpecAnnotation.caseSensitiveFlag) {
             val lowerCasedValue = (value as String).lowercase(Locale.getDefault())
-            val loweredFieldValue = builder.lower(path.get(fieldName))
+            val loweredFieldValue = builder.lower(path[fieldName])
             return when (ops) {
                 SearchOperation.STARTS_WITH -> builder.like(loweredFieldValue, "$lowerCasedValue%")
                 SearchOperation.ENDS_WITH -> builder.like(loweredFieldValue, "%$lowerCasedValue")

@@ -16,8 +16,8 @@ class LocalDateTimeStrategy : ParsingStrategy {
         value: Any?
     ): Predicate? {
         return when (ops) {
-            SearchOperation.GREATER_THAN -> builder.greaterThan(path.get(fieldName), value as LocalDateTime)
-            SearchOperation.LESS_THAN -> builder.lessThan(path.get(fieldName), value as LocalDateTime)
+            SearchOperation.GREATER_THAN -> builder.greaterThan(path[fieldName], value as LocalDateTime)
+            SearchOperation.LESS_THAN -> builder.lessThan(path[fieldName], value as LocalDateTime)
             else -> super.buildPredicate(builder, path, fieldName, ops, value)
         }
     }
