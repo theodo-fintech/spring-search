@@ -20,6 +20,7 @@
 		<h2.version>2.2.220</h2.version>
 		<jackson-databind.version>2.16.0</jackson-databind.version>
 		<snakeyaml.version>2.0</snakeyaml.version>
+		<dependency-check-maven.version>9.0.7</dependency-check-maven.version>
 		<antl4.version>4.13.1</antl4.version>
 		<grammar.package>com.sipios.springsearch.grammar</grammar.package>
 		<grammar.directory>com/sipios/springsearch/grammar</grammar.directory>
@@ -375,7 +376,7 @@
 			<plugin>
 				<groupId>org.owasp</groupId>
 				<artifactId>dependency-check-maven</artifactId>
-				<version>9.0.7</version>
+				<version>${dependency-check-maven.version}</version>
 				<executions>
 					<execution>
 						<goals>
