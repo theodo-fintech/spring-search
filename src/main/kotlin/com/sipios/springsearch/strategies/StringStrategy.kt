@@ -5,6 +5,7 @@ import com.sipios.springsearch.anotation.SearchSpec
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.Path
 import jakarta.persistence.criteria.Predicate
+import java.util.Locale
 
 class StringStrategy(var searchSpecAnnotation: SearchSpec) : ParsingStrategy {
     override fun buildPredicate(
@@ -15,7 +16,7 @@ class StringStrategy(var searchSpecAnnotation: SearchSpec) : ParsingStrategy {
         value: Any?
     ): Predicate? {
         if (!searchSpecAnnotation.caseSensitiveFlag) {
-            val lowerCasedValue = (value as String).toLowerCase()
+            val lowerCasedValue = (value as String).lowercase(Locale.getDefault())
             val loweredFieldValue = builder.lower(path.get(fieldName))
             return when (ops) {
                 SearchOperation.STARTS_WITH -> builder.like(loweredFieldValue, "$lowerCasedValue%")
