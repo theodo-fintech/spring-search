@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.1.2</version>
+		<version>3.1.7</version>
 		<relativePath /> <!-- lookup parent from repository --> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.sipios</groupId>
@@ -18,6 +18,8 @@
 		<kotlin.version>1.9.22</kotlin.version>
 		<jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
 		<h2.version>2.2.220</h2.version>
+		<jackson-databind.version>2.16.0</jackson-databind.version>
+		<snakeyaml.version>2.0</snakeyaml.version>
 		<antl4.version>4.13.1</antl4.version>
 		<grammar.package>com.sipios.springsearch.grammar</grammar.package>
 		<grammar.directory>com/sipios/springsearch/grammar</grammar.directory>
@@ -44,6 +46,18 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson-databind.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>${snakeyaml.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
