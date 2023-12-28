@@ -7,7 +7,7 @@ import jakarta.persistence.criteria.Path
 import jakarta.persistence.criteria.Predicate
 import java.util.Locale
 
-class StringStrategy(private var searchSpecAnnotation: SearchSpec) : ParsingStrategy {
+data class StringStrategy(var searchSpecAnnotation: SearchSpec) : ParsingStrategy {
     override fun buildPredicate(
         builder: CriteriaBuilder,
         path: Path<*>,
