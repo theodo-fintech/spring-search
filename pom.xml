@@ -165,7 +165,7 @@
 						<sourceDir>src/main/kotlin</sourceDir>
 						<sourceDir>target/generated-sources/antlr4</sourceDir>
 					</sourceDirs>
-					<jvmTarget>21</jvmTarget>
+					<jvmTarget>17</jvmTarget>
 				</configuration>
 				<dependencies>
 					<dependency>
