@@ -80,7 +80,7 @@ Please note that providing such a feature on your API does not come without risk
 <!-- GETTING STARTED -->
 ## Getting Started
 
-**Requirements** : JDK 8 or more.  
+**Requirements** : JDK 17 or more.  
 To get a local copy up and running follow these simple steps.
 
 ### Installation
@@ -91,7 +91,7 @@ Add the repo to your project inside your `pom.xml` file
 <dependency>
     <groupId>com.sipios</groupId>
     <artifactId>spring-search</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
 </dependency>
 ```
 
@@ -174,6 +174,40 @@ Request : `/cars?search=options.transmission:Auto`
 12. Complex example  
 Request : `/cars?search=creationyear:2018 AND price<300000 AND (color:Yellow OR color:Blue) AND options.transmission:Auto`
 ![complex example](./docs/images/complex-example.gif)
+
+<!-- TROUBLESHOOTING -->
+## Troubleshooting
+
+If you get the following error ⬇️
+
+> No primary or default constructor found for interface org.springframework.data.jpa.domain.Specification
+
+You are free to opt for either of the two following solutions :
+1. Add a `@Configuration` class to add our argument resolver to your project
+```kotlin
+// Kotlin
+@Configuration
+class SpringSearchResolverConf : WebMvcConfigurer {
+  override fun addArgumentResolvers(argumentResolvers: MutableList<HandlerMethodArgumentResolver>) {
+    argumentResolvers.add(SearchSpecificationResolver())
+  }
+}
+```
+```java
+// Java
+@Configuration
+public class SpringSearchResolverConf implements WebMvcConfigurer {
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        argumentResolvers.add(new SearchSpecificationResolver());
+    }
+}
+```
+
+2. Add a `@ComponentScan` annotation to your project configuration class
+```java
+@ComponentScan(basePackages = {"com.your-application", "com.sipios.springsearch"})
+```
 
 <!-- ROADMAP -->
 ## Roadmap
