@@ -600,13 +600,13 @@ class SpringSearchApplicationTest {
 
         var specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", true)
-        ).withSearch("createdAt>='2019-01-01'").build()
+        ).withSearch("createdAt>:'2019-01-01'").build()
         var specificationUsers = userRepository.findAll(specification)
         Assertions.assertEquals(2, specificationUsers.size)
 
         specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", true)
-        ).withSearch("createdAt>='2019-01-04'").build()
+        ).withSearch("createdAt>:'2019-01-04'").build()
         specificationUsers = userRepository.findAll(specification)
         Assertions.assertEquals(0, specificationUsers.size)
     }
@@ -619,13 +619,13 @@ class SpringSearchApplicationTest {
 
         var specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", true)
-        ).withSearch("createdAt<='2019-01-01'").build()
+        ).withSearch("createdAt<:'2019-01-01'").build()
         var specificationUsers = userRepository.findAll(specification)
         Assertions.assertEquals(1, specificationUsers.size)
 
         specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", true)
-        ).withSearch("createdAt<='2019-01-03'").build()
+        ).withSearch("createdAt<:'2019-01-03'").build()
         specificationUsers = userRepository.findAll(specification)
         Assertions.assertEquals(2, specificationUsers.size)
     }
@@ -809,7 +809,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("updatedInstantAt>='2020-01-11T09:20:30Z'").build()
+        ).withSearch("updatedInstantAt>:'2020-01-11T09:20:30Z'").build()
         val robotUsers = userRepository.findAll(specification)
         Assertions.assertEquals(1, robotUsers.size)
         Assertions.assertEquals("robot", robotUsers[0].userFirstName)
@@ -827,7 +827,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("updatedInstantAt<='2020-01-11T09:20:30Z'").build()
+        ).withSearch("updatedInstantAt<:'2020-01-11T09:20:30Z'").build()
         val robotUsers = userRepository.findAll(specification)
         Assertions.assertEquals(1, robotUsers.size)
         Assertions.assertEquals("john", robotUsers[0].userFirstName)
@@ -879,7 +879,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "robot2", updatedAt = LocalDateTime.parse("2020-01-12T10:20:30")))
         val specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("updatedAt>='2020-01-11T10:20:30'").build()
+        ).withSearch("updatedAt>:'2020-01-11T10:20:30'").build()
         val users = userRepository.findAll(specification)
         Assertions.assertEquals(2, users.size)
         Assertions.assertFalse(users.any { user -> user.userFirstName == "john" })
@@ -892,7 +892,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "robot2", updatedAt = LocalDateTime.parse("2020-01-12T10:20:30")))
         val specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("updatedAt<='2020-01-11T10:20:30'").build()
+        ).withSearch("updatedAt<:'2020-01-11T10:20:30'").build()
         val users = userRepository.findAll(specification)
         Assertions.assertEquals(2, users.size)
         Assertions.assertFalse(users.any { user -> user.userFirstName == "robot2" })
@@ -958,7 +958,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("updatedDateAt<='2020-01-11'").build()
+        ).withSearch("updatedDateAt<:'2020-01-11'").build()
         val users = userRepository.findAll(specification)
         Assertions.assertEquals(2, users.size)
         Assertions.assertFalse(users.any { user -> user.userFirstName == "robot2" })
@@ -972,7 +972,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("updatedDateAt>='2020-01-11'").build()
+        ).withSearch("updatedDateAt>:'2020-01-11'").build()
         val users = userRepository.findAll(specification)
         Assertions.assertEquals(2, users.size)
         Assertions.assertFalse(users.any { user -> user.userFirstName == "john" })
@@ -1025,7 +1025,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("updatedTimeAt<='10:20:30'").build()
+        ).withSearch("updatedTimeAt<:'10:20:30'").build()
         val users = userRepository.findAll(specification)
         Assertions.assertEquals(2, users.size)
         Assertions.assertFalse(users.any { user -> user.userFirstName == "robot2" })
@@ -1039,7 +1039,7 @@ class SpringSearchApplicationTest {
 
         val specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("updatedTimeAt>='10:20:30'").build()
+        ).withSearch("updatedTimeAt>:'10:20:30'").build()
         val users = userRepository.findAll(specification)
         Assertions.assertEquals(2, users.size)
         Assertions.assertFalse(users.any { user -> user.userFirstName == "john" })
@@ -1143,7 +1143,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "joe", userChildrenNumber = 4))
         val specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("userChildrenNumber<=2").build()
+        ).withSearch("userChildrenNumber<:2").build()
         val users = userRepository.findAll(specification)
         Assertions.assertEquals(1, users.size)
         Assertions.assertEquals("john", users[0].userFirstName)
@@ -1156,7 +1156,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "joe", userChildrenNumber = 4))
         val specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("userChildrenNumber>=3").build()
+        ).withSearch("userChildrenNumber>:3").build()
         val users = userRepository.findAll(specification)
         Assertions.assertEquals(2, users.size)
     }
