@@ -4,7 +4,7 @@ enum class SearchOperation {
     EQUALS, NOT_EQUALS, GREATER_THAN, LESS_THAN, STARTS_WITH, ENDS_WITH, CONTAINS, DOESNT_START_WITH, DOESNT_END_WITH, DOESNT_CONTAIN, GREATER_THAN_EQUALS, LESS_THAN_EQUALS;
 
     companion object {
-        val SIMPLE_OPERATION_SET = arrayOf(":", "!", ">", "<", "~", ">=", "<=")
+        val SIMPLE_OPERATION_SET = arrayOf(":", "!", ">", "<", "~", ">:", "<:")
         val ZERO_OR_MORE_REGEX = "*"
         val OR_OPERATOR = "OR"
         val AND_OPERATOR = "AND"
@@ -23,8 +23,8 @@ enum class SearchOperation {
                 "!" -> NOT_EQUALS
                 ">" -> GREATER_THAN
                 "<" -> LESS_THAN
-                ">=" -> GREATER_THAN_EQUALS
-                "<=" -> LESS_THAN_EQUALS
+                ">:" -> GREATER_THAN_EQUALS
+                "<:" -> LESS_THAN_EQUALS
                 else -> null
             }
         }
