@@ -18,6 +18,8 @@ class LocalDateStrategy : ParsingStrategy {
         return when (ops) {
             SearchOperation.GREATER_THAN -> builder.greaterThan(path[fieldName], value as LocalDate)
             SearchOperation.LESS_THAN -> builder.lessThan(path[fieldName], value as LocalDate)
+            SearchOperation.GREATER_THAN_EQUALS -> builder.greaterThanOrEqualTo(path[fieldName], value as LocalDate)
+            SearchOperation.LESS_THAN_EQUALS -> builder.lessThanOrEqualTo(path[fieldName], value as LocalDate)
             else -> super.buildPredicate(builder, path, fieldName, ops, value)
         }
     }
