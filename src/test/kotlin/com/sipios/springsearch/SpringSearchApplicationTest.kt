@@ -979,4 +979,42 @@ class SpringSearchApplicationTest {
         Assertions.assertEquals(1, robotUsers.size)
         Assertions.assertEquals(user2UUID, robotUsers[0].uuid)
     }
+
+    @Test
+    fun canGetUsersWithNumberOfChildrenLessOrEqualSearch() {
+        userRepository.save(Users(userFirstName = "john", userChildrenNumber = 2))
+        userRepository.save(Users(userFirstName = "jane", userChildrenNumber = 3))
+        userRepository.save(Users(userFirstName = "joe", userChildrenNumber = 4))
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("userChildrenNumber<=2").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertEquals(1, users.size)
+        Assertions.assertEquals("john", users[0].userFirstName)
+    }
+
+    @Test
+    fun canGetUsersWithNumberOfChildrenGreaterOrEqualSearch() {
+        userRepository.save(Users(userFirstName = "john", userChildrenNumber = 2))
+        userRepository.save(Users(userFirstName = "jane", userChildrenNumber = 3))
+        userRepository.save(Users(userFirstName = "joe", userChildrenNumber = 4))
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("userChildrenNumber>=3").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertEquals(2, users.size)
+    }
+
+    @Test
+    fun canGetUsersWithNumberOfChildrenLessSearch() {
+        userRepository.save(Users(userFirstName = "john", userChildrenNumber = 2))
+        userRepository.save(Users(userFirstName = "jane", userChildrenNumber = 3))
+        userRepository.save(Users(userFirstName = "joe", userChildrenNumber = 4))
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("userChildrenNumber<3").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertEquals(1, users.size)
+        Assertions.assertEquals("john", users[0].userFirstName)
+    }
 }
