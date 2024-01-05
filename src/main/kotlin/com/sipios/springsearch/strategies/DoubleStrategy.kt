@@ -23,7 +23,9 @@ class DoubleStrategy : ParsingStrategy {
         }
     }
 
-    override fun parse(value: String?, fieldClass: KClass<out Any>): Any? {
-        return value?.toDouble()
+    override fun parse(value: Any?, fieldClass: KClass<out Any>): Any? {
+        if (value is String) return value.toDouble()
+        if (value is List<*>) return value.map { it.toString().toDouble() }
+        return value
     }
 }

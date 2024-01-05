@@ -23,7 +23,7 @@ interface ParsingStrategy {
      * @param fieldClass Kotlin class of the referred field
      * @return Returns by default the value without any parsing
      */
-    fun parse(value: String?, fieldClass: KClass<out Any>): Any? {
+    fun parse(value: Any?, fieldClass: KClass<out Any>): Any? {
         return value
     }
 
@@ -45,6 +45,16 @@ interface ParsingStrategy {
         value: Any?
     ): Predicate? {
         return when (ops) {
+            SearchOperation.IN -> {
+                val inClause: CriteriaBuilder.In<Any> = getInClause(builder, path, fieldName, value)
+                inClause
+            }
+
+            SearchOperation.NOT_IN -> {
+                val inClause: CriteriaBuilder.In<Any> = getInClause(builder, path, fieldName, value)
+                builder.not(inClause)
+            }
+
             SearchOperation.EQUALS -> builder.equal(path.get<Any>(fieldName), value)
             SearchOperation.NOT_EQUALS -> builder.notEqual(path.get<Any>(fieldName), value)
             SearchOperation.STARTS_WITH -> builder.like(path[fieldName], "$value%")
@@ -56,8 +66,22 @@ interface ParsingStrategy {
                 (path.get<String>(fieldName).`as`(String::class.java)),
                 "%$value%"
             )
+
             else -> null
         }
+    }
+
+    fun getInClause(
+        builder: CriteriaBuilder,
+        path: Path<*>,
+        fieldName: String,
+        value: Any?
+    ): CriteriaBuilder.In<Any> {
+        val inClause: CriteriaBuilder.In<Any> = builder.`in`(path.get(fieldName))
+        val values = value as List<*>
+        values.forEach { inClause.value(it) }
+        println("inClause: $inClause")
+        return inClause
     }
 
     companion object {
