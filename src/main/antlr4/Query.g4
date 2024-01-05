@@ -4,6 +4,7 @@ Copyright (c) 2019, Michael Mollard
 
 grammar Query;
 
+// syntactic rules
 input
    : query EOF
    ;
@@ -42,7 +43,7 @@ op
    ;
 
 
-
+// lexical rules
 BOOL
     : 'true'
     | 'false'
@@ -118,6 +119,16 @@ fragment HexDigit
 fragment OctalDigit
  : [0-7]
  ;
+fragment ARRAY_ELEMENT
+   : STRING
+   | NUMBER
+   | BOOL
+   | IDENTIFIER
+   ;
+
+fragment POINT
+   : '.'
+   ;
 
 AND
    : 'AND'
@@ -148,15 +159,8 @@ RBRACKET
     : ']'
     ;
 
-fragment ARRAY_ELEMENT
-   : STRING
-   | NUMBER
-   | BOOL
-   | IDENTIFIER
-   ;
-
 ARRAY
-   : '[' (ARRAY_ELEMENT(','ARRAY_ELEMENT)* )?']'
+   : '[' WS* (ARRAY_ELEMENT WS* (',' WS* ARRAY_ELEMENT WS*)* )?']'
    ;
 
 GT
@@ -189,11 +193,6 @@ NOT_IN
 
 NOT_EQ
    : '!'
-   ;
-
-
-fragment POINT
-   : '.'
    ;
 
 IDENTIFIER
