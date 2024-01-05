@@ -80,7 +80,6 @@ interface ParsingStrategy {
         val inClause: CriteriaBuilder.In<Any> = builder.`in`(path.get(fieldName))
         val values = value as List<*>
         values.forEach { inClause.value(it) }
-        println("inClause: $inClause")
         return inClause
     }
 
