@@ -1,7 +1,3 @@
-/*
-Copyright (c) 2019, Michael Mollard
-*/
-
 grammar Query;
 
 // syntactic rules
@@ -23,14 +19,18 @@ key
    : IDENTIFIER
    ;
 
+array
+   : LBRACKET (value (COMMA value)* )? RBRACKET
+   ;
+   
 value
-   : IDENTIFIER
+   : array
+   | IDENTIFIER
    | STRING
-   | ARRAY
    | ENCODED_STRING
    | NUMBER
    | BOOL
-    ;
+  ;
 
 op
    : EQ
@@ -43,7 +43,6 @@ op
    | NOT_IN
    ;
 
-
 // lexical rules
 BOOL
     : 'true'
@@ -54,8 +53,6 @@ STRING
  : '"' DoubleStringCharacter* '"'
  | '\'' SingleStringCharacter* '\''
  ;
-
-
 
 fragment DoubleStringCharacter
    : ~["\\\r\n]
@@ -120,12 +117,6 @@ fragment HexDigit
 fragment OctalDigit
  : [0-7]
  ;
-fragment ARRAY_ELEMENT
-   : STRING
-   | NUMBER
-   | BOOL
-   | IDENTIFIER
-   ;
 
 fragment POINT
    : '.'
@@ -160,10 +151,6 @@ RBRACKET
     : ']'
     ;
 
-ARRAY
-   : '[' WS* (ARRAY_ELEMENT WS* (',' WS* ARRAY_ELEMENT WS*)* )?']'
-   ;
-
 GT
    : '>'
    ;
@@ -196,12 +183,16 @@ NOT_EQ
    : '!'
    ;
 
+COMMA
+   : ','
+   ;
+
 IDENTIFIER
    : [A-Za-z0-9.]+
    ;
 
 ENCODED_STRING
-   : ~([ :<>!()])+
+   : '"' ( ~[\\"] | '\\' . )* '"'
    ;
 
 LineTerminator
