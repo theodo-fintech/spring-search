@@ -26,10 +26,11 @@ key
 value
    : IDENTIFIER
    | STRING
+   | ARRAY
    | ENCODED_STRING
    | NUMBER
    | BOOL
-   | ARRAY   ;
+    ;
 
 op
    : EQ
