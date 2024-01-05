@@ -24,7 +24,9 @@ class DurationStrategy : ParsingStrategy {
         }
     }
 
-    override fun parse(value: String?, fieldClass: KClass<out Any>): Any? {
-        return Duration.parse(value)
+    override fun parse(value: Any?, fieldClass: KClass<out Any>): Any? {
+        if (value is String) return Duration.parse(value)
+        if (value is List<*>) return value.map { Duration.parse(it.toString()) }
+        return value
     }
 }
