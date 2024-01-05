@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2019, Michael Mollard
+*/
+
 grammar Query;
 
 // syntactic rules
@@ -20,7 +24,7 @@ key
    ;
 
 array
-   : LBRACKET (value (COMMA value)* )? RBRACKET
+   : LBRACKET (value (',' value)* )? RBRACKET
    ;
    
 value
@@ -118,10 +122,6 @@ fragment OctalDigit
  : [0-7]
  ;
 
-fragment POINT
-   : '.'
-   ;
-
 AND
    : 'AND'
    ;
@@ -183,17 +183,19 @@ NOT_EQ
    : '!'
    ;
 
-COMMA
-   : ','
+
+fragment POINT
+   : '.'
    ;
 
 IDENTIFIER
    : [A-Za-z0-9.]+
    ;
 
-ENCODED_STRING
-   : '"' ( ~[\\"] | '\\' . )* '"'
+ENCODED_STRING //anything but these characters :<>!()[], and whitespace
+   : ~([ ,:<>!()[\]])+
    ;
+
 
 LineTerminator
 : [\r\n\u2028\u2029] -> channel(HIDDEN)

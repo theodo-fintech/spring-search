@@ -34,20 +34,15 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
         val key = ctx.key()!!.text
         val op = ctx.op()!!.text
         var value = ctx.value()!!.text
-
+        var valueAsList: List<String>? = null
         if (ctx.value().STRING() != null) {
             value = clearString(value)
         } else if (ctx.value().array() != null) {
             val arr = ctx.value().array()
             val arrayValues = arr.value()
-            val valueAsList = arrayValues.map { v ->
-                if (v.STRING() != null) {
-                    clearString(v.text)
-                }
-                v.text
-            }
-            value = valueAsList.joinToString(",")
+            valueAsList = arrayValues.map({if (it.STRING() != null) clearString(it.text) else it.text})
         }
+
         val matchResult = this.valueRegExp.find(value!!)
         val criteria = SearchCriteria(
             key,
