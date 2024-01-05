@@ -36,13 +36,18 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
         var value = ctx.value()!!.text
 
         if (ctx.value().STRING() != null) {
-            value = value
-                .removeSurrounding("'")
-                .removeSurrounding("\"")
-                .replace("\\\"", "\"")
-                .replace("\\'", "'")
+            value = clearString(value)
+        } else if (ctx.value().array() != null) {
+            val arr = ctx.value().array()
+            val arrayValues = arr.value()
+            val valueAsList = arrayValues.map { v ->
+                if (v.STRING() != null) {
+                    clearString(v.text)
+                }
+                v.text
+            }
+            value = valueAsList.joinToString(",")
         }
-
         val matchResult = this.valueRegExp.find(value!!)
         val criteria = SearchCriteria(
             key,
@@ -54,4 +59,10 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
 
         return SpecificationImpl(criteria, searchSpecAnnotation)
     }
+
+    private fun clearString(value: String) = value
+        .removeSurrounding("'")
+        .removeSurrounding("\"")
+        .replace("\\\"", "\"")
+        .replace("\\'", "'")
 }
