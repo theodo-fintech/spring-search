@@ -15,6 +15,9 @@ data class StringStrategy(var searchSpecAnnotation: SearchSpec) : ParsingStrateg
         ops: SearchOperation?,
         value: Any?
     ): Predicate? {
+        if (ops == SearchOperation.NOT_IN || ops == SearchOperation.IN) {
+            return super.buildPredicate(builder, path, fieldName, ops, value)
+        }
         if (!searchSpecAnnotation.caseSensitiveFlag) {
             val lowerCasedValue = (value as String).lowercase(Locale.getDefault())
             val loweredFieldValue = builder.lower(path[fieldName])

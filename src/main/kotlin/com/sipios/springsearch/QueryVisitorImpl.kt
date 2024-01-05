@@ -40,9 +40,18 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
         } else if (ctx.value().array() != null) {
             val arr = ctx.value().array()
             val arrayValues = arr.value()
-            valueAsList = arrayValues.map({if (it.STRING() != null) clearString(it.text) else it.text})
+            valueAsList = arrayValues.map({ if (it.STRING() != null) clearString(it.text) else it.text })
         }
-
+        if (valueAsList != null) {
+            val criteria = SearchCriteria(
+                key,
+                op,
+                null,
+                valueAsList,
+                null
+            )
+            return SpecificationImpl(criteria, searchSpecAnnotation)
+        }
         val matchResult = this.valueRegExp.find(value!!)
         val criteria = SearchCriteria(
             key,

@@ -1173,4 +1173,75 @@ class SpringSearchApplicationTest {
         Assertions.assertEquals(1, users.size)
         Assertions.assertEquals("john", users[0].userFirstName)
     }
+
+    @Test
+    fun canGetUserWithNameIn() {
+        val johnId = userRepository.save(Users(userFirstName = "john", userChildrenNumber = 2)).userId
+        val janeId = userRepository.save(Users(userFirstName = "jane", userChildrenNumber = 3)).userId
+        userRepository.save(Users(userFirstName = "joe", userChildrenNumber = 4))
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("userFirstName IN [\"john\", \"jane\"]").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertTrue(setOf(johnId, janeId) == users.map { user -> user.userId }.toSet())
+    }
+
+    @Test
+    fun canGetUserWithNameNotIn() {
+        userRepository.save(Users(userFirstName = "john", userChildrenNumber = 2))
+        userRepository.save(Users(userFirstName = "jane", userChildrenNumber = 3))
+        val joeId = userRepository.save(Users(userFirstName = "joe", userChildrenNumber = 4)).userId
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("userFirstName NOT IN [\"john\", \"jane\"]").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertTrue(setOf(joeId) == users.map { user -> user.userId }.toSet())
+    }
+
+    @Test
+    fun canGetUserWithChildrenNumberNotIn() {
+        userRepository.save(Users(userFirstName = "john", userChildrenNumber = 2))
+        userRepository.save(Users(userFirstName = "jane", userChildrenNumber = 3))
+        val joeId = userRepository.save(Users(userFirstName = "joe", userChildrenNumber = 4)).userId
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("userChildrenNumber NOT IN [2, 3]").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertTrue(setOf(joeId) == users.map { user -> user.userId }.toSet())
+    }
+
+    @Test
+    fun canGetUserWithChildrenNumberIn() {
+        val johnId = userRepository.save(Users(userFirstName = "john", userChildrenNumber = 2)).userId
+        val janeId = userRepository.save(Users(userFirstName = "jane", userChildrenNumber = 3)).userId
+        userRepository.save(Users(userFirstName = "joe", userChildrenNumber = 4))
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("userChildrenNumber IN [2, 3]").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertTrue(setOf(janeId, johnId) == users.map { user -> user.userId }.toSet())
+    }
+
+    @Test
+    fun canGetUserWithTypeIn() {
+        val johnId = userRepository.save(Users(userFirstName = "john", type = UserType.TEAM_MEMBER)).userId
+        val janeId = userRepository.save(Users(userFirstName = "jane", type = UserType.ADMINISTRATOR)).userId
+        userRepository.save(Users(userFirstName = "joe", type = UserType.MANAGER))
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("type IN [ADMINISTRATOR, TEAM_MEMBER]").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertTrue(setOf(janeId, johnId) == users.map { user -> user.userId }.toSet())
+    }
+    @Test
+    fun canGetUserWithIn() {
+        val johnId = userRepository.save(Users(userFirstName = "john", updatedDateAt = LocalDate.parse("2020-01-10"))).userId
+        val janeId = userRepository.save(Users(userFirstName = "jane", updatedDateAt = LocalDate.parse("2020-01-15"))).userId
+        userRepository.save(Users(userFirstName = "joe", updatedDateAt = LocalDate.parse("2021-01-10")))
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("updatedDateAt IN ['2020-01-10', '2020-01-15']").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertTrue(setOf(janeId, johnId) == users.map { user -> user.userId }.toSet())
+    }
 }

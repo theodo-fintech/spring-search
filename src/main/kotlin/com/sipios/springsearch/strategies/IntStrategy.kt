@@ -23,7 +23,9 @@ class IntStrategy : ParsingStrategy {
         }
     }
 
-    override fun parse(value: String?, fieldClass: KClass<out Any>): Any? {
-        return value?.toInt()
+    override fun parse(value: Any?, fieldClass: KClass<out Any>): Any? {
+        if (value is String) return value.toInt()
+        if (value is List<*>) return value.map { it.toString().toInt() }
+        return value
     }
 }
