@@ -28,7 +28,7 @@ value
    | ENCODED_STRING
    | NUMBER
    | BOOL
-   ;
+   | ARRAY   ;
 
 op
    : EQ
@@ -37,7 +37,11 @@ op
    | LT
    | LTE
    | NOT_EQ
+   | IN
+   | NOT_IN
    ;
+
+
 
 BOOL
     : 'true'
@@ -48,6 +52,8 @@ STRING
  : '"' DoubleStringCharacter* '"'
  | '\'' SingleStringCharacter* '\''
  ;
+
+
 
 fragment DoubleStringCharacter
    : ~["\\\r\n]
@@ -134,6 +140,24 @@ RPAREN
    : ')'
    ;
 
+LBRACKET
+   : '['
+   ;
+
+RBRACKET
+    : ']'
+    ;
+
+fragment ARRAY_ELEMENT
+   : STRING
+   | NUMBER
+   | BOOL
+   | IDENTIFIER
+   ;
+
+ARRAY
+   : '[' (ARRAY_ELEMENT(','ARRAY_ELEMENT)* )?']'
+   ;
 
 GT
    : '>'
@@ -155,6 +179,13 @@ EQ
    : ':'
    ;
 
+IN
+   : 'IN'
+   ;
+
+NOT_IN
+    : 'NOT IN'
+    ;
 
 NOT_EQ
    : '!'
