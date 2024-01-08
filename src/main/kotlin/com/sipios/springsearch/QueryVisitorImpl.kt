@@ -41,6 +41,7 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
             val arrayValues = arr.value()
             val valueAsList: List<String> =
                 arrayValues.map { if (it.STRING() != null) clearString(it.text) else it.text }
+            // there is no need for prefix and suffix (e.g. 'john*') in case of array value
             val criteria = SearchCriteria(
                 key,
                 op,

@@ -158,6 +158,9 @@ Request : `/cars?search=color:Red OR color:Blue`
 Request : `/cars?search=brand:Aston* AND price<300000`  
 ![and operator example](./docs/images/and-example.gif)
 
+7. Using the `IN` and `NOT IN` operators
+Request : `/cars?search=color IN ['Red', 'Blue']`
+
 8. Using parenthesis  
 Request : `/cars?search=( brand:Nissan OR brand:Chevrolet ) AND color:Blue`  
 *Note: Spaces inside the parenthesis are not necessary*
