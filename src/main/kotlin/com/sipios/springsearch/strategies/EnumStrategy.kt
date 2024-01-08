@@ -4,9 +4,6 @@ import kotlin.reflect.KClass
 
 class EnumStrategy : ParsingStrategy {
     override fun parse(value: String?, fieldClass: KClass<out Any>): Any? {
-        return toValue(fieldClass, value)
+        return Class.forName(fieldClass.qualifiedName).getMethod("valueOf", String::class.java).invoke(null, value)
     }
-
-    private fun toValue(fieldClass: KClass<out Any>, value: Any?): Any? =
-        Class.forName(fieldClass.qualifiedName).getMethod("valueOf", String::class.java).invoke(null, value)
 }
