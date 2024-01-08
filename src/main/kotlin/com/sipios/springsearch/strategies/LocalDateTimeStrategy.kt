@@ -24,9 +24,7 @@ class LocalDateTimeStrategy : ParsingStrategy {
         }
     }
 
-    override fun parse(value: Any?, fieldClass: KClass<out Any>): Any? {
-        if (value is String) return LocalDateTime.parse(value)
-        if (value is List<*>) return value.map { LocalDateTime.parse(it.toString()) }
-        return value
+    override fun parse(value: String?, fieldClass: KClass<out Any>): Any? {
+        return LocalDateTime.parse(value)
     }
 }

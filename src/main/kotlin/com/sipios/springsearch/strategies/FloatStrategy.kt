@@ -23,9 +23,7 @@ class FloatStrategy : ParsingStrategy {
         }
     }
 
-    override fun parse(value: Any?, fieldClass: KClass<out Any>): Any? {
-        if (value is String) return value.toFloat()
-        if (value is List<*>) return value.map { it.toString().toFloat() }
-        return value
+    override fun parse(value: String?, fieldClass: KClass<out Any>): Any? {
+        return value?.toFloat()
     }
 }

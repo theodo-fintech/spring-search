@@ -23,8 +23,12 @@ interface ParsingStrategy {
      * @param fieldClass Kotlin class of the referred field
      * @return Returns by default the value without any parsing
      */
-    fun parse(value: Any?, fieldClass: KClass<out Any>): Any? {
+    fun parse(value: String?, fieldClass: KClass<out Any>): Any? {
         return value
+    }
+
+    fun parse(value: List<*>?, fieldClass: KClass<out Any>): Any? {
+        return value?.map { parse(it.toString(), fieldClass) }
     }
 
     /**

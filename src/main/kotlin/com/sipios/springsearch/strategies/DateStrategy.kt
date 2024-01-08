@@ -28,9 +28,7 @@ class DateStrategy : ParsingStrategy {
         }
     }
 
-    override fun parse(value: Any?, fieldClass: KClass<out Any>): Any? {
-        if (value is String) return standardDateFormat.parse(value)
-        if (value is List<*>) return value.map { standardDateFormat.parse(it.toString()) }
-        return value
+    override fun parse(value: String?, fieldClass: KClass<out Any>): Any? {
+        return standardDateFormat.parse(value)
     }
 }
