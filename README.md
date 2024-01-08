@@ -160,7 +160,8 @@ Request : `/cars?search=brand:Aston* AND price<300000`
 
 7. Using the `IN` and `NOT IN` operators  
 Request : `/cars?search=color IN ['Red', 'Blue']  
-*Note: Spaces inside the brackets are not necessary*
+*Note: Spaces inside the brackets are not necessary*  
+*Note: You will need to encode the value (e.g. encodeURI) as brackets are not valid url parts*
 
 
 8. Using parenthesis  
