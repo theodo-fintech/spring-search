@@ -1187,6 +1187,18 @@ class SpringSearchApplicationTest {
     }
 
     @Test
+    fun canGetUserWithNameInEmptyList() {
+        userRepository.save(Users(userFirstName = "john", userChildrenNumber = 2))
+        userRepository.save(Users(userFirstName = "jane", userChildrenNumber = 3))
+        userRepository.save(Users(userFirstName = "joe", userChildrenNumber = 4))
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("userFirstName IN []").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertTrue(users.isEmpty())
+    }
+
+    @Test
     fun canGetUserWithNameNotIn() {
         userRepository.save(Users(userFirstName = "john", userChildrenNumber = 2))
         userRepository.save(Users(userFirstName = "jane", userChildrenNumber = 3))
@@ -1233,10 +1245,13 @@ class SpringSearchApplicationTest {
         val users = userRepository.findAll(specification)
         Assertions.assertTrue(setOf(janeId, johnId) == users.map { user -> user.userId }.toSet())
     }
+
     @Test
     fun canGetUserWithIn() {
-        val johnId = userRepository.save(Users(userFirstName = "john", updatedDateAt = LocalDate.parse("2020-01-10"))).userId
-        val janeId = userRepository.save(Users(userFirstName = "jane", updatedDateAt = LocalDate.parse("2020-01-15"))).userId
+        val johnId =
+            userRepository.save(Users(userFirstName = "john", updatedDateAt = LocalDate.parse("2020-01-10"))).userId
+        val janeId =
+            userRepository.save(Users(userFirstName = "jane", updatedDateAt = LocalDate.parse("2020-01-15"))).userId
         userRepository.save(Users(userFirstName = "joe", updatedDateAt = LocalDate.parse("2021-01-10")))
         val specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", false)

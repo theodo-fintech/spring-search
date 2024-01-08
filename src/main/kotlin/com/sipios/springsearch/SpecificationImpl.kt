@@ -19,7 +19,8 @@ import org.springframework.web.server.ResponseStatusException
  *
  * @param <T>The class on which the specification will be applied</T>
  * */
-class SpecificationImpl<T>(private val criteria: SearchCriteria, private val searchSpecAnnotation: SearchSpec) : Specification<T> {
+class SpecificationImpl<T>(private val criteria: SearchCriteria, private val searchSpecAnnotation: SearchSpec) :
+    Specification<T> {
     @Throws(ResponseStatusException::class)
     override fun toPredicate(root: Root<T>, query: CriteriaQuery<*>, builder: CriteriaBuilder): Predicate? {
         val nestedKey = criteria.key.split(".")
@@ -29,7 +30,13 @@ class SpecificationImpl<T>(private val criteria: SearchCriteria, private val sea
         val strategy = ParsingStrategy.getStrategy(fieldClass, searchSpecAnnotation)
         val value: Any?
         try {
-            value = strategy.parse(criteria.value, fieldClass)
+            value = if (criteria.value is List<*>) {
+                ParsingStrategy.getStrategy(fieldClass, searchSpecAnnotation)
+                    .parse(criteria.value as List<*>, fieldClass)
+            } else {
+                ParsingStrategy.getStrategy(fieldClass, searchSpecAnnotation)
+                    .parse(criteria.value?.toString(), fieldClass)
+            }
         } catch (e: Exception) {
             throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
