@@ -24,9 +24,7 @@ class InstantStrategy : ParsingStrategy {
         }
     }
 
-    override fun parse(value: Any?, fieldClass: KClass<out Any>): Any? {
-        if (value is String) return Instant.parse(value)
-        if (value is List<*>) return value.map { Instant.parse(it.toString()) }
-        return value
+    override fun parse(value: String?, fieldClass: KClass<out Any>): Any? {
+        return Instant.parse(value)
     }
 }
