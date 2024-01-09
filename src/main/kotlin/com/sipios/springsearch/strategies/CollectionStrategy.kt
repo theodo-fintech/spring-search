@@ -13,6 +13,7 @@ class CollectionStrategy : ParsingStrategy {
         path: Path<*>,
         fieldName: String,
         ops: SearchOperation?,
+        // value is not used in this strategy, IS and IS_NOT are always followed by EMPTY
         value: Any?
     ): Predicate? {
         if (ops == SearchOperation.IS) {
@@ -21,7 +22,7 @@ class CollectionStrategy : ParsingStrategy {
         if (ops == SearchOperation.IS_NOT) {
             return builder.isNotEmpty(path[fieldName])
         }
-        return super.buildPredicate(builder, path, fieldName, ops, value)
+        throw IllegalArgumentException("Unsupported operation $ops for collection field $fieldName, only IS and IS_NOT are supported")
     }
 
     override fun parse(value: String?, fieldClass: KClass<out Any>): Any? {
