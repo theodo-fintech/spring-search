@@ -1,16 +1,17 @@
 package com.sipios.springsearch
 
-import com.sipios.springsearch.anotation.SearchSpec
 import com.sipios.springsearch.strategies.ParsingStrategy
+import com.sipios.springsearch.anotation.SearchSpec
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Path
 import jakarta.persistence.criteria.Predicate
 import jakarta.persistence.criteria.Root
-import java.util.ArrayList
+import org.hibernate.query.sqm.tree.domain.SqmPluralValuedSimplePath
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
+import java.util.ArrayList
 
 /**
  * Implementation of the JPA Specification based on a Search Criteria
@@ -22,21 +23,27 @@ import org.springframework.web.server.ResponseStatusException
 class SpecificationImpl<T>(private val criteria: SearchCriteria, private val searchSpecAnnotation: SearchSpec) :
     Specification<T> {
     @Throws(ResponseStatusException::class)
-    override fun toPredicate(root: Root<T>, query: CriteriaQuery<*>, builder: CriteriaBuilder): Predicate? {
+    override fun toPredicate(
+        root: Root<T>,
+        query: CriteriaQuery<*>,
+        builder: CriteriaBuilder
+    ): Predicate? {
         val nestedKey = criteria.key.split(".")
         val nestedRoot = getNestedRoot(root, nestedKey)
         val criteriaKey = nestedKey[nestedKey.size - 1]
         val fieldClass = nestedRoot.get<Any>(criteriaKey).javaType.kotlin
-        val strategy = ParsingStrategy.getStrategy(fieldClass, searchSpecAnnotation)
+        val isCollectionField = nestedRoot.get<Any>(criteriaKey) is SqmPluralValuedSimplePath<*>
+        val strategy = ParsingStrategy.getStrategy(fieldClass, searchSpecAnnotation, isCollectionField)
         val value: Any?
         try {
-            value = if (criteria.value is List<*>) {
-                ParsingStrategy.getStrategy(fieldClass, searchSpecAnnotation)
-                    .parse(criteria.value as List<*>, fieldClass)
-            } else {
-                ParsingStrategy.getStrategy(fieldClass, searchSpecAnnotation)
-                    .parse(criteria.value?.toString(), fieldClass)
-            }
+            value =
+                if (criteria.value is List<*>) {
+                    strategy
+                        .parse(criteria.value as List<*>, fieldClass)
+                } else {
+                    strategy
+                        .parse(criteria.value?.toString(), fieldClass)
+                }
         } catch (e: Exception) {
             throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
@@ -47,7 +54,10 @@ class SpecificationImpl<T>(private val criteria: SearchCriteria, private val sea
         return strategy.buildPredicate(builder, nestedRoot, criteriaKey, criteria.operation, value)
     }
 
-    private fun getNestedRoot(root: Root<T>, nestedKey: List<String>): Path<*> {
+    private fun getNestedRoot(
+        root: Root<T>,
+        nestedKey: List<String>
+    ): Path<*> {
         val prefix = ArrayList(nestedKey)
         prefix.removeAt(nestedKey.size - 1)
         var temp: Path<*> = root

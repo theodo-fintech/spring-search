@@ -88,8 +88,9 @@ interface ParsingStrategy {
     }
 
     companion object {
-        fun getStrategy(fieldClass: KClass<out Any>, searchSpecAnnotation: SearchSpec): ParsingStrategy {
+        fun getStrategy(fieldClass: KClass<out Any>, searchSpecAnnotation: SearchSpec, isCollectionField: Boolean): ParsingStrategy {
             return when {
+                isCollectionField -> CollectionStrategy()
                 fieldClass == Boolean::class -> BooleanStrategy()
                 fieldClass == Date::class -> DateStrategy()
                 fieldClass == Double::class -> DoubleStrategy()
