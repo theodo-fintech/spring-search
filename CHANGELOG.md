@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
+## [0.2.5] - 09 Jan 2024
+### Added
+- Add Instant strategy
+
 ## [0.2.4] - 12 Mar 2021
 ### Added 
 - Add UUID strategy 
