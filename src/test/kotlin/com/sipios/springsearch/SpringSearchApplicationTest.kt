@@ -742,7 +742,7 @@ class SpringSearchApplicationTest {
     }
 
     @Test
-    fun canGetUsersWithUpdateInstantAtGreaterSearch() {
+    fun canGetUsersWithUpdatedInstantAtGreaterSearch() {
         userRepository.save(
             Users(
                 userFirstName = "HamidReza",
