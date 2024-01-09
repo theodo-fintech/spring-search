@@ -29,6 +29,7 @@ array
    
 value
    : array
+   | (EMPTY | NOT_EMPTY)
    | IDENTIFIER
    | STRING
    | ENCODED_STRING
@@ -45,6 +46,7 @@ op
    | NOT_EQ
    | IN
    | NOT_IN
+   | IS
    ;
 
 // lexical rules
@@ -169,6 +171,18 @@ LTE
 
 EQ
    : ':'
+   ;
+
+IS
+   : 'IS'
+   ;
+
+EMPTY
+   : 'EMPTY'
+   ;
+
+NOT_EMPTY
+   : 'NOT EMPTY'
    ;
 
 IN
