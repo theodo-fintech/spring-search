@@ -158,30 +158,32 @@ Request : `/cars?search=color:Red OR color:Blue`
 Request : `/cars?search=brand:Aston* AND price<300000`  
 ![and operator example](./docs/images/and-example.gif)
 
-7. Using the `IN` and `NOT IN` operators  
+8. Using the `IN` and `NOT IN` operators  
 Request : `/cars?search=color IN ['Red', 'Blue']  
 *Note: Spaces inside the brackets are not necessary*  
 *Note: You will need to encode the value (e.g. encodeURI) as brackets are not valid url parts*
 
+9. Using the `IS EMPTY` and `IS NOT EMPTY` operators for collection fields  
+Request : `/users?search=cars IS EMPTY`
 
-8. Using parenthesis  
+10. Using parenthesis  
 Request : `/cars?search=( brand:Nissan OR brand:Chevrolet ) AND color:Blue`  
 *Note: Spaces inside the parenthesis are not necessary*
 ![parenthesis example](./docs/images/parenthesis-example.gif)
 
-9. Using space in nouns  
+11. Using space in nouns  
 Request : `/cars?search=model:'Spacetourer Business Lounge'`  
 ![space example](./docs/images/space-example.gif)
 
-10. Using special characters  
+12. Using special characters  
 Request: `/cars?search=model:中华V7`
 ![special characters example](./docs/images/special-characters-example.gif)
 
-11. Using deep fields  
+13. Using deep fields  
 Request : `/cars?search=options.transmission:Auto`
 ![deep field example](./docs/images/deep-field-example.gif)
 
-12. Complex example  
+14. Complex example  
 Request : `/cars?search=creationyear:2018 AND price<300000 AND (color:Yellow OR color:Blue) AND options.transmission:Auto`
 ![complex example](./docs/images/complex-example.gif)
 
