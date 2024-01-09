@@ -742,7 +742,7 @@ class SpringSearchApplicationTest {
     }
 
     @Test
-    fun canGetUsersWithUpdateInstantAtGreaterSearch() {
+    fun canGetUsersWithUpdatedInstantAtGreaterSearch() {
         userRepository.save(
             Users(
                 userFirstName = "HamidReza",
@@ -757,6 +757,42 @@ class SpringSearchApplicationTest {
         val robotUsers = userRepository.findAll(specification)
         Assertions.assertEquals(1, robotUsers.size)
         Assertions.assertEquals("robot", robotUsers[0].userFirstName)
+    }
+
+    @Test
+    fun canGetUsersWithUpdatedInstantAtLessSearch() {
+        userRepository.save(
+            Users(
+                userFirstName = "HamidReza",
+                updatedInstantAt = Instant.parse("2020-01-10T10:15:30Z")
+            )
+        )
+        userRepository.save(Users(userFirstName = "robot", updatedInstantAt = Instant.parse("2020-01-11T10:20:30Z")))
+
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("updatedInstantAt<'2020-01-11T10:17:30Z'").build()
+        val robotUsers = userRepository.findAll(specification)
+        Assertions.assertEquals(1, robotUsers.size)
+        Assertions.assertEquals("HamidReza", robotUsers[0].userFirstName)
+    }
+
+    @Test
+    fun canGetUsersWithUpdatedInstantAtEqualSearch() {
+        userRepository.save(
+            Users(
+                userFirstName = "HamidReza",
+                updatedInstantAt = Instant.parse("2020-01-10T10:15:30Z")
+            )
+        )
+        userRepository.save(Users(userFirstName = "robot", updatedInstantAt = Instant.parse("2020-01-11T10:20:30Z")))
+
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("updatedInstantAt:'2020-01-10T10:15:30Z'").build()
+        val robotUsers = userRepository.findAll(specification)
+        Assertions.assertEquals(1, robotUsers.size)
+        Assertions.assertEquals("HamidReza", robotUsers[0].userFirstName)
     }
 
     @Test
