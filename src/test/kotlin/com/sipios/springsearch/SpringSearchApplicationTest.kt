@@ -1264,7 +1264,7 @@ class SpringSearchApplicationTest {
     }
 
     @Test
-    fun canGetUserWithEmptyNoResult() {
+    fun canGetAuthorsWithEmptyBook() {
         val johnBook = Book()
         johnBook.title = "john book"
         val john = Author()
@@ -1285,7 +1285,7 @@ class SpringSearchApplicationTest {
     }
 
     @Test
-    fun canGetUserWithEmpty() {
+    fun canGetAuthorsWithEmptyBookWithResult() {
         val johnBook = Book()
         johnBook.title = "john book"
         val john = Author()
@@ -1304,7 +1304,7 @@ class SpringSearchApplicationTest {
     }
 
     @Test
-    fun canGetUserWithNotEmpty() {
+    fun canGetAuthorsWithBooksNotEmpty() {
         val johnBook = Book()
         johnBook.title = "john book"
         val john = Author()
@@ -1320,5 +1320,41 @@ class SpringSearchApplicationTest {
         val users = authorRepository.findAll(specification)
         Assertions.assertTrue(users.size == 1)
         Assertions.assertTrue(users[0].name == john.name)
+    }
+
+    @Test
+    fun canGetAuthorsWithBooksNotEmptyAllResult() {
+        val johnBook = Book()
+        johnBook.title = "john book"
+        val john = Author()
+        john.name = "john"
+        john.addBook(johnBook)
+        authorRepository.save(john)
+        val jane = Author()
+        jane.name = "jane"
+        val janeBook = Book()
+        janeBook.title = "jane book"
+        jane.addBook(janeBook)
+        authorRepository.save(jane)
+        val specification = SpecificationsBuilder<Author>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("books IS NOT EMPTY").build()
+        val users = authorRepository.findAll(specification)
+        Assertions.assertTrue(users.size == 2)
+    }
+
+    @Test
+    fun canGetAuthorsWithBooksNotEmptyNoResult() {
+        val john = Author()
+        john.name = "john"
+        authorRepository.save(john)
+        val jane = Author()
+        jane.name = "jane"
+        authorRepository.save(jane)
+        val specification = SpecificationsBuilder<Author>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("books IS NOT EMPTY").build()
+        val users = authorRepository.findAll(specification)
+        Assertions.assertTrue(users.size == 0)
     }
 }

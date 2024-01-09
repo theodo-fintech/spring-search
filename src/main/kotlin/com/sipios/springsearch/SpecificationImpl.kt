@@ -1,17 +1,17 @@
 package com.sipios.springsearch
 
-import com.sipios.springsearch.strategies.ParsingStrategy
 import com.sipios.springsearch.anotation.SearchSpec
+import com.sipios.springsearch.strategies.ParsingStrategy
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Path
 import jakarta.persistence.criteria.Predicate
 import jakarta.persistence.criteria.Root
+import java.util.ArrayList
 import org.hibernate.query.sqm.tree.domain.SqmPluralValuedSimplePath
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
-import java.util.ArrayList
 
 /**
  * Implementation of the JPA Specification based on a Search Criteria
