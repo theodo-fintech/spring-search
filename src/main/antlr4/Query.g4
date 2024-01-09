@@ -29,7 +29,7 @@ array
    
 value
    : array
-   | (EMPTY | NOT_EMPTY)
+   | EMPTY
    | IDENTIFIER
    | STRING
    | ENCODED_STRING
@@ -46,6 +46,7 @@ op
    | NOT_EQ
    | IN
    | NOT_IN
+   | IS_NOT
    | IS
    ;
 
@@ -177,12 +178,12 @@ IS
    : 'IS'
    ;
 
+IS_NOT
+    : 'IS NOT'
+    ;
+
 EMPTY
    : 'EMPTY'
-   ;
-
-NOT_EMPTY
-   : 'NOT EMPTY'
    ;
 
 IN
