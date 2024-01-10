@@ -1,10 +1,10 @@
 package com.sipios.springsearch
 
 import com.sipios.springsearch.anotation.SearchSpec
-import javax.persistence.criteria.CriteriaBuilder
-import javax.persistence.criteria.CriteriaQuery
-import javax.persistence.criteria.Predicate
-import javax.persistence.criteria.Root
+import jakarta.persistence.criteria.CriteriaBuilder
+import jakarta.persistence.criteria.CriteriaQuery
+import jakarta.persistence.criteria.Predicate
+import jakarta.persistence.criteria.Root
 import org.springframework.data.jpa.domain.Specification
 
 class SpecificationsBuilder<U>(searchSpecAnnotation: SearchSpec) {
@@ -20,7 +20,7 @@ class SpecificationsBuilder<U>(searchSpecAnnotation: SearchSpec) {
 
     /**
      * This function expect a search string to have been provided.
-     * The search string has been transformed into a Expression Queue with the format: [OR, value>100, AND, value<1000, label:*MONO*]
+     * The search string has been transformed into an Expression Queue with the format: [OR, value>100, AND, value<1000, label:*MONO*]
      *
      * @return A list of specification used to filter the underlying object using JPA specifications
      */

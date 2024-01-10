@@ -4,22 +4,26 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.1</version>
+		<version>3.1.7</version>
 		<relativePath /> <!-- lookup parent from repository --> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.sipios</groupId>
 	<artifactId>spring-search</artifactId>
-	<version>0.2.5</version>
+	<version>0.2.6</version>
 	<name>spring-search</name>
 	<description>API for generating spring boot database queries</description>
 
 	<properties>
-		<java.version>1.8</java.version>
-		<kotlin.version>1.6.20</kotlin.version>
-		<antl4.version>4.9</antl4.version>
+		<java.version>17</java.version>
+		<kotlin.version>1.9.22</kotlin.version>
+		<jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
+		<h2.version>2.2.220</h2.version>
+		<jackson-databind.version>2.16.0</jackson-databind.version>
+		<snakeyaml.version>2.0</snakeyaml.version>
+		<dependency-check-maven.version>9.0.7</dependency-check-maven.version>
+		<antl4.version>4.13.1</antl4.version>
 		<grammar.package>com.sipios.springsearch.grammar</grammar.package>
 		<grammar.directory>com/sipios/springsearch/grammar</grammar.directory>
-		<jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
 		<project.testresult.directory>${project.build.directory}/test-results</project.testresult.directory>
 	</properties>
 
@@ -32,6 +36,7 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
+			<version>${h2.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -45,16 +50,24 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson-databind.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>${snakeyaml.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.fasterxml.jackson.module</groupId>
 			<artifactId>jackson-module-kotlin</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-reflect</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-stdlib-jdk8</artifactId>
 		</dependency>
 
 		<dependency>
@@ -78,11 +91,6 @@
 			<artifactId>kotlin-test</artifactId>
 			<version>${kotlin.version}</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-stdlib-jdk8</artifactId>
-			<version>${kotlin.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -113,17 +121,13 @@
 				</configuration>
 			</plugin>
 			<plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-            </plugin>
-			<plugin>
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-maven-plugin</artifactId>
 				<version>${kotlin.version}</version>
 				<executions>
 					<execution>
 						<id>compile</id>
-						<phase>compile</phase>
+						<phase>process-sources</phase>
 						<goals>
 							<goal>compile</goal>
 						</goals>
@@ -161,7 +165,7 @@
 						<sourceDir>src/main/kotlin</sourceDir>
 						<sourceDir>target/generated-sources/antlr4</sourceDir>
 					</sourceDirs>
-					<jvmTarget>1.8</jvmTarget>
+					<jvmTarget>17</jvmTarget>
 				</configuration>
 				<dependencies>
 					<dependency>
@@ -291,6 +295,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
 				<executions>
 					<execution>
 						<id>compile</id>
@@ -351,7 +356,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.5</version>
+				<version>3.1.0</version>
 				<executions>
 					<execution>
 						<id>sign-artifacts</id>
@@ -365,6 +370,18 @@
 								<arg>loopback</arg>
 							</gpgArguments>
 						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.owasp</groupId>
+				<artifactId>dependency-check-maven</artifactId>
+				<version>${dependency-check-maven.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>

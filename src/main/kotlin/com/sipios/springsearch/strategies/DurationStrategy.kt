@@ -1,10 +1,10 @@
 package com.sipios.springsearch.strategies
 
 import com.sipios.springsearch.SearchOperation
+import jakarta.persistence.criteria.CriteriaBuilder
+import jakarta.persistence.criteria.Path
+import jakarta.persistence.criteria.Predicate
 import java.time.Duration
-import javax.persistence.criteria.CriteriaBuilder
-import javax.persistence.criteria.Path
-import javax.persistence.criteria.Predicate
 import kotlin.reflect.KClass
 
 class DurationStrategy : ParsingStrategy {
@@ -16,8 +16,8 @@ class DurationStrategy : ParsingStrategy {
         value: Any?
     ): Predicate? {
         return when (ops) {
-            SearchOperation.GREATER_THAN -> builder.greaterThan(path.get<Duration>(fieldName), value as Duration)
-            SearchOperation.LESS_THAN -> builder.lessThan(path.get<Duration>(fieldName), value as Duration)
+            SearchOperation.GREATER_THAN -> builder.greaterThan(path[fieldName], value as Duration)
+            SearchOperation.LESS_THAN -> builder.lessThan(path[fieldName], value as Duration)
             else -> super.buildPredicate(builder, path, fieldName, ops, value)
         }
     }

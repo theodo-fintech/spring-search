@@ -14,7 +14,7 @@ annotation class SearchSpec(
     val searchParam: String = "search",
 
     /**
-     * A flag to indicate if the search needs to be case sensitive or not
+     * A flag to indicate if the search needs to be case-sensitive or not
      */
     val caseSensitiveFlag: Boolean = true
 )

@@ -6,7 +6,7 @@ import com.sipios.springsearch.grammar.QueryParser
 import org.springframework.data.jpa.domain.Specification
 
 class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryBaseVisitor<Specification<T>>() {
-    private val ValueRegExp = Regex(pattern = "^(\\*?)(.+?)(\\*?)$")
+    private val valueRegExp = Regex(pattern = "^(\\*?)(.+?)(\\*?)$")
     override fun visitOpQuery(ctx: QueryParser.OpQueryContext): Specification<T> {
         val left = visit(ctx.left)
         val right = visit(ctx.right)
@@ -43,7 +43,7 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
                 .replace("\\'", "'")
         }
 
-        val matchResult = this.ValueRegExp.find(value!!)
+        val matchResult = this.valueRegExp.find(value!!)
         val criteria = SearchCriteria(
             key,
             op,
