@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
+## [0.2.6] - 10 Jan 2024
+### Added
+- Bump Java, Kotlin and Spring versions
+- Bump various dependencies versions to avoid vulnerabilities
+- Various refactorings to leverage Java 17 features
+- Update README.md
+
 ## [0.2.5] - 09 Jan 2024
 ### Added
 - Add Instant strategy
