@@ -1266,13 +1266,11 @@ class SpringSearchApplicationTest {
     @Test
     fun canGetAuthorsWithEmptyBook() {
         val johnBook = Book()
-        johnBook.title = "john book"
         val john = Author()
         john.name = "john"
         john.addBook(johnBook)
         authorRepository.save(john)
         val janeBook = Book()
-        janeBook.title = "jane book"
         val jane = Author()
         jane.name = "jane"
         jane.addBook(janeBook)
@@ -1287,7 +1285,6 @@ class SpringSearchApplicationTest {
     @Test
     fun canGetAuthorsWithEmptyBookWithResult() {
         val johnBook = Book()
-        johnBook.title = "john book"
         val john = Author()
         john.name = "john"
         john.addBook(johnBook)
@@ -1306,7 +1303,6 @@ class SpringSearchApplicationTest {
     @Test
     fun canGetAuthorsWithBooksNotEmpty() {
         val johnBook = Book()
-        johnBook.title = "john book"
         val john = Author()
         john.name = "john"
         john.addBook(johnBook)
@@ -1325,7 +1321,6 @@ class SpringSearchApplicationTest {
     @Test
     fun canGetAuthorsWithBooksNotEmptyAllResult() {
         val johnBook = Book()
-        johnBook.title = "john book"
         val john = Author()
         john.name = "john"
         john.addBook(johnBook)
@@ -1333,7 +1328,6 @@ class SpringSearchApplicationTest {
         val jane = Author()
         jane.name = "jane"
         val janeBook = Book()
-        janeBook.title = "jane book"
         jane.addBook(janeBook)
         authorRepository.save(jane)
         val specification = SpecificationsBuilder<Author>(
