@@ -80,7 +80,7 @@ Please note that providing such a feature on your API does not come without risk
 <!-- GETTING STARTED -->
 ## Getting Started
 
-**Requirements** : JDK 17 or more.  
+**Requirements** : JDK 8 or more.  
 To get a local copy up and running follow these simple steps.
 
 ### Installation
@@ -91,7 +91,7 @@ Add the repo to your project inside your `pom.xml` file
 <dependency>
     <groupId>com.sipios</groupId>
     <artifactId>spring-search</artifactId>
-    <version>0.3.0</version>
+    <version>0.2.6</version>
 </dependency>
 ```
 
