@@ -43,8 +43,6 @@ op
    | LT
    | LTE
    | NOT_EQ
-   | IN
-   | NOT_IN
    ;
 
 // lexical rules
@@ -170,14 +168,6 @@ LTE
 EQ
    : ':'
    ;
-
-IN
-   : 'IN'
-   ;
-
-NOT_IN
-    : 'NOT IN'
-    ;
 
 NOT_EQ
    : '!'

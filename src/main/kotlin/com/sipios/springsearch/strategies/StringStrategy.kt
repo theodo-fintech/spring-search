@@ -15,7 +15,7 @@ data class StringStrategy(var searchSpecAnnotation: SearchSpec) : ParsingStrateg
         ops: SearchOperation?,
         value: Any?
     ): Predicate? {
-        if (ops == SearchOperation.NOT_IN || ops == SearchOperation.IN) {
+        if (ops == SearchOperation.EQUALS_ARRAY || ops == SearchOperation.NOT_EQUALS_ARRAY) {
             return super.buildPredicate(builder, path, fieldName, ops, value)
         }
         if (!searchSpecAnnotation.caseSensitiveFlag) {

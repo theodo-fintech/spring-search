@@ -5,7 +5,7 @@ class SearchCriteria // Change EQUALS into ENDS_WITH, CONTAINS, STARTS_WITH base
     var operation: SearchOperation?
 
     init {
-        var op = SearchOperation.getSimpleOperation(operation)
+        var op = SearchOperation.getSimpleOperation(operation, value is List<*>)
         if (op != null) {
             // Change EQUALS into ENDS_WITH, CONTAINS, STARTS_WITH based on the presence of * in the value
             val startsWithAsterisk = prefix != null && prefix.contains(SearchOperation.ZERO_OR_MORE_REGEX)

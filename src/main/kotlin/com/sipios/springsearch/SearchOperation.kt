@@ -1,7 +1,21 @@
 package com.sipios.springsearch
 
 enum class SearchOperation {
-    EQUALS, NOT_EQUALS, GREATER_THAN, LESS_THAN, STARTS_WITH, ENDS_WITH, CONTAINS, DOESNT_START_WITH, DOESNT_END_WITH, DOESNT_CONTAIN, GREATER_THAN_EQUALS, LESS_THAN_EQUALS, IN, NOT_IN;
+    EQUALS,
+    NOT_EQUALS,
+    GREATER_THAN,
+    LESS_THAN,
+    STARTS_WITH,
+    ENDS_WITH,
+    CONTAINS,
+    DOESNT_START_WITH,
+    DOESNT_END_WITH,
+    DOESNT_CONTAIN,
+    GREATER_THAN_EQUALS,
+    LESS_THAN_EQUALS,
+    EQUALS_ARRAY,
+    NOT_EQUALS_ARRAY
+    ;
 
     companion object {
         val SIMPLE_OPERATION_SET = arrayOf(":", "!", ">", "<", "~", ">:", "<:")
@@ -17,16 +31,17 @@ enum class SearchOperation {
          * @param input operation as string
          * @return The matching operation
          */
-        fun getSimpleOperation(input: String): SearchOperation? {
+        fun getSimpleOperation(
+            input: String,
+            valueIsArray: Boolean
+        ): SearchOperation? {
             return when (input) {
-                ":" -> EQUALS
-                "!" -> NOT_EQUALS
+                ":" -> if (valueIsArray) EQUALS_ARRAY else EQUALS
+                "!" -> if (valueIsArray) NOT_EQUALS_ARRAY else NOT_EQUALS
                 ">" -> GREATER_THAN
                 "<" -> LESS_THAN
                 ">:" -> GREATER_THAN_EQUALS
                 "<:" -> LESS_THAN_EQUALS
-                "IN" -> IN
-                "NOT IN" -> NOT_IN
                 else -> null
             }
         }
