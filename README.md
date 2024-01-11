@@ -158,10 +158,11 @@ Request : `/cars?search=color:Red OR color:Blue`
 Request : `/cars?search=brand:Aston* AND price<300000`  
 ![and operator example](./docs/images/and-example.gif)
 
-8. Using the `IN` and `NOT IN` operators  
-Request : `/cars?search=color IN ['Red', 'Blue']  
-*Note: Spaces inside the brackets are not necessary*  
-*Note: You will need to encode the value (e.g. encodeURI) as brackets are not valid url parts*
+8. Checking if value is or not in a list  
+   Request : `/cars?search=color : ['Red', 'Blue']`  
+   Request : `/cars?search=color ! ['Red', 'Blue']`  
+   *Note: Spaces inside the brackets are not necessary*  
+   *Note: You will need to encode the value (e.g. encodeURI) as brackets are not valid url parts*
 
 9. Using the `IS EMPTY` and `IS NOT EMPTY` operators for collection fields  
 Request : `/users?search=cars IS EMPTY`
