@@ -33,7 +33,9 @@ value
 op
    : EQ
    | GT
+   | GTE
    | LT
+   | LTE
    | NOT_EQ
    ;
 
@@ -137,11 +139,17 @@ GT
    : '>'
    ;
 
+GTE
+   : '>:'
+   ;
 
 LT
    : '<'
    ;
 
+LTE
+   : '<:'
+   ;
 
 EQ
    : ':'

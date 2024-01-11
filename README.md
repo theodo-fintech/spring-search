@@ -134,10 +134,14 @@ Request : `/cars?search=color!Red`
 
 3. Using the greater than operator `>`  
 Request : `/cars?search=creationyear>2017`  
+> Note: You can use the `>:` operator as well.
+
 ![greater than operator example](./docs/images/greater-than-example.gif)
 
 4. Using the less than operator `<`  
-Request : `/cars?search=price<100000`  
+Request : `/cars?search=price<100000`
+> Note: You can use the `<:` operator as well.
+
 ![less than operator example](./docs/images/less-than-example.gif)
 
 5. Using the starts with operator `*`  
