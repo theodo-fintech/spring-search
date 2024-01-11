@@ -44,8 +44,6 @@ op
    | LT
    | LTE
    | NOT_EQ
-   | IN
-   | NOT_IN
    | IS_NOT
    | IS
    ;
@@ -185,14 +183,6 @@ IS_NOT
 EMPTY
    : 'EMPTY'
    ;
-
-IN
-   : 'IN'
-   ;
-
-NOT_IN
-    : 'NOT IN'
-    ;
 
 NOT_EQ
    : '!'
