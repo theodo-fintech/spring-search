@@ -18,6 +18,11 @@ query
 criteria
    : key eq_array_value #eqArrayCriteria
    | key op value #opCriteria
+   | key (IS | IS_NOT) is_value #isCriteria
+   ;
+
+is_value
+   : EMPTY
    ;
 
 eq_array_value
@@ -34,7 +39,6 @@ array
    
 value
    : array
-   | EMPTY
    | IDENTIFIER
    | STRING
    | ENCODED_STRING
@@ -49,8 +53,6 @@ op
    | LT
    | LTE
    | NOT_EQ
-   | IS_NOT
-   | IS
    ;
 
 // lexical rules
