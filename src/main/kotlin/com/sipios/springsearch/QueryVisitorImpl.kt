@@ -30,6 +30,24 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
         return visit(ctx.query())
     }
 
+    override fun visitIsCriteria(ctx: QueryParser.IsCriteriaContext): Specification<T> {
+        val key = ctx.key()!!.text
+        val op = if (ctx.IS() != null) {
+            SearchOperation.IS
+        } else {
+            SearchOperation.IS_NOT
+        }
+        val value = ctx.is_value!!.text
+        val criteria = SearchCriteria(
+            key,
+            op,
+            null,
+            value,
+            null
+        )
+        return SpecificationImpl(criteria, searchSpecAnnotation)
+    }
+
     override fun visitEqArrayCriteria(ctx: QueryParser.EqArrayCriteriaContext): Specification<T> {
         val key = ctx.key()!!.text
         val op = if (ctx.eq_array_value().EQ() != null) {

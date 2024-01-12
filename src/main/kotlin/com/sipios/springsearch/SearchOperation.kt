@@ -45,8 +45,6 @@ enum class SearchOperation {
                 "<" -> LESS_THAN
                 ">:" -> GREATER_THAN_EQUALS
                 "<:" -> LESS_THAN_EQUALS
-                "IS" -> IS
-                "IS NOT" -> IS_NOT
                 else -> null
             }
         }

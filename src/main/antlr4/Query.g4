@@ -35,7 +35,6 @@ array
    
 value
    : array
-   | EMPTY
    | IDENTIFIER
    | STRING
    | ENCODED_STRING
@@ -50,8 +49,6 @@ op
    | LT
    | LTE
    | NOT_EQ
-   | IS_NOT
-   | IS
    ;
 
 // lexical rules
