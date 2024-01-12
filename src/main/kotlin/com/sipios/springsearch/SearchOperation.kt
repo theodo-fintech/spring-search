@@ -32,12 +32,11 @@ enum class SearchOperation {
          * @return The matching operation
          */
         fun getSimpleOperation(
-            input: String,
-            valueIsArray: Boolean
+            input: String
         ): SearchOperation? {
             return when (input) {
-                ":" -> if (valueIsArray) EQUALS_ARRAY else EQUALS
-                "!" -> if (valueIsArray) NOT_EQUALS_ARRAY else NOT_EQUALS
+                ":" -> EQUALS
+                "!" -> NOT_EQUALS
                 ">" -> GREATER_THAN
                 "<" -> LESS_THAN
                 ">:" -> GREATER_THAN_EQUALS
