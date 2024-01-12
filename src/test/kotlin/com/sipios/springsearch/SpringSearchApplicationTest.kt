@@ -1399,16 +1399,16 @@ class SpringSearchApplicationTest {
 
     @Test
     fun canGetUsersWithUpdatedDateBetweenAndIdIn() {
-        userRepository.save(Users(userFirstName = "john", updatedDateAt = LocalDate.parse("2020-01-10"), userId = 1))
-        userRepository.save(Users(userFirstName = "jane", updatedDateAt = LocalDate.parse("2020-01-11"), userId = 2))
-        userRepository.save(Users(userFirstName = "joe", updatedDateAt = LocalDate.parse("2020-01-12"), userId = 3))
-        userRepository.save(Users(userFirstName = "jean", updatedDateAt = LocalDate.parse("2020-01-13"), userId = 4))
+        userRepository.save(Users(userFirstName = "john", updatedDateAt = LocalDate.parse("2020-01-10")))
+        userRepository.save(Users(userFirstName = "jane", updatedDateAt = LocalDate.parse("2020-01-11")))
+        val joeId = userRepository.save(Users(userFirstName = "joe", updatedDateAt = LocalDate.parse("2020-01-12"))).userId
+        val jeanId = userRepository.save(Users(userFirstName = "jean", updatedDateAt = LocalDate.parse("2020-01-13"))).userId
         val specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("updatedDateAt BETWEEN 2020-01-11 AND 2020-01-13 AND userId IN [3]").build()
+        ).withSearch("updatedDateAt BETWEEN 2020-01-11 AND 2020-01-13 AND userId : [$joeId, $jeanId]").build()
         val users = userRepository.findAll(specification)
-        Assertions.assertEquals(1, users.size)
+        Assertions.assertEquals(2, users.size)
         val setNames = users.map { user -> user.userFirstName }.toSet()
-        Assertions.assertEquals(setOf("joe"), setNames)
+        Assertions.assertEquals(setOf("joe", "jean"), setNames)
     }
 }
