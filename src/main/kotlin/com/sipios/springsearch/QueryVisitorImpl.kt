@@ -52,6 +52,42 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
         return SpecificationImpl(criteria, searchSpecAnnotation)
     }
 
+    override fun visitBetweenCriteria(ctx: QueryParser.BetweenCriteriaContext): Specification<T> {
+        val key = ctx.key()!!.text
+        var leftValue = ctx.left!!.text
+        var rightValue = ctx.right!!.text
+        if (ctx.left!!.STRING() != null) {
+            leftValue = clearString(leftValue)
+        }
+        if (ctx.right!!.STRING() != null) {
+            rightValue = clearString(rightValue)
+        }
+        val opLeft = SearchOperation.GREATER_THAN_EQUALS
+        val opRight = SearchOperation.LESS_THAN_EQUALS
+        val criteriaLeft = SearchCriteria(
+            key,
+            opLeft,
+            null,
+            leftValue,
+            null
+        )
+        val leftExp = SpecificationImpl<T>(criteriaLeft, searchSpecAnnotation)
+
+        val criteriaRight = SearchCriteria(
+            key,
+            opRight,
+            null,
+            rightValue,
+            null
+        )
+
+        val rightExp = SpecificationImpl<T>(criteriaRight, searchSpecAnnotation)
+
+        return if (ctx.BETWEEN() != null) {
+            leftExp.and(rightExp)
+        } else
+            Specification.not(leftExp.and(rightExp))
+    }
     override fun visitOpCriteria(ctx: QueryParser.OpCriteriaContext): Specification<T> {
         val key = ctx.key()!!.text
         var value = ctx.value()!!.text

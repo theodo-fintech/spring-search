@@ -16,7 +16,9 @@ enum class SearchOperation {
     EQUALS_ARRAY,
     NOT_EQUALS_ARRAY,
     IS,
-    IS_NOT
+    IS_NOT,
+    BETWEEN,
+    NOT_BETWEEN,
     ;
 
     companion object {
