@@ -16,7 +16,12 @@ query
    ;
 
 criteria
-   : key op value
+   : key eq_array_value #eqArrayCriteria
+   | key op value #opCriteria
+   ;
+
+eq_array_value
+   : (EQ | NOT_EQ) array
    ;
 
 key
