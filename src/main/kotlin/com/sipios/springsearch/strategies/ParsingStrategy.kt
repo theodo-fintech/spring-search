@@ -59,6 +59,21 @@ interface ParsingStrategy {
                 builder.not(inClause)
             }
 
+            SearchOperation.IS -> {
+                if (value == null) {
+                    builder.isNull(path.get<Any>(fieldName))
+                } else {
+                    builder.isEmpty(path[fieldName])
+                }
+            }
+            SearchOperation.IS_NOT -> {
+                if (value == null) {
+                    builder.isNotNull(path.get<Any>(fieldName))
+                } else {
+                    builder.isNotEmpty(path[fieldName])
+                }
+            }
+
             SearchOperation.EQUALS -> builder.equal(path.get<Any>(fieldName), value)
             SearchOperation.NOT_EQUALS -> builder.notEqual(path.get<Any>(fieldName), value)
             SearchOperation.STARTS_WITH -> builder.like(path[fieldName], "$value%")

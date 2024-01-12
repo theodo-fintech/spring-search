@@ -24,6 +24,7 @@ criteria
 
 is_value
    : EMPTY
+   | NULL
    ;
 
 eq_array_value
@@ -60,6 +61,10 @@ op
 BOOL
     : 'true'
     | 'false'
+    ;
+
+NULL
+    : 'null'
     ;
 
 STRING

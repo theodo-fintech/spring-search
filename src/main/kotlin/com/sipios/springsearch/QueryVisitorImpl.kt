@@ -37,7 +37,11 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
         } else {
             SearchOperation.IS_NOT
         }
-        val value = ctx.is_value!!.text
+        val value = if (ctx.is_value.NULL() != null) {
+            null
+        } else {
+            ctx.is_value.text
+        }
         val criteria = SearchCriteria(
             key,
             op,
