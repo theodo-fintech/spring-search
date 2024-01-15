@@ -13,8 +13,8 @@ enum class SearchOperation {
     DOESNT_CONTAIN,
     GREATER_THAN_EQUALS,
     LESS_THAN_EQUALS,
-    EQUALS_ARRAY,
-    NOT_EQUALS_ARRAY,
+    IN_ARRAY,
+    NOT_IN_ARRAY,
     IS,
     IS_NOT
     ;

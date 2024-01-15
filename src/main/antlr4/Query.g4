@@ -26,7 +26,7 @@ is_value
    ;
 
 eq_array_value
-   : (EQ | NOT_EQ) array
+   : (IN | NOT_IN) array
    ;
 
 key
@@ -195,6 +195,13 @@ NOT_EQ
    : '!'
    ;
 
+IN
+   : 'IN'
+   ;
+
+NOT_IN
+   : 'NOT IN'
+   ;
 
 fragment POINT
    : '.'
