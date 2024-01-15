@@ -1181,7 +1181,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "joe", userChildrenNumber = 4))
         val specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("userFirstName : [\"john\", \"jane\"]").build()
+        ).withSearch("userFirstName IN [\"john\", \"jane\"]").build()
         val users = userRepository.findAll(specification)
         Assertions.assertTrue(setOf(johnId, janeId) == users.map { user -> user.userId }.toSet())
     }
@@ -1193,7 +1193,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "joe", userChildrenNumber = 4))
         val specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("userFirstName : []").build()
+        ).withSearch("userFirstName IN []").build()
         val users = userRepository.findAll(specification)
         Assertions.assertTrue(users.isEmpty())
     }
@@ -1205,7 +1205,7 @@ class SpringSearchApplicationTest {
         val joeId = userRepository.save(Users(userFirstName = "joe", userChildrenNumber = 4)).userId
         val specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("userFirstName ! [\"john\", \"jane\"]").build()
+        ).withSearch("userFirstName NOT IN [\"john\", \"jane\"]").build()
         val users = userRepository.findAll(specification)
         Assertions.assertTrue(setOf(joeId) == users.map { user -> user.userId }.toSet())
     }
@@ -1217,7 +1217,7 @@ class SpringSearchApplicationTest {
         val joeId = userRepository.save(Users(userFirstName = "joe", userChildrenNumber = 4)).userId
         val specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("userChildrenNumber ! [2, 3]").build()
+        ).withSearch("userChildrenNumber NOT IN [2, 3]").build()
         val users = userRepository.findAll(specification)
         Assertions.assertTrue(setOf(joeId) == users.map { user -> user.userId }.toSet())
     }
@@ -1229,7 +1229,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "joe", userChildrenNumber = 4))
         val specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("userChildrenNumber : [2, 3]").build()
+        ).withSearch("userChildrenNumber IN [2, 3]").build()
         val users = userRepository.findAll(specification)
         Assertions.assertTrue(setOf(janeId, johnId) == users.map { user -> user.userId }.toSet())
     }
@@ -1241,7 +1241,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "joe", type = UserType.MANAGER))
         val specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("type : [ADMINISTRATOR, TEAM_MEMBER]").build()
+        ).withSearch("type IN [ADMINISTRATOR, TEAM_MEMBER]").build()
         val users = userRepository.findAll(specification)
         Assertions.assertTrue(setOf(janeId, johnId) == users.map { user -> user.userId }.toSet())
     }
@@ -1255,7 +1255,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "joe", updatedDateAt = LocalDate.parse("2021-01-10")))
         val specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("updatedDateAt : ['2020-01-10', '2020-01-15']").build()
+        ).withSearch("updatedDateAt IN ['2020-01-10', '2020-01-15']").build()
         val users = userRepository.findAll(specification)
         Assertions.assertTrue(setOf(janeId, johnId) == users.map { user -> user.userId }.toSet())
     }

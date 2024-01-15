@@ -159,8 +159,8 @@ Request : `/cars?search=brand:Aston* AND price<300000`
 ![and operator example](./docs/images/and-example.gif)
 
 8. Checking if value is or not in a list  
-Request : `/cars?search=color : ['Red', 'Blue']`  
-Request : `/cars?search=color ! ['Red', 'Blue']`  
+Request : `/cars?search=color IN ['Red', 'Blue']`  
+Request : `/cars?search=color NOT IN ['Red', 'Blue']`  
 *Note: Spaces inside the brackets are not necessary*  
 *Note: You will need to encode the value (e.g. encodeURI) as brackets are not valid url parts*
 

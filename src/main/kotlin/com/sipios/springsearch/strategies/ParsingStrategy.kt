@@ -49,12 +49,12 @@ interface ParsingStrategy {
         value: Any?
     ): Predicate? {
         return when (ops) {
-            SearchOperation.EQUALS_ARRAY -> {
+            SearchOperation.IN_ARRAY -> {
                 val inClause: CriteriaBuilder.In<Any> = getInClause(builder, path, fieldName, value)
                 inClause
             }
 
-            SearchOperation.NOT_EQUALS_ARRAY -> {
+            SearchOperation.NOT_IN_ARRAY -> {
                 val inClause: CriteriaBuilder.In<Any> = getInClause(builder, path, fieldName, value)
                 builder.not(inClause)
             }
