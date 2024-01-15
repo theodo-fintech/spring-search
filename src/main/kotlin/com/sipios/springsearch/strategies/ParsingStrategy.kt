@@ -27,6 +27,10 @@ interface ParsingStrategy {
         return value
     }
 
+    fun parse(value: List<*>?, fieldClass: KClass<out Any>): Any? {
+        return value?.map { parse(it.toString(), fieldClass) }
+    }
+
     /**
      * Method to build the predicate
      *
@@ -45,6 +49,16 @@ interface ParsingStrategy {
         value: Any?
     ): Predicate? {
         return when (ops) {
+            SearchOperation.IN_ARRAY -> {
+                val inClause: CriteriaBuilder.In<Any> = getInClause(builder, path, fieldName, value)
+                inClause
+            }
+
+            SearchOperation.NOT_IN_ARRAY -> {
+                val inClause: CriteriaBuilder.In<Any> = getInClause(builder, path, fieldName, value)
+                builder.not(inClause)
+            }
+
             SearchOperation.EQUALS -> builder.equal(path.get<Any>(fieldName), value)
             SearchOperation.NOT_EQUALS -> builder.notEqual(path.get<Any>(fieldName), value)
             SearchOperation.STARTS_WITH -> builder.like(path[fieldName], "$value%")
@@ -56,8 +70,21 @@ interface ParsingStrategy {
                 (path.get<String>(fieldName).`as`(String::class.java)),
                 "%$value%"
             )
+
             else -> null
         }
+    }
+
+    fun getInClause(
+        builder: CriteriaBuilder,
+        path: Path<*>,
+        fieldName: String,
+        value: Any?
+    ): CriteriaBuilder.In<Any> {
+        val inClause: CriteriaBuilder.In<Any> = builder.`in`(path.get(fieldName))
+        val values = value as List<*>
+        values.forEach { inClause.value(it) }
+        return inClause
     }
 
     companion object {

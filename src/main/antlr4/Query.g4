@@ -4,6 +4,7 @@ Copyright (c) 2019, Michael Mollard
 
 grammar Query;
 
+// syntactic rules
 input
    : query EOF
    ;
@@ -15,20 +16,30 @@ query
    ;
 
 criteria
-   : key op value
+   : key eq_array_value #eqArrayCriteria
+   | key op value #opCriteria
+   ;
+
+eq_array_value
+   : (IN | NOT_IN) array
    ;
 
 key
    : IDENTIFIER
    ;
 
+array
+   : LBRACKET (value (',' value)* )? RBRACKET
+   ;
+   
 value
-   : IDENTIFIER
+   : array
+   | IDENTIFIER
    | STRING
    | ENCODED_STRING
    | NUMBER
    | BOOL
-   ;
+  ;
 
 op
    : EQ
@@ -39,6 +50,7 @@ op
    | NOT_EQ
    ;
 
+// lexical rules
 BOOL
     : 'true'
     | 'false'
@@ -134,6 +146,13 @@ RPAREN
    : ')'
    ;
 
+LBRACKET
+   : '['
+   ;
+
+RBRACKET
+    : ']'
+    ;
 
 GT
    : '>'
@@ -155,11 +174,17 @@ EQ
    : ':'
    ;
 
-
 NOT_EQ
    : '!'
    ;
 
+IN
+   : 'IN'
+   ;
+
+NOT_IN
+   : 'NOT IN'
+   ;
 
 fragment POINT
    : '.'
@@ -169,9 +194,10 @@ IDENTIFIER
    : [A-Za-z0-9.]+
    ;
 
-ENCODED_STRING
-   : ~([ :<>!()])+
+ENCODED_STRING //anything but these characters :<>!()[], and whitespace
+   : ~([ ,:<>!()[\]])+
    ;
+
 
 LineTerminator
 : [\r\n\u2028\u2029] -> channel(HIDDEN)

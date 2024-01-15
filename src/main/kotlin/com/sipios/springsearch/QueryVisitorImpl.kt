@@ -30,20 +30,36 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
         return visit(ctx.query())
     }
 
-    override fun visitCriteria(ctx: QueryParser.CriteriaContext): Specification<T> {
+    override fun visitEqArrayCriteria(ctx: QueryParser.EqArrayCriteriaContext): Specification<T> {
         val key = ctx.key()!!.text
-        val op = ctx.op()!!.text
-        var value = ctx.value()!!.text
-
-        if (ctx.value().STRING() != null) {
-            value = value
-                .removeSurrounding("'")
-                .removeSurrounding("\"")
-                .replace("\\\"", "\"")
-                .replace("\\'", "'")
+        val op = if (ctx.eq_array_value().IN() != null) {
+            SearchOperation.IN_ARRAY
+        } else {
+            SearchOperation.NOT_IN_ARRAY
         }
+        val arr = ctx.eq_array_value().array()
+        val arrayValues = arr.value()
+        val valueAsList: List<String> =
+            arrayValues.map { if (it.STRING() != null) clearString(it.text) else it.text }
+        // there is no need for prefix and suffix (e.g. 'john*') in case of array value
+        val criteria = SearchCriteria(
+            key,
+            op,
+            null,
+            valueAsList,
+            null
+        )
+        return SpecificationImpl(criteria, searchSpecAnnotation)
+    }
 
+    override fun visitOpCriteria(ctx: QueryParser.OpCriteriaContext): Specification<T> {
+        val key = ctx.key()!!.text
+        var value = ctx.value()!!.text
+        if (ctx.value().STRING() != null) {
+            value = clearString(value)
+        }
         val matchResult = this.valueRegExp.find(value!!)
+        val op = SearchOperation.getSimpleOperation(ctx.op().text)!!
         val criteria = SearchCriteria(
             key,
             op,
@@ -54,4 +70,10 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
 
         return SpecificationImpl(criteria, searchSpecAnnotation)
     }
+
+    private fun clearString(value: String) = value
+        .removeSurrounding("'")
+        .removeSurrounding("\"")
+        .replace("\\\"", "\"")
+        .replace("\\'", "'")
 }

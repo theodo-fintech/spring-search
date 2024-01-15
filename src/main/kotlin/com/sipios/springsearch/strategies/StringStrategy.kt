@@ -15,7 +15,7 @@ data class StringStrategy(var searchSpecAnnotation: SearchSpec) : ParsingStrateg
         ops: SearchOperation?,
         value: Any?
     ): Predicate? {
-        if (!searchSpecAnnotation.caseSensitiveFlag) {
+        if (!searchSpecAnnotation.caseSensitiveFlag && value !is List<*>) {
             val lowerCasedValue = (value as String).lowercase(Locale.getDefault())
             val loweredFieldValue = builder.lower(path[fieldName])
             return when (ops) {
