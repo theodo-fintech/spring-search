@@ -8,7 +8,6 @@ import jakarta.persistence.criteria.Path
 import jakarta.persistence.criteria.Predicate
 import jakarta.persistence.criteria.Root
 import java.util.ArrayList
-import org.hibernate.query.sqm.tree.domain.SqmPluralValuedSimplePath
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -32,7 +31,7 @@ class SpecificationImpl<T>(private val criteria: SearchCriteria, private val sea
         val nestedRoot = getNestedRoot(root, nestedKey)
         val criteriaKey = nestedKey[nestedKey.size - 1]
         val fieldClass = nestedRoot.get<Any>(criteriaKey).javaType.kotlin
-        val isCollectionField = nestedRoot.get<Any>(criteriaKey) is SqmPluralValuedSimplePath<*>
+        val isCollectionField = isCollectionType(nestedRoot.javaType, criteriaKey)
         val strategy = ParsingStrategy.getStrategy(fieldClass, searchSpecAnnotation, isCollectionField)
         val value: Any?
         try {
@@ -64,7 +63,16 @@ class SpecificationImpl<T>(private val criteria: SearchCriteria, private val sea
         for (s in prefix) {
             temp = temp.get<T>(s)
         }
-
         return temp
+    }
+
+    private fun isCollectionType(clazz: Class<*>, fieldName: String): Boolean {
+        try {
+            val field = clazz.getDeclaredField(fieldName)
+            val type = field.type
+            return Collection::class.java.isAssignableFrom(type) || type.isArray
+        } catch (e: NoSuchFieldException) {
+            return false
+        }
     }
 }
