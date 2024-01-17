@@ -6,7 +6,6 @@ import jakarta.persistence.criteria.Path
 import jakarta.persistence.criteria.Predicate
 
 class CollectionStrategy : ParsingStrategy {
-
     override fun buildPredicate(
         builder: CriteriaBuilder,
         path: Path<*>,
@@ -14,12 +13,22 @@ class CollectionStrategy : ParsingStrategy {
         ops: SearchOperation?,
         value: Any?
     ): Predicate? {
-        if (ops == SearchOperation.IS && value != null) {
+        if (ops == SearchOperation.IS && value == null) {
+            return builder.isNull(path.get<Any>(fieldName))
+        }
+        if (ops == SearchOperation.IS && value == SearchOperation.EMPTY) {
             return builder.isEmpty(path[fieldName])
         }
-        if (ops == SearchOperation.IS_NOT && value != null) {
+        if (ops == SearchOperation.IS_NOT && value == null) {
+            return builder.isNotNull(path.get<Any>(fieldName))
+        }
+        if (ops == SearchOperation.IS_NOT && value == SearchOperation.EMPTY) {
             return builder.isNotEmpty(path[fieldName])
         }
-        throw IllegalArgumentException("Unsupported operation $ops for collection field $fieldName, only IS and IS_NOT are supported")
+
+        throw IllegalArgumentException(
+            "Unsupported operation $ops $value for collection field $fieldName, " +
+                "only IS null/EMPTY and IS NOT null/EMPTY are supported"
+        )
     }
 }
