@@ -64,7 +64,7 @@ BOOL
     ;
 
 NULL
-    : 'null'
+    : 'null' | 'NULL'
     ;
 
 STRING
