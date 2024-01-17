@@ -38,14 +38,7 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
             SearchOperation.IS_NOT
         }
         val value = ctx.is_value!!.text
-        val criteria = SearchCriteria(
-            key,
-            op,
-            null,
-            value,
-            null
-        )
-        return SpecificationImpl(criteria, searchSpecAnnotation)
+        return toSpec(key, op, value)
     }
 
     override fun visitEqArrayCriteria(ctx: QueryParser.EqArrayCriteriaContext): Specification<T> {
@@ -72,16 +65,27 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
 
     override fun visitBetweenCriteria(ctx: QueryParser.BetweenCriteriaContext): Specification<T> {
         val key = ctx.key()!!.text
-        var leftValue = ctx.left!!.text
-        var rightValue = ctx.right!!.text
-        if (ctx.left!!.STRING() != null) {
+        var leftValue = ctx.left.text
+        var rightValue = ctx.right.text
+        if (ctx.left.STRING() != null) {
             leftValue = clearString(leftValue)
         }
-        if (ctx.right!!.STRING() != null) {
+        if (ctx.right.STRING() != null) {
             rightValue = clearString(rightValue)
         }
-        val opLeft = SearchOperation.GREATER_THAN_EQUALS
-        val opRight = SearchOperation.LESS_THAN_EQUALS
+        val leftExp = toSpec(key, SearchOperation.GREATER_THAN_EQUALS, leftValue)
+        val rightExp = toSpec(key, SearchOperation.LESS_THAN_EQUALS, rightValue)
+        return if (ctx.BETWEEN() != null) {
+            leftExp.and(rightExp)
+        } else
+            Specification.not(leftExp.and(rightExp))
+    }
+
+    private fun toSpec(
+        key: String,
+        opLeft: SearchOperation,
+        leftValue: String?
+    ): SpecificationImpl<T> {
         val criteriaLeft = SearchCriteria(
             key,
             opLeft,
@@ -90,22 +94,9 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
             null
         )
         val leftExp = SpecificationImpl<T>(criteriaLeft, searchSpecAnnotation)
-
-        val criteriaRight = SearchCriteria(
-            key,
-            opRight,
-            null,
-            rightValue,
-            null
-        )
-
-        val rightExp = SpecificationImpl<T>(criteriaRight, searchSpecAnnotation)
-
-        return if (ctx.BETWEEN() != null) {
-            leftExp.and(rightExp)
-        } else
-            Specification.not(leftExp.and(rightExp))
+        return leftExp
     }
+
     override fun visitOpCriteria(ctx: QueryParser.OpCriteriaContext): Specification<T> {
         val key = ctx.key()!!.text
         var value = ctx.value()!!.text
