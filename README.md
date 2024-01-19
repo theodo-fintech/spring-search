@@ -187,6 +187,8 @@ Request : `/cars?search=options.transmission:Auto`
 14. Complex example  
 Request : `/cars?search=creationyear:2018 AND price<300000 AND (color:Yellow OR color:Blue) AND options.transmission:Auto`
 ![complex example](./docs/images/complex-example.gif)
+15. Using the BETWEEN operator
+Request : `/cars?search=creationyear BETWEEN 2017 AND 2019`
 
 <!-- TROUBLESHOOTING -->
 ## Troubleshooting
