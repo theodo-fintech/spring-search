@@ -14,7 +14,11 @@ enum class SearchOperation {
     GREATER_THAN_EQUALS,
     LESS_THAN_EQUALS,
     IN_ARRAY,
-    NOT_IN_ARRAY
+    NOT_IN_ARRAY,
+    IS,
+    IS_NOT,
+    BETWEEN,
+    NOT_BETWEEN,
     ;
 
     companion object {

@@ -8,6 +8,7 @@ import jakarta.persistence.criteria.Path
 import jakarta.persistence.criteria.Predicate
 import jakarta.persistence.criteria.Root
 import java.util.ArrayList
+import kotlin.reflect.KClass
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -22,20 +23,55 @@ import org.springframework.web.server.ResponseStatusException
 class SpecificationImpl<T>(private val criteria: SearchCriteria, private val searchSpecAnnotation: SearchSpec) :
     Specification<T> {
     @Throws(ResponseStatusException::class)
-    override fun toPredicate(root: Root<T>, query: CriteriaQuery<*>, builder: CriteriaBuilder): Predicate? {
+    override fun toPredicate(
+        root: Root<T>,
+        query: CriteriaQuery<*>,
+        builder: CriteriaBuilder
+    ): Predicate? {
         val nestedKey = criteria.key.split(".")
         val nestedRoot = getNestedRoot(root, nestedKey)
         val criteriaKey = nestedKey[nestedKey.size - 1]
         val fieldClass = nestedRoot.get<Any>(criteriaKey).javaType.kotlin
-        val strategy = ParsingStrategy.getStrategy(fieldClass, searchSpecAnnotation)
-        val value: Any?
+        val isCollectionField = isCollectionType(nestedRoot.javaType, criteriaKey)
+        val strategy = ParsingStrategy.getStrategy(fieldClass, searchSpecAnnotation, isCollectionField)
+        val value = parseValue(strategy, fieldClass, criteriaKey, criteria.value)
+        return strategy.buildPredicate(builder, nestedRoot, criteriaKey, criteria.operation, value)
+    }
+
+    private fun getNestedRoot(
+        root: Root<T>,
+        nestedKey: List<String>
+    ): Path<*> {
+        val prefix = ArrayList(nestedKey)
+        prefix.removeAt(nestedKey.size - 1)
+        var temp: Path<*> = root
+        for (s in prefix) {
+            temp = temp.get<T>(s)
+        }
+        return temp
+    }
+
+    private fun isCollectionType(clazz: Class<*>, fieldName: String): Boolean {
         try {
-            value = if (criteria.value is List<*>) {
-                ParsingStrategy.getStrategy(fieldClass, searchSpecAnnotation)
-                    .parse(criteria.value as List<*>, fieldClass)
+            val field = clazz.getDeclaredField(fieldName)
+            val type = field.type
+            return Collection::class.java.isAssignableFrom(type) || type.isArray
+        } catch (e: NoSuchFieldException) {
+            return false
+        }
+    }
+
+    private fun parseValue(
+        strategy: ParsingStrategy,
+        fieldClass: KClass<out Any>,
+        criteriaKey: String,
+        value: Any?
+    ): Any? {
+        return try {
+            if (value is List<*>) {
+                strategy.parse(value, fieldClass)
             } else {
-                ParsingStrategy.getStrategy(fieldClass, searchSpecAnnotation)
-                    .parse(criteria.value?.toString(), fieldClass)
+                strategy.parse(value?.toString(), fieldClass)
             }
         } catch (e: Exception) {
             throw ResponseStatusException(
@@ -43,18 +79,5 @@ class SpecificationImpl<T>(private val criteria: SearchCriteria, private val sea
                 "Could not parse input for the field $criteriaKey as a ${fieldClass.simpleName}"
             )
         }
-
-        return strategy.buildPredicate(builder, nestedRoot, criteriaKey, criteria.operation, value)
-    }
-
-    private fun getNestedRoot(root: Root<T>, nestedKey: List<String>): Path<*> {
-        val prefix = ArrayList(nestedKey)
-        prefix.removeAt(nestedKey.size - 1)
-        var temp: Path<*> = root
-        for (s in prefix) {
-            temp = temp.get<T>(s)
-        }
-
-        return temp
     }
 }

@@ -13,12 +13,16 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.server.ResponseStatusException
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = [SpringSearchApplication::class])
 @Transactional
 class SpringSearchApplicationTest {
     @Autowired
     lateinit var userRepository: UsersRepository
+
+    @Autowired
+    lateinit var authorRepository: AuthorRepository
 
     @Test
     fun run() {
@@ -1258,5 +1262,188 @@ class SpringSearchApplicationTest {
         ).withSearch("updatedDateAt IN ['2020-01-10', '2020-01-15']").build()
         val users = userRepository.findAll(specification)
         Assertions.assertTrue(setOf(janeId, johnId) == users.map { user -> user.userId }.toSet())
+    }
+
+    @Test
+    fun canGetAuthorsWithEmptyBook() {
+        val johnBook = Book()
+        val john = Author()
+        john.name = "john"
+        john.addBook(johnBook)
+        authorRepository.save(john)
+        val janeBook = Book()
+        val jane = Author()
+        jane.name = "jane"
+        jane.addBook(janeBook)
+        authorRepository.save(jane)
+        val specification = SpecificationsBuilder<Author>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("books IS EMPTY").build()
+        val users = authorRepository.findAll(specification)
+        Assertions.assertTrue(users.isEmpty())
+    }
+
+    @Test
+    fun canGetAuthorsWithEmptyBookWithResult() {
+        val johnBook = Book()
+        val john = Author()
+        john.name = "john"
+        john.addBook(johnBook)
+        authorRepository.save(john)
+        val jane = Author()
+        jane.name = "jane"
+        authorRepository.save(jane)
+        val specification = SpecificationsBuilder<Author>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("books IS EMPTY").build()
+        val users = authorRepository.findAll(specification)
+        Assertions.assertTrue(users.size == 1)
+        Assertions.assertTrue(users[0].name == jane.name)
+    }
+
+    @Test
+    fun canGetAuthorsWithBooksNotEmpty() {
+        val johnBook = Book()
+        val john = Author()
+        john.name = "john"
+        john.addBook(johnBook)
+        authorRepository.save(john)
+        val jane = Author()
+        jane.name = "jane"
+        authorRepository.save(jane)
+        val specification = SpecificationsBuilder<Author>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("books IS NOT EMPTY").build()
+        val users = authorRepository.findAll(specification)
+        Assertions.assertTrue(users.size == 1)
+        Assertions.assertTrue(users[0].name == john.name)
+    }
+
+    @Test
+    fun canGetAuthorsWithBooksNotEmptyAllResult() {
+        val johnBook = Book()
+        val john = Author()
+        john.name = "john"
+        john.addBook(johnBook)
+        authorRepository.save(john)
+        val jane = Author()
+        jane.name = "jane"
+        val janeBook = Book()
+        jane.addBook(janeBook)
+        authorRepository.save(jane)
+        val specification = SpecificationsBuilder<Author>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("books IS NOT EMPTY").build()
+        val users = authorRepository.findAll(specification)
+        Assertions.assertTrue(users.size == 2)
+    }
+
+    @Test
+    fun canGetAuthorsWithBooksNotEmptyNoResult() {
+        val john = Author()
+        john.name = "john"
+        authorRepository.save(john)
+        val jane = Author()
+        jane.name = "jane"
+        authorRepository.save(jane)
+        val specification = SpecificationsBuilder<Author>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("books IS NOT EMPTY").build()
+        val users = authorRepository.findAll(specification)
+        Assertions.assertTrue(users.size == 0)
+    }
+
+    @Test
+    fun canGetUsersWithNumberOfChildrenBetween() {
+        userRepository.save(Users(userFirstName = "john", userChildrenNumber = 2))
+        userRepository.save(Users(userFirstName = "jane", userChildrenNumber = 3))
+        userRepository.save(Users(userFirstName = "joe", userChildrenNumber = 5))
+        userRepository.save(Users(userFirstName = "jean", userChildrenNumber = 10))
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("userChildrenNumber BETWEEN 4 AND 10").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertEquals(2, users.size)
+        val setNames = users.map { user -> user.userFirstName }.toSet()
+        Assertions.assertEquals(setOf("joe", "jean"), setNames)
+    }
+
+    @Test
+    fun canGetUsersWithUpdatedDateBetween() {
+        userRepository.save(Users(userFirstName = "john", updatedDateAt = LocalDate.parse("2020-01-10")))
+        userRepository.save(Users(userFirstName = "jane", updatedDateAt = LocalDate.parse("2020-01-11")))
+        userRepository.save(Users(userFirstName = "joe", updatedDateAt = LocalDate.parse("2020-01-12")))
+        userRepository.save(Users(userFirstName = "jean", updatedDateAt = LocalDate.parse("2020-01-13")))
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("updatedDateAt BETWEEN 2020-01-12 AND 2020-01-13").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertEquals(2, users.size)
+        val setNames = users.map { user -> user.userFirstName }.toSet()
+        Assertions.assertEquals(setOf("joe", "jean"), setNames)
+    }
+
+    @Test
+    fun canGetUsersWithUpdatedDateNotBetween() {
+        userRepository.save(Users(userFirstName = "john", updatedDateAt = LocalDate.parse("2020-01-10")))
+        userRepository.save(Users(userFirstName = "jane", updatedDateAt = LocalDate.parse("2020-01-11")))
+        userRepository.save(Users(userFirstName = "joe", updatedDateAt = LocalDate.parse("2020-01-12")))
+        userRepository.save(Users(userFirstName = "jean", updatedDateAt = LocalDate.parse("2020-01-13")))
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("updatedDateAt NOT BETWEEN 2020-01-12 AND 2020-01-13").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertEquals(2, users.size)
+        val setNames = users.map { user -> user.userFirstName }.toSet()
+        Assertions.assertEquals(setOf("john", "jane"), setNames)
+    }
+
+    @Test
+    fun canGetUsersWithUpdatedDateBetweenAndIdIn() {
+        userRepository.save(Users(userFirstName = "john", updatedDateAt = LocalDate.parse("2020-01-10")))
+        userRepository.save(Users(userFirstName = "jane", updatedDateAt = LocalDate.parse("2020-01-11")))
+        val joeId = userRepository.save(Users(userFirstName = "joe", updatedDateAt = LocalDate.parse("2020-01-12"))).userId
+        val jeanId = userRepository.save(Users(userFirstName = "jean", updatedDateAt = LocalDate.parse("2020-01-13"))).userId
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("updatedDateAt BETWEEN 2020-01-11 AND 2020-01-13 AND userId IN [$joeId, $jeanId]").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertEquals(2, users.size)
+        val setNames = users.map { user -> user.userFirstName }.toSet()
+        Assertions.assertEquals(setOf("joe", "jean"), setNames)
+    }
+    // test for a wrong search, should throw an exception during the parse
+    @Test
+    fun badRequestWithWrongSearch() {
+        Assertions.assertThrows(ResponseStatusException::class.java) {
+            SpecificationsBuilder<Users>(
+                SearchSpec::class.constructors.first().call("", false)
+            ).withSearch("userFirstName : ").build()
+        }
+        Assertions.assertThrows(ResponseStatusException::class.java) {
+            SpecificationsBuilder<Users>(
+                SearchSpec::class.constructors.first().call("", false)
+            ).withSearch("updatedDateAt BETWEEN  AND 2020-01-11").build()
+        }
+        Assertions.assertThrows(ResponseStatusException::class.java) {
+            SpecificationsBuilder<Users>(
+                SearchSpec::class.constructors.first().call("", false)
+            ).withSearch("updatedDateAt BETWEEN 2020-01-11 AND").build()
+        }
+        Assertions.assertThrows(ResponseStatusException::class.java) {
+            SpecificationsBuilder<Author>(
+                SearchSpec::class.constructors.first().call("", false)
+            ).withSearch("books IS EMPT ").build()
+        }
+        Assertions.assertThrows(ResponseStatusException::class.java) {
+            SpecificationsBuilder<Author>(
+                SearchSpec::class.constructors.first().call("", false)
+            ).withSearch("books IS NOT EMPT ").build()
+        }
+        Assertions.assertThrows(ResponseStatusException::class.java) {
+            SpecificationsBuilder<Users>(
+                SearchSpec::class.constructors.first().call("", false)
+            ).withSearch("userId IN [").build()
+        }
     }
 }

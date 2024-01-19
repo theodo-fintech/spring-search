@@ -19,7 +19,7 @@ import java.util.UUID
 data class Users(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    var userId: Long? = null,
+    var userId: Int? = null,
 
     @Column(name = "FirstName")
     var userFirstName: String = "John",

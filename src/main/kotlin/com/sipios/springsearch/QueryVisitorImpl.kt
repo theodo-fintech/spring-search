@@ -30,6 +30,17 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
         return visit(ctx.query())
     }
 
+    override fun visitIsCriteria(ctx: QueryParser.IsCriteriaContext): Specification<T> {
+        val key = ctx.key()!!.text
+        val op = if (ctx.IS() != null) {
+            SearchOperation.IS
+        } else {
+            SearchOperation.IS_NOT
+        }
+        val value = ctx.is_value!!.text
+        return toSpec(key, op, value)
+    }
+
     override fun visitEqArrayCriteria(ctx: QueryParser.EqArrayCriteriaContext): Specification<T> {
         val key = ctx.key()!!.text
         val op = if (ctx.eq_array_value().IN() != null) {
@@ -42,13 +53,37 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
         val valueAsList: List<String> =
             arrayValues.map { if (it.STRING() != null) clearString(it.text) else it.text }
         // there is no need for prefix and suffix (e.g. 'john*') in case of array value
-        val criteria = SearchCriteria(
-            key,
-            op,
-            null,
-            valueAsList,
-            null
-        )
+        val criteria = SearchCriteria(key, op, valueAsList)
+        return SpecificationImpl(criteria, searchSpecAnnotation)
+    }
+
+    override fun visitBetweenCriteria(ctx: QueryParser.BetweenCriteriaContext): Specification<T> {
+        val key = ctx.key()!!.text
+        val leftValue = if (ctx.left.STRING() != null) {
+            clearString(ctx.left.text)
+        } else {
+            ctx.left.text
+        }
+        val rightValue = if (ctx.right.STRING() != null) {
+            clearString(ctx.right.text)
+        } else {
+            ctx.right.text
+        }
+        val leftExp = toSpec(key, SearchOperation.GREATER_THAN_EQUALS, leftValue)
+        val rightExp = toSpec(key, SearchOperation.LESS_THAN_EQUALS, rightValue)
+        return if (ctx.BETWEEN() != null) {
+            leftExp.and(rightExp)
+        } else {
+            Specification.not(leftExp.and(rightExp))
+        }
+    }
+
+    private fun toSpec(
+        key: String,
+        opLeft: SearchOperation,
+        leftValue: String?
+    ): SpecificationImpl<T> {
+        val criteria = SearchCriteria(key, opLeft, leftValue)
         return SpecificationImpl(criteria, searchSpecAnnotation)
     }
 

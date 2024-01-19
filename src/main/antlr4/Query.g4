@@ -18,6 +18,12 @@ query
 criteria
    : key eq_array_value #eqArrayCriteria
    | key op value #opCriteria
+   | key (BETWEEN | NOT_BETWEEN) left=value AND right=value #betweenCriteria
+   | key (IS | IS_NOT) is_value #isCriteria
+   ;
+
+is_value
+   : EMPTY
    ;
 
 eq_array_value
@@ -174,10 +180,29 @@ EQ
    : ':'
    ;
 
+IS
+   : 'IS'
+   ;
+
+IS_NOT
+    : 'IS NOT'
+    ;
+
+EMPTY
+   : 'EMPTY'
+   ;
+
 NOT_EQ
    : '!'
    ;
 
+BETWEEN
+   : 'BETWEEN'
+   ;
+
+NOT_BETWEEN
+   : 'NOT BETWEEN'
+   ;
 IN
    : 'IN'
    ;
