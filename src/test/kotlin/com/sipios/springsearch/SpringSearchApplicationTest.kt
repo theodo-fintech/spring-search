@@ -1441,6 +1441,35 @@ class SpringSearchApplicationTest {
         val setNames = users.map { user -> user.userFirstName }.toSet()
         Assertions.assertEquals(setOf("david"), setNames)
     }
+    @Test
+    fun canGetUsersWithUserFirstNameGt() {
+        userRepository.save(Users(userFirstName = "abel"))
+        userRepository.save(Users(userFirstName = "bob"))
+        userRepository.save(Users(userFirstName = "connor"))
+        userRepository.save(Users(userFirstName = "david"))
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("userFirstName > barry'").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertEquals(3, users.size)
+        val setNames = users.map { user -> user.userFirstName }.toSet()
+        Assertions.assertEquals(setOf("connor", "david", "bob"), setNames)
+    }
+
+    @Test
+    fun canGetUsersWithUserFirstNameLt() {
+        userRepository.save(Users(userFirstName = "abel"))
+        userRepository.save(Users(userFirstName = "bob"))
+        userRepository.save(Users(userFirstName = "connor"))
+        userRepository.save(Users(userFirstName = "david"))
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("userFirstName < barry'").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertEquals(1, users.size)
+        val setNames = users.map { user -> user.userFirstName }.toSet()
+        Assertions.assertEquals(setOf("abel"), setNames)
+    }
 
     @Test
     fun canGetUsersWithUserFirstNameCaseSensitive() {
