@@ -43,12 +43,12 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
 
     override fun visitEqArrayCriteria(ctx: QueryParser.EqArrayCriteriaContext): Specification<T> {
         val key = ctx.key()!!.text
-        val op = if (ctx.eq_array_value().IN() != null) {
+        val op = if (ctx.IN() != null) {
             SearchOperation.IN_ARRAY
         } else {
             SearchOperation.NOT_IN_ARRAY
         }
-        val arr = ctx.eq_array_value().array()
+        val arr = ctx.array()
         val arrayValues = arr.value()
         val valueAsList: List<String> =
             arrayValues.map { if (it.STRING() != null) clearString(it.text) else it.text }
