@@ -53,32 +53,29 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
         val valueAsList: List<String> =
             arrayValues.map { if (it.STRING() != null) clearString(it.text) else it.text }
         // there is no need for prefix and suffix (e.g. 'john*') in case of array value
-        val criteria = SearchCriteria(
-            key,
-            op,
-            null,
-            valueAsList,
-            null
-        )
+        val criteria = SearchCriteria(key, op, valueAsList)
         return SpecificationImpl(criteria, searchSpecAnnotation)
     }
 
     override fun visitBetweenCriteria(ctx: QueryParser.BetweenCriteriaContext): Specification<T> {
         val key = ctx.key()!!.text
-        var leftValue = ctx.left.text
-        var rightValue = ctx.right.text
-        if (ctx.left.STRING() != null) {
-            leftValue = clearString(leftValue)
+        val leftValue = if (ctx.left.STRING() != null) {
+            clearString(ctx.left.text)
+        } else {
+            ctx.left.text
         }
-        if (ctx.right.STRING() != null) {
-            rightValue = clearString(rightValue)
+        val rightValue = if (ctx.right.STRING() != null) {
+            clearString(ctx.right.text)
+        } else {
+            ctx.right.text
         }
         val leftExp = toSpec(key, SearchOperation.GREATER_THAN_EQUALS, leftValue)
         val rightExp = toSpec(key, SearchOperation.LESS_THAN_EQUALS, rightValue)
         return if (ctx.BETWEEN() != null) {
             leftExp.and(rightExp)
-        } else
+        } else {
             Specification.not(leftExp.and(rightExp))
+        }
     }
 
     private fun toSpec(
@@ -86,15 +83,8 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
         opLeft: SearchOperation,
         leftValue: String?
     ): SpecificationImpl<T> {
-        val criteriaLeft = SearchCriteria(
-            key,
-            opLeft,
-            null,
-            leftValue,
-            null
-        )
-        val leftExp = SpecificationImpl<T>(criteriaLeft, searchSpecAnnotation)
-        return leftExp
+        val criteria = SearchCriteria(key, opLeft, leftValue)
+        return SpecificationImpl(criteria, searchSpecAnnotation)
     }
 
     override fun visitOpCriteria(ctx: QueryParser.OpCriteriaContext): Specification<T> {

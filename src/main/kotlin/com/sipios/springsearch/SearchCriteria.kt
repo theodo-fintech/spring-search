@@ -24,4 +24,6 @@ class SearchCriteria // Change EQUALS into ENDS_WITH, CONTAINS, STARTS_WITH base
         }
         this.operation = op
     }
+    constructor(key: String, op: SearchOperation, value: Any?) : this(key, op, null, value, null) {
+    }
 }
