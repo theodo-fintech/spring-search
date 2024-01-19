@@ -1412,6 +1412,50 @@ class SpringSearchApplicationTest {
         val setNames = users.map { user -> user.userFirstName }.toSet()
         Assertions.assertEquals(setOf("joe", "jean"), setNames)
     }
+
+    @Test
+    fun canGetUsersWithUserFirstNameBetween() {
+        userRepository.save(Users(userFirstName = "abel"))
+        userRepository.save(Users(userFirstName = "bob"))
+        userRepository.save(Users(userFirstName = "connor"))
+        userRepository.save(Users(userFirstName = "david"))
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("userFirstName BETWEEN 'aaron' AND 'cyrano'").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertEquals(3, users.size)
+        val setNames = users.map { user -> user.userFirstName }.toSet()
+        Assertions.assertEquals(setOf("abel", "bob", "connor"), setNames)
+    }
+    @Test
+    fun canGetUsersWithUserFirstNameNotBetween() {
+        userRepository.save(Users(userFirstName = "abel"))
+        userRepository.save(Users(userFirstName = "bob"))
+        userRepository.save(Users(userFirstName = "connor"))
+        userRepository.save(Users(userFirstName = "david"))
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("userFirstName NOT BETWEEN 'aaron' AND 'cyrano'").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertEquals(1, users.size)
+        val setNames = users.map { user -> user.userFirstName }.toSet()
+        Assertions.assertEquals(setOf("david"), setNames)
+    }
+
+    @Test
+    fun canGetUsersWithUserFirstNameCaseSensitive() {
+        userRepository.save(Users(userFirstName = "abel"))
+        userRepository.save(Users(userFirstName = "Aaron"))
+        userRepository.save(Users(userFirstName = "connor"))
+        userRepository.save(Users(userFirstName = "david"))
+        // create spec with case sensitive flag
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", true)
+        ).withSearch("userFirstName : A*").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertEquals(1, users.size)
+        Assertions.assertEquals("Aaron", users[0].userFirstName)
+    }
     // test for a wrong search, should throw an exception during the parse
     @Test
     fun badRequestWithWrongSearch() {
