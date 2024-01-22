@@ -1284,6 +1284,31 @@ class SpringSearchApplicationTest {
     }
 
     @Test
+    fun cantSearchForEmptyWithNonFieldProperties() {
+        val johnBook = Book()
+        val john = Author()
+        john.name = "john"
+        john.addBook(johnBook)
+        authorRepository.save(john)
+        val janeBook = Book()
+        val jane = Author()
+        jane.name = "jane"
+        jane.addBook(janeBook)
+        authorRepository.save(jane)
+        val specification = SpecificationsBuilder<Author>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("name IS EMPTY").build()
+        Assertions.assertThrows(
+            ResponseStatusException::class.java
+        ) { authorRepository.findAll(specification) }
+        val specification2 = SpecificationsBuilder<Author>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("name IS NOT EMPTY").build()
+        Assertions.assertThrows(
+            ResponseStatusException::class.java
+        ) { authorRepository.findAll(specification2) }
+    }
+    @Test
     fun canGetAuthorsWithEmptyBookWithResult() {
         val johnBook = Book()
         val john = Author()

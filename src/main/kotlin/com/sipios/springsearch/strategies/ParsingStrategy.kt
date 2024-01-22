@@ -14,7 +14,8 @@ import java.util.Date
 import java.util.UUID
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
-
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 interface ParsingStrategy {
     /**
      * Method to parse the value specified to the corresponding strategy
@@ -64,7 +65,9 @@ interface ParsingStrategy {
                     builder.isNull(path.get<Any>(fieldName))
                 } else {
                     // we should not call parent method for collection fields
-                    throw IllegalArgumentException("Unsupported operation $ops $value for field $fieldName")
+                    // so this makes no sense to search for EMPTY with a non-collection field
+                    throw ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Unsupported operation $ops $value for field $fieldName")
                 }
             }
             SearchOperation.IS_NOT -> {
@@ -72,7 +75,9 @@ interface ParsingStrategy {
                     builder.isNotNull(path.get<Any>(fieldName))
                 } else {
                     // we should not call parent method for collection fields
-                    throw IllegalArgumentException("Unsupported operation $ops $value for field $fieldName")
+                    // so this makes no sense to search for NOT EMPTY with a non-collection field
+                    throw ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Unsupported operation $ops $value for field $fieldName")
                 }
             }
 
