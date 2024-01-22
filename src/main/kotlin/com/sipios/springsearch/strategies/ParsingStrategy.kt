@@ -63,14 +63,16 @@ interface ParsingStrategy {
                 if (value == null) {
                     builder.isNull(path.get<Any>(fieldName))
                 } else {
-                    builder.isEmpty(path[fieldName])
+                    // we should not call parent method for collection fields
+                    throw IllegalArgumentException("Unsupported operation $ops $value for field $fieldName")
                 }
             }
             SearchOperation.IS_NOT -> {
                 if (value == null) {
                     builder.isNotNull(path.get<Any>(fieldName))
                 } else {
-                    builder.isNotEmpty(path[fieldName])
+                    // we should not call parent method for collection fields
+                    throw IllegalArgumentException("Unsupported operation $ops $value for field $fieldName")
                 }
             }
 
