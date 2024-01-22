@@ -13,22 +13,15 @@ class CollectionStrategy : ParsingStrategy {
         ops: SearchOperation?,
         value: Any?
     ): Predicate? {
-        if (ops == SearchOperation.IS && value == null) {
-            return builder.isNull(path.get<Any>(fieldName))
-        }
         if (ops == SearchOperation.IS && value == SearchOperation.EMPTY) {
             return builder.isEmpty(path[fieldName])
-        }
-        if (ops == SearchOperation.IS_NOT && value == null) {
-            return builder.isNotNull(path.get<Any>(fieldName))
         }
         if (ops == SearchOperation.IS_NOT && value == SearchOperation.EMPTY) {
             return builder.isNotEmpty(path[fieldName])
         }
-
         throw IllegalArgumentException(
             "Unsupported operation $ops $value for collection field $fieldName, " +
-                "only IS null/EMPTY and IS NOT null/EMPTY are supported"
+                "only IS EMPTY and IS NOT EMPTY are supported"
         )
     }
 }
