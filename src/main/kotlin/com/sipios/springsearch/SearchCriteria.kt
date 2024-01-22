@@ -1,7 +1,7 @@
 package com.sipios.springsearch
 
 class SearchCriteria // Change EQUALS into ENDS_WITH, CONTAINS, STARTS_WITH based on the presence of * in the value
-    (var key: String, private var op: SearchOperation, prefix: String?, var value: Any?, suffix: String?) {
+    (var key: String, private var op: SearchOperation, prefix: String?, val value: Any?, suffix: String?) {
     var operation: SearchOperation?
 
     init {
@@ -23,5 +23,7 @@ class SearchCriteria // Change EQUALS into ENDS_WITH, CONTAINS, STARTS_WITH base
             else -> op
         }
         this.operation = op
+    }
+    constructor(key: String, op: SearchOperation, value: Any?) : this(key, op, null, value, null) {
     }
 }

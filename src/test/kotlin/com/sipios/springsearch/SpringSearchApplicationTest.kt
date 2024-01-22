@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.server.ResponseStatusException
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = [SpringSearchApplication::class])
 @Transactional
@@ -1410,6 +1411,40 @@ class SpringSearchApplicationTest {
         Assertions.assertEquals(2, users.size)
         val setNames = users.map { user -> user.userFirstName }.toSet()
         Assertions.assertEquals(setOf("joe", "jean"), setNames)
+    }
+    // test for a wrong search, should throw an exception during the parse
+    @Test
+    fun badRequestWithWrongSearch() {
+        Assertions.assertThrows(ResponseStatusException::class.java) {
+            SpecificationsBuilder<Users>(
+                SearchSpec::class.constructors.first().call("", false)
+            ).withSearch("userFirstName : ").build()
+        }
+        Assertions.assertThrows(ResponseStatusException::class.java) {
+            SpecificationsBuilder<Users>(
+                SearchSpec::class.constructors.first().call("", false)
+            ).withSearch("updatedDateAt BETWEEN  AND 2020-01-11").build()
+        }
+        Assertions.assertThrows(ResponseStatusException::class.java) {
+            SpecificationsBuilder<Users>(
+                SearchSpec::class.constructors.first().call("", false)
+            ).withSearch("updatedDateAt BETWEEN 2020-01-11 AND").build()
+        }
+        Assertions.assertThrows(ResponseStatusException::class.java) {
+            SpecificationsBuilder<Author>(
+                SearchSpec::class.constructors.first().call("", false)
+            ).withSearch("books IS EMPT ").build()
+        }
+        Assertions.assertThrows(ResponseStatusException::class.java) {
+            SpecificationsBuilder<Author>(
+                SearchSpec::class.constructors.first().call("", false)
+            ).withSearch("books IS NOT EMPT ").build()
+        }
+        Assertions.assertThrows(ResponseStatusException::class.java) {
+            SpecificationsBuilder<Users>(
+                SearchSpec::class.constructors.first().call("", false)
+            ).withSearch("userId IN [").build()
+        }
     }
 
     @Test

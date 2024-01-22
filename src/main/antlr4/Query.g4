@@ -16,7 +16,7 @@ query
    ;
 
 criteria
-   : key eq_array_value #eqArrayCriteria
+   : key (IN | NOT_IN) array #eqArrayCriteria
    | key op value #opCriteria
    | key (BETWEEN | NOT_BETWEEN) left=value AND right=value #betweenCriteria
    | key (IS | IS_NOT) is_value #isCriteria
@@ -27,10 +27,6 @@ is_value
    | NULL
    ;
 
-eq_array_value
-   : (IN | NOT_IN) array
-   ;
-
 key
    : IDENTIFIER
    ;
@@ -38,10 +34,9 @@ key
 array
    : LBRACKET (value (',' value)* )? RBRACKET
    ;
-   
+
 value
-   : array
-   | IDENTIFIER
+   : IDENTIFIER
    | STRING
    | ENCODED_STRING
    | NUMBER
