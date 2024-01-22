@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
+import java.net.http.HttpResponse
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = [SpringSearchApplication::class])
 @Transactional
@@ -1351,6 +1352,27 @@ class SpringSearchApplicationTest {
         ).withSearch("books IS NOT EMPTY").build()
         val users = authorRepository.findAll(specification)
         Assertions.assertTrue(users.size == 0)
+    }
+    @Test
+    fun cantGetAuthorsWithBooksNull() {
+        val john = Author()
+        john.name = "john"
+        authorRepository.save(john)
+        val jane = Author()
+        jane.name = "jane"
+        authorRepository.save(jane)
+        val spec = SpecificationsBuilder<Author>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("books IS null").build()
+        Assertions.assertThrows(
+            ResponseStatusException::class.java
+        ) { authorRepository.findAll(spec) }
+        val specNotNull = SpecificationsBuilder<Author>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("books IS NOT null").build()
+        Assertions.assertThrows(
+            ResponseStatusException::class.java
+        ) { authorRepository.findAll(specNotNull) }
     }
 
     @Test

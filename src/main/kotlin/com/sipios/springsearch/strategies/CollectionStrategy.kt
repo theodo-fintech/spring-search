@@ -4,6 +4,8 @@ import com.sipios.springsearch.SearchOperation
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.Path
 import jakarta.persistence.criteria.Predicate
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 
 class CollectionStrategy : ParsingStrategy {
     override fun buildPredicate(
@@ -19,7 +21,7 @@ class CollectionStrategy : ParsingStrategy {
         if (ops == SearchOperation.IS_NOT && value == SearchOperation.EMPTY) {
             return builder.isNotEmpty(path[fieldName])
         }
-        throw IllegalArgumentException(
+        throw ResponseStatusException(HttpStatus.BAD_REQUEST,
             "Unsupported operation $ops $value for collection field $fieldName, " +
                 "only IS EMPTY and IS NOT EMPTY are supported"
         )
