@@ -89,9 +89,10 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
 
     override fun visitOpCriteria(ctx: QueryParser.OpCriteriaContext): Specification<T> {
         val key = ctx.key().text
-        var value = ctx.value().text
-        if (ctx.value().STRING() != null) {
-            value = clearString(value)
+        val value = if (ctx.value().STRING() != null) {
+            clearString(ctx.value().text)
+        } else {
+            ctx.value().text
         }
         val matchResult = this.valueRegExp.find(value)
         val op = SearchOperation.getSimpleOperation(ctx.op().text) ?: throw IllegalArgumentException("Invalid operation")
