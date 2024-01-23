@@ -4,6 +4,8 @@ import com.sipios.springsearch.anotation.SearchSpec
 import com.sipios.springsearch.grammar.QueryBaseVisitor
 import com.sipios.springsearch.grammar.QueryParser
 import org.springframework.data.jpa.domain.Specification
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 
 class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryBaseVisitor<Specification<T>>() {
     private val valueRegExp = Regex(pattern = "^(?<prefix>\\*?)(?<value>.+?)(?<suffix>\\*?)$")
@@ -32,6 +34,7 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
 
     override fun visitIsCriteria(ctx: QueryParser.IsCriteriaContext): Specification<T> {
         val key = ctx.key().text
+        verifyBlackList(key)
         val op = if (ctx.IS() != null) {
             SearchOperation.IS
         } else if (ctx.IS_NOT() != null) {
@@ -44,6 +47,7 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
 
     override fun visitEqArrayCriteria(ctx: QueryParser.EqArrayCriteriaContext): Specification<T> {
         val key = ctx.key().text
+        verifyBlackList(key)
         val op = if (ctx.IN() != null) {
             SearchOperation.IN_ARRAY
         } else {
@@ -60,6 +64,7 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
 
     override fun visitBetweenCriteria(ctx: QueryParser.BetweenCriteriaContext): Specification<T> {
         val key = ctx.key().text
+        verifyBlackList(key)
         val leftValue = if (ctx.left.STRING() != null) {
             clearString(ctx.left.text)
         } else {
@@ -95,6 +100,7 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
         } else {
             ctx.value().text
         }
+        verifyBlackList(key)
         val matchResult = this.valueRegExp.find(value)
         val op = SearchOperation.getSimpleOperation(ctx.op().text) ?: throw IllegalArgumentException("Invalid operation")
         val criteria = SearchCriteria(
@@ -106,6 +112,16 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
         )
 
         return SpecificationImpl(criteria, searchSpecAnnotation)
+    }
+
+    private fun verifyBlackList(key: String?) {
+        val blackList = this.searchSpecAnnotation.blackListedFields
+        if (blackList.contains(key)) {
+            throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Field $key is blacklisted"
+            )
+        }
     }
 
     private fun clearString(value: String) = value

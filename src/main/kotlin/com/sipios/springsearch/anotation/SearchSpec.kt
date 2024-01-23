@@ -16,5 +16,10 @@ annotation class SearchSpec(
     /**
      * A flag to indicate if the search needs to be case-sensitive or not
      */
-    val caseSensitiveFlag: Boolean = true
+    val caseSensitiveFlag: Boolean = true,
+
+    /**
+     * A list of fields that should be excluded from the search
+     */
+    val blackListedFields: Array<String> = []
 )
