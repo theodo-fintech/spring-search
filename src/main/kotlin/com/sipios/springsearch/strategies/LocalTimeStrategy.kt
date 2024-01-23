@@ -25,6 +25,7 @@ class LocalTimeStrategy : ParsingStrategy {
     }
 
     override fun parse(value: String?, fieldClass: KClass<out Any>): Any? {
+        if (value == SearchOperation.NULL) return value
         return LocalTime.parse(value)
     }
 }

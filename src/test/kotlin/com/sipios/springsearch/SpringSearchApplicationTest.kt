@@ -1610,4 +1610,15 @@ class SpringSearchApplicationTest {
         val setNames = users.map { user -> user.userFirstName }.toSet()
         Assertions.assertEquals(setOf("john", "jane", "joe", "jean"), setNames)
     }
+
+    @Test
+    fun canGetUserWithNullSalary() {
+        userRepository.save(Users(userFirstName = "john", userSalary = 100.0F))
+        userRepository.save(Users(userFirstName = "jane", userSalary = 1000.0F))
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("userSalary IS NULL").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertEquals(0, users.size)
+    }
 }
