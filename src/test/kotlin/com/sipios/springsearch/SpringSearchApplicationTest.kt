@@ -1616,7 +1616,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "john", userSalary = 100.0F))
         userRepository.save(Users(userFirstName = "jane", userSalary = 1000.0F))
         val specification = SpecificationsBuilder<Users>(
-            SearchSpec::class.constructors.first().call("", false)
+            SearchSpec::class.constructors.first().call("", false, emptyArray<String>())
         ).withSearch("userSalary IS NULL").build()
         val users = userRepository.findAll(specification)
         Assertions.assertEquals(0, users.size)
