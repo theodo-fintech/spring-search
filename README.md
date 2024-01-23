@@ -126,27 +126,28 @@ fun yourFunctionNameHere(@SearchSpec specs: Specification<YourModel>): ResponseE
 
 ## Operators
 <!-- table of operators -->
-| Operator       | Description                   | Example                                            |
-|----------------|-------------------------------|----------------------------------------------------|
-| `:`            | Equal                         | `color:Red`                                        |
-| `!`            | Not equal                     | `color!Red`                                        |
-| `>`            | Greater than                  | `creationyear>2017`                                |
-| `>:`           | Greater than eq               | `creationyear>2017`                                |
-| `<`            | Less than                     | `price<100000`                                     |
-| `<:`           | Less than eq                  | `price<100000`                                     |
-| `*`            | Starts with                   | `brand:*Martin`                                    |
-| `*`            | Ends with                     | `brand:Aston*`                                     |
-| `*`            | Contains                      | `brand:*Martin*`                                   |
-| `OR`           | Logical OR                    | `color:Red OR color:Blue`                          |
-| `AND`          | Logical AND                   | `brand:Aston* AND price<300000`                    |
-| `IN`           | Value is in list              | `color IN ['Red', 'Blue']`                         |
-| `NOT IN`       | Value is not in list          | `color NOT IN ['Red', 'Blue']`                     |
-| `IS EMPTY`     | Collection field is empty     | `cars IS EMPTY`                                    |
-| `IS NOT EMPTY` | Collection field is not empty | `cars IS NOT EMPTY`                                |
-| `IS NULL`      | Field is null                 | `brand IS NULL`                                    |
-| `IS NOT NULL`  | Field is not null             | `brand IS NOT NULL`                                |
-| `()`           | Parenthesis                   | `brand:Nissan OR (brand:Chevrolet AND color:Blue)` |
-| `BETWEEN`      | Value is between two values   | `creationyear BETWEEN 2017 AND 2019`               |
+| Operator       | Description                     | Example                                            |
+|----------------|---------------------------------|----------------------------------------------------|
+| `:`            | Equal                           | `color:Red`                                        |
+| `!`            | Not equal                       | `color!Red`                                        |
+| `>`            | Greater than                    | `creationyear>2017`                                |
+| `>:`           | Greater than eq                 | `creationyear>2017`                                |
+| `<`            | Less than                       | `price<100000`                                     |
+| `<:`           | Less than eq                    | `price<100000`                                     |
+| `*`            | Starts with                     | `brand:*Martin`                                    |
+| `*`            | Ends with                       | `brand:Aston*`                                     |
+| `*`            | Contains                        | `brand:*Martin*`                                   |
+| `OR`           | Logical OR                      | `color:Red OR color:Blue`                          |
+| `AND`          | Logical AND                     | `brand:Aston* AND price<300000`                    |
+| `IN`           | Value is in list                | `color IN ['Red', 'Blue']`                         |
+| `NOT IN`       | Value is not in list            | `color NOT IN ['Red', 'Blue']`                     |
+| `IS EMPTY`     | Collection field is empty       | `cars IS EMPTY`                                    |
+| `IS NOT EMPTY` | Collection field is not empty   | `cars IS NOT EMPTY`                                |
+| `IS NULL`      | Field is null                   | `brand IS NULL`                                    |
+| `IS NOT NULL`  | Field is not null               | `brand IS NOT NULL`                                |
+| `()`           | Parenthesis                     | `brand:Nissan OR (brand:Chevrolet AND color:Blue)` |
+| `BETWEEN`      | Value is between two values     | `creationyear BETWEEN 2017 AND 2019`               |
+| `NOT BETWEEN`  | Value is not between two values | `creationyear NOT BETWEEN 2017 AND 2019`           |
 
 
 ## Examples

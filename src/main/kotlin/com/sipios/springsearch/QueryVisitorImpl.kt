@@ -31,7 +31,7 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
     }
 
     override fun visitIsCriteria(ctx: QueryParser.IsCriteriaContext): Specification<T> {
-        val key = ctx.key()!!.text
+        val key = ctx.key().text
         val op = if (ctx.IS() != null) {
             SearchOperation.IS
         } else if (ctx.IS_NOT() != null) {
@@ -39,12 +39,7 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
         } else {
             throw IllegalArgumentException("Invalid operation")
         }
-        val value = if (ctx.is_value.NULL() != null) {
-            null
-        } else {
-            ctx.is_value.text
-        }
-        return toSpec(key, op, value)
+        return toSpec(key, op, ctx.is_value().text)
     }
 
     override fun visitEqArrayCriteria(ctx: QueryParser.EqArrayCriteriaContext): Specification<T> {

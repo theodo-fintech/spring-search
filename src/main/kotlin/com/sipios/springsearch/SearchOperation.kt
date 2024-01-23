@@ -29,6 +29,7 @@ enum class SearchOperation {
         val LEFT_PARANTHESIS = "("
         val RIGHT_PARANTHESIS = ")"
         val EMPTY = "EMPTY"
+        val NULL = "NULL"
 
         /**
          * Parse a string into an operation.

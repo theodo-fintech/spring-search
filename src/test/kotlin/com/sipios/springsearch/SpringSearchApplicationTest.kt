@@ -1387,13 +1387,13 @@ class SpringSearchApplicationTest {
         authorRepository.save(jane)
         val spec = SpecificationsBuilder<Author>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("books IS null").build()
+        ).withSearch("books IS NULL").build()
         Assertions.assertThrows(
             ResponseStatusException::class.java
         ) { authorRepository.findAll(spec) }
         val specNotNull = SpecificationsBuilder<Author>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("books IS NOT null").build()
+        ).withSearch("books IS NOT NULL").build()
         Assertions.assertThrows(
             ResponseStatusException::class.java
         ) { authorRepository.findAll(specNotNull) }
@@ -1574,7 +1574,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "jean", type = null))
         val specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("type IS null").build()
+        ).withSearch("type IS NULL").build()
         val users = userRepository.findAll(specification)
         Assertions.assertEquals(2, users.size)
         val setNames = users.map { user -> user.userFirstName }.toSet()
@@ -1589,10 +1589,25 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "jean", type = null))
         val specification = SpecificationsBuilder<Users>(
             SearchSpec::class.constructors.first().call("", false)
-        ).withSearch("type IS NOT null").build()
+        ).withSearch("type IS NOT NULL").build()
         val users = userRepository.findAll(specification)
         Assertions.assertEquals(2, users.size)
         val setNames = users.map { user -> user.userFirstName }.toSet()
         Assertions.assertEquals(setOf("jane", "joe"), setNames)
+    }
+
+    @Test
+    fun canGetUsersWithNotNullFirstName() {
+        userRepository.save(Users(userFirstName = "john", type = null))
+        userRepository.save(Users(userFirstName = "jane", type = UserType.ADMINISTRATOR))
+        userRepository.save(Users(userFirstName = "joe", type = UserType.MANAGER))
+        userRepository.save(Users(userFirstName = "jean", type = null))
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("userFirstName IS NOT NULL").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertEquals(4, users.size)
+        val setNames = users.map { user -> user.userFirstName }.toSet()
+        Assertions.assertEquals(setOf("john", "jane", "joe", "jean"), setNames)
     }
 }

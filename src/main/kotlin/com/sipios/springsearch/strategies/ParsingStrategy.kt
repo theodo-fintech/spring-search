@@ -61,7 +61,7 @@ interface ParsingStrategy {
             }
 
             SearchOperation.IS -> {
-                if (value == null) {
+                if (value == SearchOperation.NULL) {
                     builder.isNull(path.get<Any>(fieldName))
                 } else {
                     // we should not call parent method for collection fields
@@ -71,7 +71,7 @@ interface ParsingStrategy {
                 }
             }
             SearchOperation.IS_NOT -> {
-                if (value == null) {
+                if (value == SearchOperation.NULL) {
                     builder.isNotNull(path.get<Any>(fieldName))
                 } else {
                     // we should not call parent method for collection fields
