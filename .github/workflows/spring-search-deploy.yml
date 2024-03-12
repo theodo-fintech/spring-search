@@ -1,0 +1,59 @@
+name: SpringSearch Deploy
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - master
+
+env:
+  TAG_NAME: ${{ github.event.pull_request.title }}
+
+jobs:
+  release-maven-central:
+    if: contains(github.head_ref, 'bump/v') && github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          fetch-depth: '0'
+
+      - name: Import GPG signing key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.MAVEN_SIGNING_KEY }}
+          passphrase: ${{ secrets.MAVEN_SIGNING_KEY_PASSPHRASE }}
+
+      - name: Install JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+          server-id: maven-central-release
+          server-username: MVN_CENTRAL_USERNAME
+          server-password: MVN_CENTRAL_PASSWORD
+
+      - name: Release to Maven repo
+        run: |
+          mvn -Dgpg.keyname=${{ secrets.GPG_KEY_NAME }} -Dgpg.passphrase=${{ secrets.MAVEN_SIGNING_KEY_PASSPHRASE }} \
+              -Drevision=${{ env.TAG_NAME }} deploy
+        env:
+          MVN_CENTRAL_USERNAME: ${{ secrets.MVN_CENTRAL_USERNAME }}
+          MVN_CENTRAL_PASSWORD: ${{ secrets.MVN_CENTRAL_PASSWORD }}
+
+      - name: Push tag
+        uses: anothrNick/github-tag-action@1.64.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CUSTOM_TAG: ${{ env.TAG_NAME }}
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          generate_release_notes: true
