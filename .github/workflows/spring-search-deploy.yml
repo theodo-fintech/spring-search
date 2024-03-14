@@ -39,7 +39,7 @@ jobs:
           server-password: MVN_CENTRAL_PASSWORD
 
       - name: Release to Maven repo
-        run: mvn -Dgpg.keyname="${{ secrets.GPG_KEY_NAME }}" -Dgpg.passphrase="${{ secrets.MAVEN_SIGNING_KEY_PASSPHRASE }}" -Drevision="${{ env.TAG_NAME }}" -DnvdApiKey="{{ secrets.NVD_API_KEY }}" deploy
+        run: mvn -Dgpg.keyname="${{ secrets.GPG_KEY_NAME }}" -Dgpg.passphrase="${{ secrets.MAVEN_SIGNING_KEY_PASSPHRASE }}" -Drevision="${{ env.TAG_NAME }}" -DnvdApiKey="${{ secrets.NVD_API_KEY }}" deploy
         env:
           MVN_CENTRAL_USERNAME: ${{ secrets.MVN_CENTRAL_USERNAME }}
           MVN_CENTRAL_PASSWORD: ${{ secrets.MVN_CENTRAL_PASSWORD }}
