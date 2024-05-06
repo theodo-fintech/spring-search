@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
+## [0.2.10] - 14 Mar 2024
+### Added
+- Add IsEmpty strategy
+- Add Between strategy
+- Add In strategy
+
 ## [0.2.6] - 10 Jan 2024
 ### Added
 - Bump Java, Kotlin and Spring versions

@@ -14,7 +14,7 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
         return when (ctx.logicalOp.text) {
             "AND" -> left.and(right)
             "OR" -> left.or(right)
-            else -> throw IllegalArgumentException("Invalid logical operator ${ctx.logicalOp.text}")
+            else -> left.and(right)
         }
     }
 
