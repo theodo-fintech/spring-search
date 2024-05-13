@@ -171,6 +171,14 @@ Request : `/cars?search=creationyear:2018 AND price<300000 AND (color:Yellow OR 
 15. Using the BETWEEN operator
 Request : `/cars?search=creationyear BETWEEN 2017 AND 2019`
 
+## Blocking the search on a field
+```java
+@GetMapping
+public List<User> getUsers(@SearchSpec(blackListedFields = {"password"}) Specification<User> specs) {
+  return userRepository.findAll(Specification.where(specs));
+}
+```
+
 <!-- TROUBLESHOOTING -->
 ## Troubleshooting
 
