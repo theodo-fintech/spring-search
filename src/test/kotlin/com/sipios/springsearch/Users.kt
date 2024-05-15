@@ -55,7 +55,7 @@ data class Users(
     var updatedTimeAt: LocalTime = LocalTime.now(),
 
     @Column
-    var updatedDateAt: LocalDate = LocalDate.now(),
+    var updatedDateAt: LocalDate? = LocalDate.now(),
 
     @Column
     var updatedInstantAt: Instant = Instant.now(),

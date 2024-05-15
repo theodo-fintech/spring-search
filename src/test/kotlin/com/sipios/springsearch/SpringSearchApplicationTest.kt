@@ -1634,4 +1634,21 @@ class SpringSearchApplicationTest {
         Assertions.assertEquals(1, robotUsers.size)
         Assertions.assertEquals(null, robotUsers[0].uuid)
     }
+
+    // Test for LocalDate is null
+    @Test
+    fun canGetUsersWithUpdatedDateAtNull() {
+        userRepository.save(Users(userFirstName = "john", updatedDateAt = LocalDate.parse("2020-01-10")))
+        userRepository.save(Users(userFirstName = "jane", updatedDateAt = LocalDate.parse("2020-01-11")))
+        userRepository.save(Users(userFirstName = "joe", updatedDateAt = null))
+        userRepository.save(Users(userFirstName = "jean", updatedDateAt = null))
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("updatedDateAt IS NULL").build()
+        val users = userRepository.findAll(specification)
+        Assertions.assertEquals(2, users.size)
+        val setNames = users.map { user -> user.userFirstName }.toSet()
+        Assertions.assertEquals(setOf("joe", "jean"), setNames)
+    }
+
 }
