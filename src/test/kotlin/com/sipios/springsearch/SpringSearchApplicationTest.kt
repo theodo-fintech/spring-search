@@ -1621,4 +1621,17 @@ class SpringSearchApplicationTest {
         val users = userRepository.findAll(specification)
         Assertions.assertEquals(0, users.size)
     }
+
+    @Test
+    fun canGetUsersWithUUIDNull() {
+        val userUUID = UUID.randomUUID()
+        userRepository.save(Users(userFirstName = "Diego", uuid = userUUID))
+        userRepository.save(Users(userFirstName = "Diego two", uuid = null))
+        val specification = SpecificationsBuilder<Users>(
+            SearchSpec::class.constructors.first().call("", false)
+        ).withSearch("uuid IS NULL").build()
+        val robotUsers = userRepository.findAll(specification)
+        Assertions.assertEquals(1, robotUsers.size)
+        Assertions.assertEquals(null, robotUsers[0].uuid)
+    }
 }

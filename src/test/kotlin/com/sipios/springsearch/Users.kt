@@ -67,5 +67,5 @@ data class Users(
     var type: UserType? = UserType.TEAM_MEMBER,
 
     @Column
-    var uuid: UUID = UUID.randomUUID()
+    var uuid: UUID? = UUID.randomUUID()
 )
