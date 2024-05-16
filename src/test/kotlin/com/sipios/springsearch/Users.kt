@@ -49,7 +49,7 @@ data class Users(
     var createdAt: Date = Date(),
 
     @Column
-    var updatedAt: LocalDateTime = LocalDateTime.now(),
+    var updatedAt: LocalDateTime? = LocalDateTime.now(),
 
     @Column
     var updatedTimeAt: LocalTime = LocalTime.now(),
