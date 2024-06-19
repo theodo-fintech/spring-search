@@ -31,7 +31,7 @@ jobs:
         uses: madrapps/jacoco-report@v1.6.1
         with:
           paths: |
-            ${{ github.workspace }}/**/target/test-results/jacoco/jacoco.xml
+            ${{ github.workspace }}/target/test-results/coverage/jacoco/jacoco.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           title: '### :zap: Coverage report'
           update-comment: true
