@@ -24,6 +24,7 @@ criteria
 
 is_value
    : EMPTY
+   | NULL
    ;
 
 key
@@ -55,6 +56,10 @@ op
 BOOL
     : 'true'
     | 'false'
+    ;
+
+NULL
+    : 'NULL'
     ;
 
 STRING
