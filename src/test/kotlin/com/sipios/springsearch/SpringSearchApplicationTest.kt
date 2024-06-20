@@ -1638,7 +1638,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "Diego", uuid = userUUID))
         userRepository.save(Users(userFirstName = "Diego two", uuid = null))
         val specification = SpecificationsBuilder<Users>(
-            SearchSpec::class.constructors.first().call("", false)
+            SearchSpec::class.constructors.first().call("", false, emptyArray<String>())
         ).withSearch("uuid IS NULL").build()
         val robotUsers = userRepository.findAll(specification)
         Assertions.assertEquals(1, robotUsers.size)
@@ -1652,7 +1652,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "joe", updatedDateAt = null))
         userRepository.save(Users(userFirstName = "jean", updatedDateAt = null))
         val specification = SpecificationsBuilder<Users>(
-            SearchSpec::class.constructors.first().call("", false)
+            SearchSpec::class.constructors.first().call("", false, emptyArray<String>())
         ).withSearch("updatedDateAt IS NULL").build()
         val users = userRepository.findAll(specification)
         Assertions.assertEquals(2, users.size)
@@ -1667,7 +1667,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "joe", updatedAt = null))
         userRepository.save(Users(userFirstName = "jean", updatedAt = LocalDateTime.parse("2020-01-13T10:15:30")))
         val specification = SpecificationsBuilder<Users>(
-            SearchSpec::class.constructors.first().call("", false)
+            SearchSpec::class.constructors.first().call("", false, emptyArray<String>())
         ).withSearch("updatedAt IS NOT NULL").build()
         val users = userRepository.findAll(specification)
         Assertions.assertEquals(3, users.size)
@@ -1681,7 +1681,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "joe", active = null))
         userRepository.save(Users(userFirstName = "jean", active = null))
         val specification = SpecificationsBuilder<Users>(
-            SearchSpec::class.constructors.first().call("", false)
+            SearchSpec::class.constructors.first().call("", false, emptyArray<String>())
         ).withSearch("active IS NULL").build()
         val users = userRepository.findAll(specification)
         Assertions.assertEquals(2, users.size)
@@ -1695,7 +1695,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "joe", userChildrenNumber = null))
         userRepository.save(Users(userFirstName = "jean", userChildrenNumber = null))
         val specification = SpecificationsBuilder<Users>(
-            SearchSpec::class.constructors.first().call("", false)
+            SearchSpec::class.constructors.first().call("", false, emptyArray<String>())
         ).withSearch("userChildrenNumber IS NULL").build()
         val users = userRepository.findAll(specification)
         Assertions.assertEquals(2, users.size)
@@ -1709,7 +1709,7 @@ class SpringSearchApplicationTest {
         userRepository.save(Users(userFirstName = "joe", createdAt = null))
         userRepository.save(Users(userFirstName = "jean", createdAt = null))
         val specification = SpecificationsBuilder<Users>(
-            SearchSpec::class.constructors.first().call("", false)
+            SearchSpec::class.constructors.first().call("", false, emptyArray<String>())
         ).withSearch("createdAt IS NULL").build()
         val users = userRepository.findAll(specification)
         Assertions.assertEquals(2, users.size)
