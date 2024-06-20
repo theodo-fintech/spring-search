@@ -36,5 +36,5 @@ jobs:
           title: '### :zap: Coverage report'
           update-comment: true
           min-coverage-overall: 80
-          min-coverage-changed-files: 60
+          min-coverage-changed-files: 75
           continue-on-error: false
