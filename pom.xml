@@ -9,14 +9,14 @@
 	</parent>
 	<groupId>com.sipios</groupId>
 	<artifactId>spring-search</artifactId>
-	<version>0.2.6</version>
+	<version>0.2.10</version>
 	<name>spring-search</name>
 	<description>API for generating spring boot database queries</description>
 
 	<properties>
 		<java.version>17</java.version>
 		<kotlin.version>1.9.22</kotlin.version>
-		<jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
+		<jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
 		<h2.version>2.2.220</h2.version>
 		<jackson-databind.version>2.16.0</jackson-databind.version>
 		<snakeyaml.version>2.0</snakeyaml.version>

@@ -16,7 +16,7 @@ data class StringStrategy(var searchSpecAnnotation: SearchSpec) : ParsingStrateg
         value: Any?
     ): Predicate? {
         if (value !is List<*>) {
-            // if case-sensitive is enabled, we need to keep the value as is
+            // if case-sensitive is enabled, we don't change the value
             val casedValue = if (searchSpecAnnotation.caseSensitiveFlag) {
                 value.toString()
             } else {

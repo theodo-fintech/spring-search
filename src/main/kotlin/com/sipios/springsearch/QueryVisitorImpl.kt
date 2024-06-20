@@ -16,7 +16,7 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
         return when (ctx.logicalOp.text) {
             "AND" -> left.and(right)
             "OR" -> left.or(right)
-            else -> throw IllegalArgumentException("Invalid logical operator ${ctx.logicalOp.text}")
+            else -> left.and(right)
         }
     }
 
@@ -37,10 +37,8 @@ class QueryVisitorImpl<T>(private val searchSpecAnnotation: SearchSpec) : QueryB
         verifyBlackList(key)
         val op = if (ctx.IS() != null) {
             SearchOperation.IS
-        } else if (ctx.IS_NOT() != null) {
-            SearchOperation.IS_NOT
         } else {
-            throw IllegalArgumentException("Invalid operation")
+            SearchOperation.IS_NOT
         }
         return toSpec(key, op, ctx.is_value().text)
     }

@@ -37,7 +37,7 @@ data class Users(
     var userAddress: String = "1 rue de l'angleterre",
 
     @Column(name = "NumberOfChildren")
-    var userChildrenNumber: Int = 3,
+    var userChildrenNumber: Int? = 3,
 
     @Column(name = "Salary")
     var userSalary: Float = 3000.0F,
@@ -46,16 +46,16 @@ data class Users(
     var userAgeInSeconds: Double = 1261440000.0,
 
     @Column
-    var createdAt: Date = Date(),
+    var createdAt: Date? = Date(),
 
     @Column
-    var updatedAt: LocalDateTime = LocalDateTime.now(),
+    var updatedAt: LocalDateTime? = LocalDateTime.now(),
 
     @Column
     var updatedTimeAt: LocalTime = LocalTime.now(),
 
     @Column
-    var updatedDateAt: LocalDate = LocalDate.now(),
+    var updatedDateAt: LocalDate? = LocalDate.now(),
 
     @Column
     var updatedInstantAt: Instant = Instant.now(),
@@ -67,5 +67,8 @@ data class Users(
     var type: UserType? = UserType.TEAM_MEMBER,
 
     @Column
-    var uuid: UUID = UUID.randomUUID()
+    var uuid: UUID? = UUID.randomUUID(),
+
+    @Column
+    var active: Boolean? = true
 )
