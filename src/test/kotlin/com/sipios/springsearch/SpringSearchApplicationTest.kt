@@ -16,7 +16,6 @@ import java.time.LocalTime
 import java.util.Date
 import java.util.UUID
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = [SpringSearchApplication::class])
 @Transactional
 class SpringSearchApplicationTest {
