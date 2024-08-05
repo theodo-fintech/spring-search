@@ -39,6 +39,9 @@ data class Users(
     @Column(name = "NumberOfChildren")
     var userChildrenNumber: Int? = 3,
 
+    @Column(name = "Debt")
+    var userDebt: Long = 3000000000L,
+
     @Column(name = "Salary")
     var userSalary: Float = 3000.0F,
 
